@@ -1,1 +1,26 @@
-{{ctrl.test}}
+<h1>available captors</h1>
+
+<div class="wrapper">
+    <div class="ck-nested">
+        <div ng-class="{opened: item.opened}" ng-include="'table_tree.html'"
+             ng-repeat="item in ctrl.captorsHierarchy"></div>
+    </div>
+
+    <script id="table_tree.html" type="text/ng-template">
+        <div ng-class="{parent: item.children}">
+            <div class="indent" style="padding-left: {{15*level}}px" ng-click="item.opened = !item.opened"></div>
+            <div class="cell-input ui checkbox">
+                <input ng-change="ctrl.chkChanged(item)" ng-model="item.selected" type="checkbox"/>
+                <label></label>
+            </div>
+            <div class="cell-name" ng-click="item.opened = !item.opened">
+                {{item.name}}
+            </div>
+        </div>
+        <div class="children" ng-if="item.children && item.children.length">
+            <div ng-class="{opened: item.opened}" ng-include="'table_tree.html'" ng-init="level = level + 1"
+                 ng-repeat="item in item.children"></div>
+        </div>
+    </script>
+
+</div>

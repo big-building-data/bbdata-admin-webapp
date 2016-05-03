@@ -7,7 +7,7 @@
  * Use of this source code is governed by an Apache 2 license
  * that can be found in the LICENSE file.
  */
-(function(){
+(function () {
 
     /**
      * @ngdoc service
@@ -16,16 +16,23 @@
      * Service to talk to the backend.
      */
     angular
-        .module( 'bbdata.rest' )
-        .factory( 'RestService', RestService );
+        .module('bbdata.rest')
+        .factory('RestService', RestService);
 
     // --------------------------
 
-    function RestService( $resource, baseUrl ){
+    function RestService($resource, baseUrl) {
 
-        return $resource( '', {}, {
+        return $resource('', {}, {
 
+            getHierarchy: {method: 'GET', url: baseUrl + 'hierarchy', isArray: true},
 
+            getValues: {
+                method: 'POST',
+                url: baseUrl + 'values',
+                isArray: false,
+                params: {"captor-id": "@id", begin: '@begin', end: '@end'}
+            }
             ///**
             // * @ngdoc
             // * @name infos
@@ -39,7 +46,7 @@
             // */
             //infos: {method: 'GET', url: baseUrl + 'info'},
 
-        } )
+        })
     }
 
 }());

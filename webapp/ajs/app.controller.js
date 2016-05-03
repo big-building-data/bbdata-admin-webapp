@@ -27,6 +27,9 @@
         var self = this;
 
         self.test = "it works!";
+        self.captorsHierarchy = [];
+        self.chkChanged = checkboxChanged;
+        _init();
 
         /* *****************************************************************
          * implementation
@@ -35,8 +38,25 @@
         //##------------init
 
         function _init() {
-
+            RestService.getHierarchy(function (result) {
+                self.captorsHierarchy = result;
+            }, _handleError);
         }
+
+
+        //##------------available methods
+
+        function checkboxChanged(item){
+             console.log(item);
+        }
+
+        //##------------utils
+
+        function _handleError(error) {
+            console.log(error);
+        }
+
+
 
     }
 }());
