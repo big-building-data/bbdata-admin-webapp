@@ -24,3 +24,26 @@
     </script>
 
 </div>
+
+
+<h1>datetime</h1>
+
+<div class="ui input">
+    <input type="text" name="daterange" value="01/01/2015 1:30 PM - 01/01/2015 2:00 PM" style="width:400px" />
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        $('input[name="daterange"]').daterangepicker({
+            buttonClasses: "ui mini button",
+            applyClass: "positive",
+            cancelClass: "cancel",
+            timePicker: true,
+            timePickerIncrement: 30,
+            locale: {
+                format: 'MM/DD/YYYY h:mm A'
+            }
+        });
+    });
+</script>

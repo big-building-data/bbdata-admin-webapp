@@ -74,3 +74,12 @@ div.parent > .indent:before {
 .opened > .children {
     display: table-row;
 }
+
+/* *****************************************************************
+ * other
+ * ****************************************************************/
+
+/*== hide daterangepicker on start ==*/
+.daterangepicker {
+    display:none;
+}
