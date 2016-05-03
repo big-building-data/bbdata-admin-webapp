@@ -1,0 +1,18 @@
+.main.container {
+    margin: 80px auto;
+    min-height: 60vh;
+}
+
+.pusher {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.pusher > .footer {
+    flex: 1;
+}
+
+img.logo {
+    margin-right: 10px !important;
+}
