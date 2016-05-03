@@ -3,7 +3,7 @@
  * ****************************************************************/
 
 /*== fix layout == */
-.main.container {
+#container {
     margin: 80px auto;
     min-height: 60vh;
 }
@@ -79,7 +79,13 @@ div.parent > .indent:before {
  * other
  * ****************************************************************/
 
-/*== hide daterangepicker on start ==*/
+/*==  daterangepicker  ==*/
+
+#daterangeInput{
+    min-width: 280px;
+    font-size: 12px;
+}
+/*hide daterangepicker on start*/
 .daterangepicker {
     display:none;
 }
