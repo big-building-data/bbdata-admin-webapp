@@ -9,15 +9,13 @@
     <!-- Site Properties -->
     <title>BBData</title>
 
-    <!--includes-->
-    <script type="text/javascript" src="/vendor/jquery-2.1.4.min.js"></script>
-    <script type="text/javascript" src="/vendor/semantic/semantic.min.js"></script>
+    <!--includes css-->
     <link rel="stylesheet" href="/vendor/semantic/semantic.min.css">
     <link rel="stylesheet" href="/css/main.css">
 
 
 </head>
-<body>
+<body ng-app="bbdata.app">
 
 <!--menu-->
 <div class="ui fixed inverted menu">
@@ -33,13 +31,7 @@
 <div class="pusher">
 
     <!--main-->
-    <div class="ui main text container">
-        <h1 class="ui header">Semantic UI Fixed Template</h1>
-
-        <p>This is a basic fixed menu template using fixed size containers.</p>
-
-        <p>A text container is used for the main container, which is useful for single column layouts</p>
-
+    <div class="ui main text container" ng-include src="'html/_main.html'" ng-controller="MainCtrl as ctrl">
     </div>
 
     <!--footer-->
@@ -55,6 +47,27 @@
     </div>
 
 </div>
+
+<!--=================== scripts include ================= -->
+
+<script type="text/javascript" src="/vendor/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="/vendor/semantic/semantic.min.js"></script>
+
+<script type="text/javascript" src="/vendor/angular/angular.min.js"></script>
+<script type="text/javascript" src="/vendor/angular/angular-resource.min.js"></script>
+<script type="text/javascript" src="/vendor/angular/angular-animate.min.js"></script>
+<script type="text/javascript" src="/vendor/angular/angular-route.min.js"></script>
+
+
+<!--rest-->
+<script type="text/javascript" src="/ajs/rest/rest.module.js"></script>
+<script type="text/javascript" src="/ajs/rest/rest.constants.js"></script>
+<script type="text/javascript" src="/ajs/rest/rest.service.js"></script>
+
+<!--app-->
+<script type="text/javascript" src="/ajs/app.module.js"></script>
+<script type="text/javascript" src="/ajs/app.controller.js"></script>
+
 </body>
 
 </html>
