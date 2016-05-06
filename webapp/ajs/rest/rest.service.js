@@ -30,8 +30,7 @@
             getValues: {
                 method: 'POST',
                 url: baseUrl + 'values',
-                isArray: false,
-                params: {"captor-id": "@id", begin: '@begin', end: '@end'}
+                isArray: false
             }
             ///**
             // * @ngdoc

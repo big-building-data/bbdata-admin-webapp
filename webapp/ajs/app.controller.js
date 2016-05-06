@@ -7,7 +7,7 @@
  * Use of this source code is governed by an Apache 2 license
  * that can be found in the LICENSE file.
  */
-(function () {
+(function(){
 
     /**
      * @ngdoc controller
@@ -17,12 +17,12 @@
      * Main controller
      */
     angular
-        .module('bbdata.app')
-        .controller('MainCtrl', MainCtrl);
+        .module( 'bbdata.app' )
+        .controller( 'MainCtrl', MainCtrl );
 
     // --------------------------
 
-    function MainCtrl(RestService, $scope) {
+    function MainCtrl( RestService, $scope ){
 
         var self = this;
 
@@ -33,11 +33,15 @@
 
 
         self.date = {
-            from: moment().floor(1, 'hour').subtract(1, 'hour' ).toDate(),
-            to: moment().floor(1, 'hour' ).toDate()
+            from: moment().floor( 1, 'hour' ).subtract( 1, 'hour' ).toDate(),
+            to  : moment().floor( 1, 'hour' ).toDate()
         };
 
         self.applyDate = applyDate;
+
+
+        var chart = null;
+
 
         /* *****************************************************************
          * implementation
@@ -50,28 +54,100 @@
 
         //##------------init
 
-        function _init() {
-            RestService.getHierarchy(function (result) {
+        function _init(){
+            RestService.getHierarchy( function( result ){
                 self.captorsHierarchy = result;
-            }, _handleError);
+            }, _handleError );
+
         }
 
 
         //##------------available methods
 
-        function checkboxChanged(item){
-             console.log(item);
+        function checkboxChanged( item ){
+            console.log( item );
+            if( item.selected ){
+                // ajax
+                RestService.getValues( {
+                    cid : item.id,
+                    from: moment( self.date.from ).format( "YYYY-MM-DDTHH:mm:ssZ" ),
+                    to  : moment( self.date.to ).format( "YYYY-MM-DDTHH:mm:ssZ" )
+                }, function( results ){
+                    addSerie( item, results.values );
+                }, _handleError );
+
+            }else{
+                removeSerie( item );
+            }
+        }
+
+        function addSerie( item, values ){
+            console.log( values );
+
+            var axis = { // Secondary yAxis
+                id       : item.id + "-axis",
+                title    : {
+                    text: item.name
+                },
+                opposite : true
+            };
+
+            var serie = {
+                name : item.name,
+                id   : item.id + "-serie",
+                yAxis: item.id + "-axis",
+                data : toTrace( values )
+            };
+
+            if( !chart ){
+                $( '#graphContainer' ).highcharts( 'StockChart', {
+
+                    rangeSelector: {
+                        enabled: false
+                    },
+
+                    legend: {enabled: true},
+
+                    yAxis : axis,
+                    series: [serie]
+
+                } );
+                chart = $( '#graphContainer' ).highcharts();
+                self.chart = chart;
+
+            }else{
+                chart.addAxis( axis );
+                chart.addSeries( serie );
+            }
+
+        }
+
+        function removeSerie( item ){
+            // remove from graph
+            chart.get( item.id + "-serie" ).remove();
+            chart.get( item.id + "-axis" ).remove();
+        }
+
+
+        function toTrace( measures ){
+
+            var results = [];
+            angular.forEach( measures, function( m ){
+                results.push( [new Date( m.timestamp ).getTime(), m.value] );
+            } );
+
+            return results;
         }
 
         //##------------utils
 
-        function _handleError(error) {
-            console.log(error);
+        function _handleError( error ){
+            console.log( error );
         }
 
-        function applyDate(d){
+        function applyDate( d ){
             self.date = d;
-            console.log(d);
+            console.log( d );
         }
 
 

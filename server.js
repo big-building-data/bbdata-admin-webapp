@@ -7,6 +7,8 @@
 var express = require('express');        // call express
 var app = express();                 // define our app using express
 var bodyParser = require('body-parser');
+var moment = require('moment');
+var random = require("random-js")();
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -20,9 +22,9 @@ var port = process.env.PORT || 8088;        // set our port
 var router = express.Router();              // get an instance of the express Router
                                             // (accessed at GET http://localhost:8080/api)
 
-router.get('/values', function (req, res) {
-     params = req.body;
-    console.log(req.body);
+router.post('/values', function (req, res) {
+    params = req.body;
+    res.send(randomValues(req.body));
 
 });
 
@@ -61,3 +63,23 @@ app.use(express.static('webapp'));
 // =============================================================================
 app.listen(port);
 console.log('Magic happens on port ' + port);
+
+
+function randomValues(params){
+
+    var measures = [];
+    var from = new Date(params.from ).getTime();
+    var to = new Date(params.to ).getTime();
+    var increment = (to - from) / 20;
+    var mean = random.integer(0, 300);
+
+    for(var i = from; i < to; i += increment){
+        measures.push({
+            timestamp: moment(i ).format( "YYYY-MM-DDTHH:mm:ssZ" ),
+            value: random.integer(0,20) + mean
+        });
+    }
+
+    return {values: measures };
+
+}
