@@ -41,6 +41,16 @@
 
 
         var chart = null;
+        var defaultChartOptions = {
+            chart        : {
+                renderTo: 'graphContainer'
+            },
+            rangeSelector: {
+                enabled: false
+            },
+
+            legend: {enabled: true}
+        };
 
 
         /* *****************************************************************
@@ -85,11 +95,11 @@
             console.log( values );
 
             var axis = { // Secondary yAxis
-                id       : item.id + "-axis",
-                title    : {
+                id      : item.id + "-axis",
+                title   : {
                     text: item.name
                 },
-                opposite : true
+                opposite: true
             };
 
             var serie = {
@@ -100,19 +110,11 @@
             };
 
             if( !chart ){
-                $( '#graphContainer' ).highcharts( 'StockChart', {
+                var options = angular.copy( defaultChartOptions );
+                options.series = [serie];
+                options.yAxis = axis;
 
-                    rangeSelector: {
-                        enabled: false
-                    },
-
-                    legend: {enabled: true},
-
-                    yAxis : axis,
-                    series: [serie]
-
-                } );
-                chart = $( '#graphContainer' ).highcharts();
+                chart = new Highcharts.StockChart( options );
                 self.chart = chart;
 
             }else{
