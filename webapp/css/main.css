@@ -81,11 +81,21 @@ div.parent > .indent:before {
 
 /*==  daterangepicker  ==*/
 
-#daterangeInput{
-    min-width: 280px;
-    font-size: 12px;
+#datetimeForm .ui.input {
+    margin: 10px 0;
 }
-/*hide daterangepicker on start*/
-.daterangepicker {
-    display:none;
+
+#datetimeForm input {
+    margin-right: 6px;
+}
+
+#datetimeForm input.ng-invalid:before {
+    font-family: FontAwesome;
+    content: "\f12a";
+    color: red;
+    padding-right: 4px;
+}
+
+input.ng-invalid {
+    border-color: red !important;
 }

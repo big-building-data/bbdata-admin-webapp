@@ -34,24 +34,23 @@
 
         <h1>datetime</h1>
 
-        <div class="ui input">
-            <input type="text" id="daterangeInput" value="01/01/2015 1:30 PM - 01/01/2015 2:00 PM"/>
-        </div>
+        <form name="datetimeForm" id="datetimeForm" ng-init="date = copy(ctrl.date)">
+            <div>format: <code>" month/day/year hr:min "</code></div>
+            <div class="ui input">
+                <input type="datetime-local" id="inputFrom" name="inputFrom" ng-model="date.from"
+                       ng-max="date.to" required/> (from)
+            </div>
+            <div class="ui input">
+                <input type="datetime-local" id="inputTo" name="inputTo"
+                       ng-model="date.to" ng-min="date.from" required/> (to)
+            </div>
 
-        <script type="text/javascript">
-            $(function () {
+            <div class="ui button" ng-click="ctrl.applyDate(date)"
+                 ng-class="{'disabled': equals(date, ctrl.date) }">
+                Apply
+            </div>
 
-                $('#daterangeInput').daterangepicker({
-                    buttonClasses: "ui mini button",
-                    applyClass: "positive",
-                    cancelClass: "cancel",
-                    timePicker: true,
-                    timePickerIncrement: 30,
-                    locale: {
-                        format: 'MM/DD/YYYY h:mm A'
-                    }
-                });
-            });
-        </script>
+        </form>
+
     </div>
 </div>

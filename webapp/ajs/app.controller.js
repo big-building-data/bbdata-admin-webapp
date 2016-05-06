@@ -22,7 +22,7 @@
 
     // --------------------------
 
-    function MainCtrl(RestService) {
+    function MainCtrl(RestService, $scope) {
 
         var self = this;
 
@@ -31,9 +31,22 @@
         self.chkChanged = checkboxChanged;
         _init();
 
+
+        self.date = {
+            from: moment().floor(1, 'hour').subtract(1, 'hour' ).toDate(),
+            to: moment().floor(1, 'hour' ).toDate()
+        };
+
+        self.applyDate = applyDate;
+
         /* *****************************************************************
          * implementation
          * ****************************************************************/
+
+        //##------------scope power
+
+        $scope.copy = angular.copy;
+        $scope.equals = angular.equals;
 
         //##------------init
 
@@ -56,6 +69,10 @@
             console.log(error);
         }
 
+        function applyDate(d){
+            self.date = d;
+            console.log(d);
+        }
 
 
     }
