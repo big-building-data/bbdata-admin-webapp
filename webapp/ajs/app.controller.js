@@ -22,7 +22,7 @@
 
     // --------------------------
 
-    function MainCtrl( RestService, $scope ){
+    function MainCtrl( RestService, $scope, $filter ){
 
         var self = this;
 
@@ -78,13 +78,7 @@
             console.log( item );
             if( item.selected ){
                 // ajax
-                RestService.getValues( {
-                    cid : item.id,
-                    from: moment( self.date.from ).format( "YYYY-MM-DDTHH:mm:ssZ" ),
-                    to  : moment( self.date.to ).format( "YYYY-MM-DDTHH:mm:ssZ" )
-                }, function( results ){
-                    addSerie( item, results.values );
-                }, _handleError );
+                getValues( item );
 
             }else{
                 removeSerie( item );
@@ -148,10 +142,22 @@
         }
 
         function applyDate( d ){
-            self.date = d;
-            console.log( d );
+            self.date = angular.copy( d );
+            var selected = $filter( 'selected' )( self.captorsHierarchy );
+            chart = null;
+            angular.forEach( selected, getValues );
         }
 
+
+        function getValues( item ){
+            RestService.getValues( {
+                cid : item.id,
+                from: moment( self.date.from ).format( "YYYY-MM-DDTHH:mm:ssZ" ),
+                to  : moment( self.date.to ).format( "YYYY-MM-DDTHH:mm:ssZ" )
+            }, function( results ){
+                addSerie( item, results.values );
+            }, _handleError );
+        }
 
     }
 }());
