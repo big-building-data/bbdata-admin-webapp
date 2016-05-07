@@ -79,15 +79,18 @@ div.parent > .indent:before {
  * other
  * ****************************************************************/
 
-/*==  daterangepicker  ==*/
-
-#datetimeForm .ui.input {
+/*inputs*/
+.ui.input {
     margin: 10px 0;
 }
 
-#datetimeForm input {
+ input {
     margin-right: 6px;
 }
+
+
+/*==  daterangepicker  ==*/
+
 
 #datetimeForm input.ng-invalid:before {
     font-family: FontAwesome;
