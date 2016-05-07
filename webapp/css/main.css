@@ -23,6 +23,7 @@
 }
 
 /*== header == */
+
 img.logo {
     margin-right: 10px !important;
 }
@@ -31,7 +32,7 @@ img.logo {
     padding: 1em 0 !important;
 }
 .box {
-    background: #f8f8f9;
+    background-color: #f8f8f9;
     border-radius: .28571429rem;
     box-shadow: 0 0 0 1px rgba(34,36,38,.22) inset,0 0 0 0 transparent;
     padding: 1em;
@@ -107,7 +108,19 @@ div.parent > .indent:before {
     margin-right: 6px !important;
 }
 
+ /*== sticky ==*/
 
+/*below fixed menu + transition ease */
+.ui.sticky {
+    transition: all .3s ease-in-out;
+}
+.ui.sticky.fixed.top {
+    margin-top: 100px !important;
+}
+
+.ui.fixed.menu {
+   z-index: 1000;
+}
 /*==  daterangepicker  ==*/
 
 
