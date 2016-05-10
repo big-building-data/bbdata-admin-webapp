@@ -7,7 +7,7 @@
  * Use of this source code is governed by an Apache 2 license
  * that can be found in the LICENSE file.
  */
-(function(){
+(function () {
 
     /**
      * @ngdoc overview
@@ -20,13 +20,43 @@
      * @date     May 2016
      * @context  BBData
      */
-    angular.module( 'bbdata.app',
+    var webapp = angular.module('bbdata.app',
         // dependencies
         [
             'bbdata.rest',
-            'ngAnimate'
+            'ngAnimate',
+            'ngRoute',
+            'link'
             //'derlin.modals'
-        ] )
-        .constant("RFC3339_FORMAT", "YYYY-MM-DDTHH:mm:ssZ");
+        ]);
 
+    webapp.constant("RFC3339_FORMAT", "YYYY-MM-DDTHH:mm:ssZ");
+
+    webapp.config(['$routeProvider',
+        function ($routeProvider) {
+            $routeProvider.
+                when('/sensors', {
+                    templateUrl: 'html/sensors/_main.html',
+                    controller: 'SensorsController',
+                    controllerAs: 'ctrl'
+                }).
+                when('/tls-sls', {
+                    templateUrl: 'html/tls-sls/_main.html',
+                    controller: 'TlsSlsController',
+                    controllerAs: 'ctrl'
+                }).
+                otherwise({
+                    redirectTo: '/',
+                    templateUrl: 'html/display/_main.html',
+                    controller: 'DisplayController',
+                    controllerAs: 'ctrl'
+                });
+        }]);
+
+    webapp.run(function ($rootScope, $location) {
+        $rootScope.$on("$locationChangeStart", function (event, next, current) {
+            // handle route changes
+            $rootScope.locationPath = $location.path();
+        });
+    })
 }());

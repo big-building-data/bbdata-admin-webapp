@@ -22,10 +22,12 @@
 <!--menu-->
 <div class="ui fixed inverted menu">
     <div class="ui container">
-        <a href="#" class="header item">
-            <img class="logo" src="assets/logo.png">
-            BBData
+        <a href="#/" class="header item">
+            <img class="logo" src="assets/logo.png">BBData
         </a>
+        <a class="item" active-link="active" href="#/">home</a>
+        <a class="item" active-link="active" href="#/sensors">sensors</a>
+        <a class="item" active-link="active" href="#/tls-sls">TLS/SLS</a>
     </div>
 </div>
 
@@ -33,7 +35,7 @@
 <div class="pusher">
 
     <!--main-->
-    <div id="container" class="ui main container" ng-include src="'html/_main.html'" ng-controller="MainCtrl as ctrl">
+    <div id="container" class="ui main container" ng-view>
     </div>
 
     <!--footer-->
@@ -73,8 +75,13 @@
 
 <!--app-->
 <script type="text/javascript" src="/ajs/app.module.js"></script>
-<script type="text/javascript" src="/ajs/app.controller.js"></script>
 <script type="text/javascript" src="/ajs/app.filters.js"></script>
+
+<script type="text/javascript" src="/ajs/controllers/display.controller.js"></script>
+<script type="text/javascript" src="/ajs/controllers/sensors.controller.js"></script>
+<script type="text/javascript" src="/ajs/controllers/tls-sls.controller.js"></script>
+
+<script type="text/javascript" src="/ajs/link/link.module.js"></script>
 
 <!--datetime-->
 <script type="text/javascript" src="/vendor/moment/momentjs.min.js"></script>

@@ -18,11 +18,11 @@
      */
     angular
         .module( 'bbdata.app' )
-        .controller( 'MainCtrl', MainCtrl );
+        .controller( 'DisplayController', ctrl );
 
     // --------------------------
 
-    function MainCtrl( RestService, $scope, $filter, RFC3339_FORMAT ){
+    function ctrl( RestService, $scope, $filter, RFC3339_FORMAT ){
 
         var self = this;
 
