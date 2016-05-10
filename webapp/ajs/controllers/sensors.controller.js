@@ -27,9 +27,21 @@
 
         self.sensors = [];
 
+        self.remove = removeSensor;
+        self.edit = editSensor;
         _init();
 
         // ===========================================
+
+        function removeSensor(sensor){
+
+        }
+
+        function editSensor(sensor){
+
+        }
+
+        //##--------------init
 
         function _init() {
             RestService.getSensors(function (sensors) {
@@ -38,6 +50,7 @@
                 $('.ui.accordion').accordion();  // initialise semantic-ui accordion plugin
             }, _handleError);
         }
+
 
         //##------------utils
 

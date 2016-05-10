@@ -1,11 +1,26 @@
-
 <h2>You sensors</h2>
 
 <div id="sensors-accordion" class="ui styled accordion">
     <div class="title" ng-repeat-start="sensor in ctrl.sensors">
-        <i class="dropdown icon"></i> {{sensor.name}} ({{sensor.id}}/{{sensor.address}})
+        <div>
+            <i class="dropdown icon"></i> {{sensor.name}} ({{sensor.id}}/{{sensor.address}})
+        </div>
+        <div>
+            <button class="circular ui icon small button"
+                    stop-event="click"
+                    hover-class="mouseout:mousein"
+                    ng-click="ctrl.edit(sensor)">
+                <i class="icon edit green"></i>
+            </button>
+            <button class="circular ui icon small button"
+                    hover-class="mouseout:mousein"
+                    stop-event="click"
+                    ng-click="ctrl.remove(sensor)">
+                <i class="icon remove circle red"></i>
+            </button>
+        </div>
     </div>
-    <div class="content"  ng-repeat-end>
+    <div class="content" ng-repeat-end>
         <p>
             {{sensor.description}}
         </p>

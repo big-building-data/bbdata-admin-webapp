@@ -25,8 +25,7 @@
         [
             'bbdata.rest',
             'ngAnimate',
-            'ngRoute',
-            'link'
+            'ngRoute'
             //'derlin.modals'
         ]);
 
