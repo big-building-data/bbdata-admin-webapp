@@ -7,7 +7,7 @@
  * Use of this source code is governed by an Apache 2 license
  * that can be found in the LICENSE file.
  */
-(function() {
+(function () {
 
     /**
      * @ngdoc sensors controller
@@ -23,7 +23,27 @@
     // --------------------------
 
     function ctrl(RestService, $scope) {
+        var self = this;
 
+        self.sensors = [];
+
+        _init();
+
+        // ===========================================
+
+        function _init() {
+            RestService.getSensors(function (sensors) {
+                console.log(sensors);
+                self.sensors = sensors;
+                $('.ui.accordion').accordion();  // initialise semantic-ui accordion plugin
+            }, _handleError);
+        }
+
+        //##------------utils
+
+        function _handleError(error) {
+            console.log(error);
+        }
     }
 
 })();

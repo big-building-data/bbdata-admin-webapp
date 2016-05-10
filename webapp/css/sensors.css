@@ -1,0 +1,22 @@
+/* *****************************************************************
+ * accordion
+ * ****************************************************************/
+
+#sensors-accordion {
+    margin: 10px auto;
+    min-width: 80%;
+}
+
+#sensors-accordion .title {
+    background-color: #efefef;
+}
+
+.table.sensor-details {
+    font-size: .9em;
+}
+
+
+.table.sensor-details td:first-child {
+    font-weight: bold;
+    text-align:right;
+}

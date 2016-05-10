@@ -31,7 +31,21 @@
                 method: 'POST',
                 url: baseUrl + 'values',
                 isArray: false
+            },
+
+            getSensors: {
+                method: 'GET',
+                url: baseUrl + 'sensors',
+                isArray: true
+            },
+
+            addSensor: {
+                method: 'POST',
+                url: baseUrl + 'sensors',
+                isArray: false
             }
+
+
             ///**
             // * @ngdoc
             // * @name infos

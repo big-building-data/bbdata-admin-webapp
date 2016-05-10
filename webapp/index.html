@@ -13,7 +13,11 @@
     <link rel="stylesheet" href="/vendor/semantic/semantic.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
     <link rel="stylesheet" href="/vendor/sticky/sticky.min.css">
-    <link rel="stylesheet" href="/css/main.css">
+    <!--my css-->
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/display.css">
+    <link rel="stylesheet" href="/css/sensors.css">
+    <link rel="stylesheet" href="/css/tls-sls.css">
 
 
 </head>
@@ -35,7 +39,7 @@
 <div class="pusher">
 
     <!--main-->
-    <div id="container" class="ui main container" ng-view>
+    <div id="container" class="ui main container {{$root.path}}" ng-view>
     </div>
 
     <!--footer-->

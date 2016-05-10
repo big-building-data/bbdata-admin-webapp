@@ -1,1 +1,36 @@
-sensors
+
+<h2>You sensors</h2>
+
+<div id="sensors-accordion" class="ui styled accordion">
+    <div class="title" ng-repeat-start="sensor in ctrl.sensors">
+        <i class="dropdown icon"></i> {{sensor.name}} ({{sensor.id}}/{{sensor.address}})
+    </div>
+    <div class="content"  ng-repeat-end>
+        <p>
+            {{sensor.description}}
+        </p>
+        <table class="ui very basic table sensor-details">
+            <tr>
+                <td>id / address</td>
+                <td class="tt">{{sensor.id}}/{{sensor.address}}</td>
+            </tr>
+            <tr>
+                <td>unit</td>
+                <td>{{sensor.unit.name}} ({{sensor.unit.symbol}})</td>
+            </tr>
+            <tr ng-show="sensor.parser.name">
+                <td>parser</td>
+                <td class="tt">{{sensor.parser.name}}</td>
+            </tr>
+            <tr>
+                <td>creation date</td>
+                <td>{{sensor.creationdate | date:"MM/dd/yyyy 'at' h:mma"}}</td>
+            </tr>
+            <tr>
+                <td>location</td>
+                <td>{{sensor.location}}</td>
+            </tr>
+        </table>
+
+    </div>
+</div>

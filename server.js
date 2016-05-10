@@ -54,6 +54,20 @@ router.get('/hierarchy', function (req, res) {
 
 // more routes for our API will happen here
 
+var sensors = JSON.parse('[ { "id" : 3329, "address" : "1.22.128",  "creationdate" : "2017-12-31T15:59:60+02:00", "name" : "Température 22b", "location" : "Plafond du bloc 22b, blueFACTORY, Fribourg", "description" : "Température au plafond du bloc 22b. La précision est à +- 0.05K", "parser" : { "name" : "knx-semi-parser" }, "type" : { "name" : "double64" }, "unit" : { "name" : "Kelvin", "symbol" : "K" } },{ "id" : 3929, "address" : "1.22.129",  "creationdate" : "2017-12-31T03:09:60+02:00", "name" : "Température 23b", "location" : "Plafond du bloc 23b, blueFACTORY, Fribourg", "description" : "Température au plafond du bloc 23b. La précision est à +- 0.05K", "parser" : { "name" : "knx-semi-parser" }, "type" : { "name" : "double64" }, "unit" : { "name" : "Kelvin", "symbol" : "K" } },{ "id" : 3, "address" : "noaddress",  "creationdate" : "2017-12-31T04:19:00+02:00", "name" : "Présence 23b", "location" : "Bloc de Mr. Lala Blum", "description" : "Capteur de présence de Mr. Blum", "type" : { "name" : "boolean" }, "unit" : { "name" : "Présence", "symbol" : "P" } }]');
+
+router.get('/sensors', function (req, res) {
+    console.log(sensors);
+    res.send(sensors);
+
+});
+
+router.post('/sensors', function (req, res) {
+    sensors.push(req.body);
+    res.send(true);
+
+});
+
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);
