@@ -26,6 +26,7 @@
             'bbdata.rest',
             'ngAnimate'
             //'derlin.modals'
-        ] );
+        ] )
+        .constant("RFC3339_FORMAT", "YYYY-MM-DDTHH:mm:ssZ");
 
 }());

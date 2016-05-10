@@ -67,7 +67,7 @@
                         <div ng-class="{parent: item.children}">
                             <div class="indent" style="padding-left: {{15*level}}px"
                                  ng-click="item.opened = !item.opened"></div>
-                            <div class="cell-input ui checkbox">
+                            <div ng-if="level > 0" class="cell-input ui checkbox">
                                 <input ng-change="ctrl.chkChanged(item)" ng-model="item.selected" type="checkbox"/>
                                 <label></label>
                             </div>

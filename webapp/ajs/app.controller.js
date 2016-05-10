@@ -22,7 +22,7 @@
 
     // --------------------------
 
-    function MainCtrl( RestService, $scope, $filter ){
+    function MainCtrl( RestService, $scope, $filter, RFC3339_FORMAT ){
 
         var self = this;
 
@@ -186,8 +186,8 @@
         function getValues( item ){
             RestService.getValues( {
                 cid : item.id,
-                from: moment( self.date.from ).format( "YYYY-MM-DDTHH:mm:ssZ" ),
-                to  : moment( self.date.to ).format( "YYYY-MM-DDTHH:mm:ssZ" )
+                from: moment( self.date.from ).format( RFC3339_FORMAT ),
+                to  : moment( self.date.to ).format( RFC3339_FORMAT )
             }, function( results ){
                 addSerie( item, results.values );
             }, _handleError );
