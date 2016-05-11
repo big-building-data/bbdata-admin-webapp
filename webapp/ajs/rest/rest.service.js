@@ -43,6 +43,12 @@
                 method: 'POST',
                 url: baseUrl + 'sensors',
                 isArray: false
+            } ,
+
+            deleteSensor: {
+                method: 'DELETE',
+                url: baseUrl + 'sensors',
+                isArray: false
             }
 
 

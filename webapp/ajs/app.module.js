@@ -25,8 +25,8 @@
         [
             'bbdata.rest',
             'ngAnimate',
-            'ngRoute'
-            //'derlin.modals'
+            'ngRoute',
+            'semantic.modals'
         ]);
 
     webapp.constant("RFC3339_FORMAT", "YYYY-MM-DDTHH:mm:ssZ");
