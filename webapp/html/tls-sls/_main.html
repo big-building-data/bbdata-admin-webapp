@@ -46,13 +46,16 @@
 
                     <div class="item" ng-repeat="s in sls.sensors track by s.id" data-as-sortable-item>
                         <!--help icon + popup-->
-                        <i class="help icon link"
+                        <i class="help icon link pink"
                            semantic-popup="click"
                            data-html="<h4>{{s.name}}</h4><p><b>description</b><br />{{s.description}}</p><p><strong>location</strong><br />{{s.location}}</p>"
                            data-variation="wide"></i>
-
-                        <span class="move" data-as-sortable-item-handle>{{s.name}} ({{s.id}})</span>
-
+                         <!--move icon-->
+                        <i class="move icon" data-as-sortable-item-handle></i>
+                        <!--text-->
+                        <span>{{s.name}} ({{s.id}})</span>
+                        <!--remove icon-->
+                        <div style="float:right"><i class="remove icon link red"></i></div>
                     </div>
                 </div>
             </div>
@@ -77,12 +80,12 @@
                 <div class="ui divider"></div>
 
                 <!--list-->
-                <div class="ul list" data-as-sortable="ctrl.dragSensorsConfig" ng-model="ctrl.sensors">
+                <div class="ul list sensors" data-as-sortable="ctrl.dragSensorsConfig" ng-model="ctrl.sensors">
                     <div class="item" ng-repeat="s in ctrl.sensors | filter:filterText track by s.id"
                          data-as-sortable-item>
 
                         <!--help icon + popup-->
-                        <i class="help icon link"
+                        <i class="help icon link pink"
                            semantic-popup="click"
                            data-html="<h4>{{s.name}}</h4><p><b>description</b><br />{{s.description}}</p><p><strong>location</strong><br />{{s.location}}</p>"
                            data-variation="wide"></i>

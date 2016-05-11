@@ -27,7 +27,7 @@
 
         var self = this;
 
-        self.tls = [ {name: "TLS 1", sls: [ {name: "sls1", sensors: []}, {name: "sls2", sensors: []} ] },
+        self.tls = [ {name: "TLS 1", sls: [ {name: "sls1", sensors: [{id: 0, name:"alskdfj"}]}, {name: "sls2", sensors: []} ] },
             {name: "TLS 2", sls: [ {name: "sls21", sensors: []}, {name: "sls22", sensors: []} ] }];
 
         _init();

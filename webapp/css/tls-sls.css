@@ -1,6 +1,8 @@
 .list .item {
     padding: 5px 2px;
     margin-right: 10px;
+    /*border-color: rgba(251,189,8, .56); yellow*/
+    /*border-color: rgba(224,57,151, .56); pink*/
 }
 
 .ui.sticky .box .ul.list {
@@ -28,4 +30,11 @@
 .move {
     selectable: false;
     cursor: move;
+}
+
+.as-sortable-item {
+    border: none;
+}
+.sls .as-sortable-item {
+    background-color: #efefef;
 }
