@@ -27,7 +27,8 @@
 
         var self = this;
 
-        self.tls = [ {name: "TLS 1", sls: [ {name: "sls1", sensors: []}, {name: "sls2", sensors: []} ] }];
+        self.tls = [ {name: "TLS 1", sls: [ {name: "sls1", sensors: []}, {name: "sls2", sensors: []} ] },
+            {name: "TLS 2", sls: [ {name: "sls21", sensors: []}, {name: "sls22", sensors: []} ] }];
 
         _init();
 
@@ -40,6 +41,15 @@
             RestService.getSensors( function( sensors ){
                 console.log( sensors );
                 self.sensors = sensors;
+                for(var i = 100; i < 200; i++){
+                    self.sensors.push({
+                        id: i,
+                        name: "lala " + i,
+                        description: "asdf",
+                        location: "slkdjf"
+                    });
+                }
+                $('.ui.sticky' ).sticky({});
             }, _handleError );
         }
 

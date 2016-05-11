@@ -28,32 +28,33 @@
     <!--===============================-->
 
     <div class="five wide column">
-        <div class="box">
-            <!--search-->
-            <div class="ui fluid icon left corner labeled input">
-                <input type="text" placeholder="filter..." ng-model="filterText">
-                <i class="remove link icon" ng-click="filterText = ''" ng-show="filterText"></i>
-                <div class="ui left corner label">
-                    <i class="search icon"></i>
+        <div class="ui sticky">
+            <div class="box">
+                <!--search-->
+                <div class="ui fluid icon left corner labeled input">
+                    <input type="text" placeholder="filter..." ng-model="filterText">
+                    <i class="remove link icon" ng-click="filterText = ''" ng-show="filterText"></i>
+                    <div class="ui left corner label">
+                        <i class="search icon"></i>
+                    </div>
                 </div>
-            </div>
 
-            <div class="ui divider"></div>
+                <div class="ui divider"></div>
 
-            <!--list-->
-            <div class="ul list" data-as-sortable="ctrl.dragSensorsConfig" ng-model="ctrl.sensors">
-                <div class="item" ng-repeat="s in ctrl.sensors | filter:filterText track by s.id"
-                     data-as-sortable-item>
+                <!--list-->
+                <div class="ul list" data-as-sortable="ctrl.dragSensorsConfig" ng-model="ctrl.sensors">
+                    <div class="item" ng-repeat="s in ctrl.sensors | filter:filterText track by s.id"
+                         data-as-sortable-item>
 
-                    <!--help icon + popup-->
-                    <i class="help icon link"
-                       semantic-popup="click"
-                       data-html="<h4>{{s.name}}</h4><p><b>description</b><br />{{s.description}}</p><p><strong>location</strong><br />{{s.location}}</p>"
-                       data-variation="wide"></i>
+                        <!--help icon + popup-->
+                        <i class="help icon link"
+                           semantic-popup="click"
+                           data-html="<h4>{{s.name}}</h4><p><b>description</b><br />{{s.description}}</p><p><strong>location</strong><br />{{s.location}}</p>"
+                           data-variation="wide"></i>
 
-                    <span data-as-sortable-item-handle>{{s.name}} ({{s.id}})</span>
+                        <span data-as-sortable-item-handle>{{s.name}} ({{s.id}})</span>
 
-
+                    </div>
                 </div>
             </div>
         </div>
