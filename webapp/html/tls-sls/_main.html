@@ -14,15 +14,14 @@
 
         <!--tls-->
         <div class="ui raised segments tls" ng-repeat="tls in ctrl.tls">
-            <!--tls title-->
+            <!--tls title and buttons-->
             <div class="ui top attached label grey">
-                <!--<i class="icon add link" hover-class=":yellow"></i>-->
-                <i class="icon edit link" hover-class=":teal"></i>
-                <i class="icon remove link" hover-class=":red"></i>
+                <i class="icon edit link" hover-class=":teal"  ng-click="ctrl.editTLS(tls, $index)"></i>
+                <i class="icon remove link" hover-class=":red" ng-click="ctrl.deleteTLS(tls, $index)"></i>
                 <span class="title">{{tls.name}}</span>
             </div>
             <div>
-
+               <!--add sls button-->
                 <button class="ui labeled icon tiny button right floated">
                     <i class="add icon"></i>
                     add SLS
@@ -34,10 +33,10 @@
             <!--sls-->
             <div class="ui segment raised sls" ng-repeat="sls in tls.sls" data-as-sortable="ctrl.dragSlsConfig"
                  ng-model="sls.sensors">
-                <!--sls title-->
+                <!--sls title and buttons-->
                 <div class="ui top attached label">
-                    <i class="icon remove link" hover-class=":red"></i>
-                    <i class="icon edit link" hover-class=":teal"></i>
+                    <i class="icon edit link" hover-class=":teal" ng-click="ctrl.editSLS(tls, $index)"></i>
+                    <i class="icon remove link" hover-class=":red" ng-click="ctrl.deleteSLS(tls, $index)"></i>
                    <span class="title">{{sls.name}}</span>
                 </div>
 
@@ -55,7 +54,9 @@
                         <!--text-->
                         <span>{{s.name}} ({{s.id}})</span>
                         <!--remove icon-->
-                        <div style="float:right"><i class="remove icon link red"></i></div>
+                        <div
+                                style="float:right"><i class="remove icon link red"
+                                                       ng-click="splice(sls.sensors, $index)"></i></div>
                     </div>
                 </div>
             </div>
