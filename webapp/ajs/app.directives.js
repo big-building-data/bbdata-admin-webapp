@@ -2,7 +2,8 @@
     angular.module('bbdata.app')
         .directive('activeLink', linkDirective)
         .directive('hoverClass', hoverClass)
-        .directive('stopEvent', stopEvent);
+        .directive('stopEvent', stopEvent)
+        .directive('semanticPopup', semanticPopup);
 
 
     function linkDirective($location, $rootScope) {
@@ -60,6 +61,18 @@
                     element.bind(attr.stopEvent, function (e) {
                         e.stopPropagation();
                     });
+            }
+        }
+    }
+
+    function semanticPopup() {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attr) {
+                var on = attr.semanticPopup || 'hover';
+                element.popup({
+                    on    : on
+                });
             }
         }
     }

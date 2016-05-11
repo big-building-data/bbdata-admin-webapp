@@ -26,6 +26,7 @@
             'bbdata.rest',
             'ngAnimate',
             'ngRoute',
+            'as.sortable',
             'semantic.modals'
         ]);
 

@@ -7,7 +7,7 @@
  * Use of this source code is governed by an Apache 2 license
  * that can be found in the LICENSE file.
  */
-(function() {
+(function(){
 
     /**
      * @ngdoc tls sls controller
@@ -17,13 +17,35 @@
      * Main controller
      */
     angular
-        .module('bbdata.app')
-        .controller('TlsSlsController', ctrl);
+        .module( 'bbdata.app' )
+        .controller( 'TlsSlsController', ctrl );
 
     // --------------------------
 
-    function ctrl(RestService, $scope) {
 
+    function ctrl( RestService, $scope ){
+
+        var self = this;
+
+        self.tls = [];
+
+        _init();
+
+        //##--------------init
+
+        function _init(){
+            RestService.getSensors( function( sensors ){
+                console.log( sensors );
+                self.sensors = sensors;
+            }, _handleError );
+        }
+
+
+        //##------------utils
+
+        function _handleError( error ){
+            console.log( error );
+        }
     }
 
 })();
