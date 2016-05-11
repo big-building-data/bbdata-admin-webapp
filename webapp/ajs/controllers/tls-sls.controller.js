@@ -27,9 +27,12 @@
 
         var self = this;
 
-        self.tls = [];
+        self.tls = [ {name: "TLS 1", sls: [ {name: "sls1", sensors: []}, {name: "sls2", sensors: []} ] }];
 
         _init();
+
+        self.dragSensorsConfig = {clone: true};
+        self.dragSlsConfig = {allowDuplicates: false};
 
         //##--------------init
 

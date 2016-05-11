@@ -1,7 +1,32 @@
 <div class="ui grid container">
+    <!--===============================-->
+
     <div class="eleven wide column">
-        // TLS
+        <div class="ui raised segments tls" ng-repeat="tls in ctrl.tls">
+            <div class="ui top attached label">{{tls.name}}</div>
+            <div class="ui segment raised sls" ng-repeat="sls in tls.sls" data-as-sortable="ctrl.dragSlsConfig"
+                 ng-model="sls.sensors">
+                <div class="ui top attached label">{{sls.name}}</div>
+                <div class="ul list">
+
+                    <div class="item" ng-repeat="s in sls.sensors track by s.id" data-as-sortable-item>
+                        <!--help icon + popup-->
+                        <i class="help icon link"
+                           semantic-popup="click"
+                           data-html="<h4>{{s.name}}</h4><p><b>description</b><br />{{s.description}}</p><p><strong>location</strong><br />{{s.location}}</p>"
+                           data-variation="wide"></i>
+
+                        <span data-as-sortable-item-handle>{{s.name}} ({{s.id}})</span>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
+
+    <!--===============================-->
+
     <div class="five wide column">
         <div class="box">
             <!--search-->
@@ -16,15 +41,21 @@
             <div class="ui divider"></div>
 
             <!--list-->
-             <div class="ul list">
-                 <div class="item" ng-repeat="s in ctrl.sensors | filter:filterText">
-                     <i class="help icon link"
-                        semantic-popup="click"
-                        data-html="<h4>{{s.name}}</h4><p><b>description</b><br />{{s.description}}</p><p><strong>location</strong><br />{{s.location}}</p>"
-                        data-variation="wide"></i>
-                     <span>{{s.name}} ({{s.id}})</span>
-                 </div>
-             </div>
+            <div class="ul list" data-as-sortable="ctrl.dragSensorsConfig" ng-model="ctrl.sensors">
+                <div class="item" ng-repeat="s in ctrl.sensors | filter:filterText track by s.id"
+                     data-as-sortable-item>
+
+                    <!--help icon + popup-->
+                    <i class="help icon link"
+                       semantic-popup="click"
+                       data-html="<h4>{{s.name}}</h4><p><b>description</b><br />{{s.description}}</p><p><strong>location</strong><br />{{s.location}}</p>"
+                       data-variation="wide"></i>
+
+                    <span data-as-sortable-item-handle>{{s.name}} ({{s.id}})</span>
+
+
+                </div>
+            </div>
         </div>
     </div>
 </div>
