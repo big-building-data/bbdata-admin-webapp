@@ -2,11 +2,46 @@
     <!--===============================-->
 
     <div class="eleven wide column">
+        <!--buttons bar-->
+        <button class="ui labeled icon button grey">
+            <i class="add icon"></i>
+            add TLS
+        </button>
+        <button class="ui labeled icon button right floated green">
+            <i class="save icon"></i>
+            save
+        </button>
+
+        <!--tls-->
         <div class="ui raised segments tls" ng-repeat="tls in ctrl.tls">
-            <div class="ui top attached label">{{tls.name}}</div>
+            <!--tls title-->
+            <div class="ui top attached label grey">
+                <!--<i class="icon add link" hover-class=":yellow"></i>-->
+                <i class="icon edit link" hover-class=":teal"></i>
+                <i class="icon remove link" hover-class=":red"></i>
+                <span class="title">{{tls.name}}</span>
+            </div>
+            <div>
+
+                <button class="ui labeled icon tiny button right floated">
+                    <i class="add icon"></i>
+                    add SLS
+                </button>
+            </div>
+
+            <div style="height: 10px; clear:both"></div>
+
+            <!--sls-->
             <div class="ui segment raised sls" ng-repeat="sls in tls.sls" data-as-sortable="ctrl.dragSlsConfig"
                  ng-model="sls.sensors">
-                <div class="ui top attached label">{{sls.name}}</div>
+                <!--sls title-->
+                <div class="ui top attached label">
+                    <i class="icon remove link" hover-class=":red"></i>
+                    <i class="icon edit link" hover-class=":teal"></i>
+                   <span class="title">{{sls.name}}</span>
+                </div>
+
+                <!--sensor list-->
                 <div class="ul list">
 
                     <div class="item" ng-repeat="s in sls.sensors track by s.id" data-as-sortable-item>
@@ -16,7 +51,7 @@
                            data-html="<h4>{{s.name}}</h4><p><b>description</b><br />{{s.description}}</p><p><strong>location</strong><br />{{s.location}}</p>"
                            data-variation="wide"></i>
 
-                        <span data-as-sortable-item-handle>{{s.name}} ({{s.id}})</span>
+                        <span class="move" data-as-sortable-item-handle>{{s.name}} ({{s.id}})</span>
 
                     </div>
                 </div>
@@ -34,7 +69,7 @@
                 <div class="ui fluid icon left corner labeled input">
                     <input type="text" placeholder="filter..." ng-model="filterText">
                     <i class="remove link icon" ng-click="filterText = ''" ng-show="filterText"></i>
-                    <div class="ui left corner label">
+                    <div class="ui left corner label yellow">
                         <i class="search icon"></i>
                     </div>
                 </div>
@@ -52,7 +87,7 @@
                            data-html="<h4>{{s.name}}</h4><p><b>description</b><br />{{s.description}}</p><p><strong>location</strong><br />{{s.location}}</p>"
                            data-variation="wide"></i>
 
-                        <span data-as-sortable-item-handle>{{s.name}} ({{s.id}})</span>
+                        <span class="move" data-as-sortable-item-handle>{{s.name}} ({{s.id}})</span>
 
                     </div>
                 </div>

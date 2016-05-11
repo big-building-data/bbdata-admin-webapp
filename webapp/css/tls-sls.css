@@ -1,5 +1,6 @@
 .list .item {
     padding: 5px 2px;
+    margin-right: 10px;
 }
 
 .ui.sticky .box .ul.list {
@@ -16,8 +17,15 @@
     margin-bottom: 10px !important;
 }
 
-.ui.raised.segments.tls {
-    float: left;
-    width: 43%;
-    margin: 2%;
+.segments.tls {
+    padding: 20px !important;
+}
+
+.attached.label .title {
+    margin-left: 15px;
+}
+
+.move {
+    selectable: false;
+    cursor: move;
 }
