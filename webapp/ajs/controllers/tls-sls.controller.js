@@ -36,8 +36,10 @@
         self.dragSensorsConfig = {clone: true};
         self.dragSlsConfig = {allowDuplicates: false};
 
+        self.addTLS = addTLS;
         self.editTLS = editTLS;
         self.deleteTLS = deleteTLS;
+        self.addSLS = addSLS;
         self.editSLS = editSLS;
         self.deleteSLS = deleteSLS;
 
@@ -64,55 +66,90 @@
         }
 
 
-        function editTLS( tls, idx ){
 
+        function editTLS( parent, idx ){
+            _addEditName( "edit TLS", parent, parent[idx] );
         }
 
-        function deleteTLS( tls, idx ){
+        function addTLS( parent, idx ){
+            _addEditName( "add TLS", parent, {name: "", sls: []}, true );
+        }
+
+        function deleteTLS( parent, idx ){
+            var tls = parent[idx];
             if( tls.sls && tls.sls.length ){
                 // some sensors exist, ask for confirmation
                 ModalService.showModal( {
-                    title: "confirm",
-                    html : "are you absolutely sure ? <br />All its SLS will be deleted as well.",
+                    title   : "confirm",
+                    html    : "<p>are you absolutely sure ?</p><p>All its SLS will be deleted as well.</p>",
                     positive: "proceed",
                     negative: "cancel",
-                    basic: true,
+                    icon    : "warning sign orange",
+                    basic   : true,
                 } ).then( function( result ){
-                    if( result.status ) splice( tls, idx );
+                    if( result.status ) splice( parent, idx );
 
                 }, _handleError );
 
             }else{
-                splice( tls, idx );
+                splice( self.tls, idx );
             }
         }
 
-
-
-        function editSLS( tls, idx ){
-
+        function addSLS( parent, idx ){
+            _addEditName( "SLS", parent, {name: "", sensors: []}, true );
         }
 
-        function deleteSLS( tls, idx ){
-            var sls = tls.sls[idx];
+        function editSLS( parent, idx ){
+            _addEditName( "edit SLS", parent, parent[idx] );
+        }
+
+        function deleteSLS( parent, idx ){
+            var sls = parent[idx];
             if( sls.sensors && sls.sensors.length ){
                 // some sensors exist, ask for confirmation
                 ModalService.showModal( {
-                    title: "confirm",
-                    html : "are you absolutely sure ?",
+                    title   : "confirm",
+                    html    : "are you absolutely sure ?",
                     positive: "proceed",
                     negative: "cancel",
-                    basic: true,
+                    icon    : "trash",
+                    basic   : true,
                 } ).then( function( result ){
-                    if( result.status ) splice( tls.sls, idx );
+                    if( result.status ) splice( parent.sls, idx );
 
                 }, _handleError );
             }else{
-                splice( tls.sls, idx );
+                splice( parent, idx );
             }
         }
 
         //##------------utils
+
+        function _addEditName( title, parent, obj, add ){
+            console.log(obj);
+            ModalService.showModal( {
+                title   : title,
+                html    : '<div class="ui labeled input"> <div class="ui label">name</div> <input type="text" ng-model="inputs.obj.name"> </div>',
+                positive: "save",
+                negative: "cancel",
+                inputs  : {
+                    obj: angular.copy(obj)
+                }
+            } ).then( function( result ){
+                console.log(result);
+                if( result.status ){
+                    // TODO check for empty names !!!
+                    if( add ){
+                        parent.push( result.inputs.obj );
+                    }else{
+                        obj.name = result.inputs.obj.name;
+                    }
+                }
+
+            }, _handleError );
+
+        }
 
         function _handleError( error ){
             console.log( error );

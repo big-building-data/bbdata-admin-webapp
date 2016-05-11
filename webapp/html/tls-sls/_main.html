@@ -3,7 +3,7 @@
 
     <div class="eleven wide column">
         <!--buttons bar-->
-        <button class="ui labeled icon button grey">
+        <button class="ui labeled icon button grey" ng-click="ctrl.addTLS(ctrl.tls)">
             <i class="add icon"></i>
             add TLS
         </button>
@@ -16,13 +16,13 @@
         <div class="ui raised segments tls" ng-repeat="tls in ctrl.tls">
             <!--tls title and buttons-->
             <div class="ui top attached label grey">
-                <i class="icon edit link" hover-class=":teal"  ng-click="ctrl.editTLS(tls, $index)"></i>
-                <i class="icon remove link" hover-class=":red" ng-click="ctrl.deleteTLS(tls, $index)"></i>
+                <i class="icon edit link" hover-class=":teal"  ng-click="ctrl.editTLS(ctrl.tls, $index)"></i>
+                <i class="icon remove link" hover-class=":red" ng-click="ctrl.deleteTLS(ctrl.tls, $index)"></i>
                 <span class="title">{{tls.name}}</span>
             </div>
             <div>
                <!--add sls button-->
-                <button class="ui labeled icon tiny button right floated">
+                <button class="ui labeled icon tiny button right floated" ng-click="ctrl.addSLS(tls.sls)">
                     <i class="add icon"></i>
                     add SLS
                 </button>
@@ -35,8 +35,8 @@
                  ng-model="sls.sensors">
                 <!--sls title and buttons-->
                 <div class="ui top attached label">
-                    <i class="icon edit link" hover-class=":teal" ng-click="ctrl.editSLS(tls, $index)"></i>
-                    <i class="icon remove link" hover-class=":red" ng-click="ctrl.deleteSLS(tls, $index)"></i>
+                    <i class="icon edit link" hover-class=":teal" ng-click="ctrl.editSLS(tls.sls, $index)"></i>
+                    <i class="icon remove link" hover-class=":red" ng-click="ctrl.deleteSLS(tls.sls, $index)"></i>
                    <span class="title">{{sls.name}}</span>
                 </div>
 

@@ -64,6 +64,7 @@
                         modalScope.negative = options.negative;
                         modalScope.title = options.title;
                         modalScope.text = options.text;
+                        modalScope.icon = options.icon;
                     }
 
                     // create close function
@@ -113,8 +114,8 @@
                         element   : modalElement
                     };
 
-                    console.log(options);
                     $( modalElement )  //
+                    // closable by default
                         .modal( 'setting', 'closable', options.cancelable === false ? false : true )  //
                         .modal( 'show' );
 
@@ -137,17 +138,18 @@
 
                 var content = options.html || "";
 
-                if(options.htmlInclude){
+                if( options.htmlInclude ){
                     content = "<div ng-include src=\"'" + options.htmlInclude + "'\"></div>";
                 }
 
                 var html;
                 if( options.basic ){
-                    html = '<div class="ui basic modal small"> <i class="close icon" ng-click="close(false)"></i> <div class="header">{{title}}</div> <div class="image content"> <div class="description"> <p ng-show="text">{{text}}</p> ' + content + ' </div> </div> <div class="actions"> <div class="ui inverted buttons"> <div class="ui red basic inverted button" ng-click="close(false)" ng-show="negative"> <i class="remove icon"></i> {{negative}} </div> <div class="ui green basic inverted button" ng-click="close(true)" ng-show="positive"> <i class="checkmark icon"></i> {{positive}} </div>' +
-                        ' </div> </div> </div>';
+                    html = '<div class="ui basic modal small" style="text-align:center"> <i class="close icon" ng-click="close(false)"></i> <div class="header">{{title}}</div> <div class="image content" ng-show="icon"><div class="image" style="margin:auto"><i style="font-size:4rem" class="{{icon}} icon"></i></div> </div> <div class="description"> <p ng-show="text">{{text}}</p> ' + content + ' </div> <div class="actions"> <div class="ui inverted buttons"> <div class="ui red basic inverted button" ng-click="close(false)" ng-show="negative" style="margin-right:6px"> <i class="remove icon"></i> {{negative}} </div> <div class="ui green basic inverted button" ng-click="close(true)" ng-show="positive"> <i class="checkmark icon"></i> {{positive}} </div> </div> </div> </div>';
+
+
 
                 }else{
-                    html = '<div class="ui modal"> <i class="close icon"></i> <div class="header">' +
+                    html = '<div class="ui small modal"> <i class="close icon"></i> <div class="header">' +
                         ' {{title}}' +
                         ' </div>' +
                         ' <div class="image content"> <div class="description"> <p ng-show="text">{{text}}</p>' + content + ' </div> </div> <div class="actions"> <div class="ui black deny button" ng-click="close(false)" ng-show="negative"> {{negative}} </div> <div class="ui positive right labeled icon button" ng-click="close(true)" ng-show="positive"> {{positive}} <i class="checkmark icon"></i> </div> </div> </div>';
