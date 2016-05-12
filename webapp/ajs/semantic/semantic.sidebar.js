@@ -19,11 +19,27 @@
                 transition : '@',
                 closable   : '@'
             },
+
             link      : function( scope, element, attrs ){
                 element.appendTo( $( 'body' ) );
-                element.sidebar( 'setting', 'dimPage', false );
-                element.sidebar( 'setting', 'closable', scope.closable === true ? true : false );
-                element.sidebar( 'setting', 'transition', scope.transition ? scope.transition : 'auto' );
+
+                var transition = scope.transition ? scope.transition : 'auto';
+                if( scope.transition == "marginate" ){
+                    transition = "overlay";
+                    element.sidebar( 'setting', 'onHide', function(){
+                        $( '.sidebar ~ .pusher' ).animate( {'margin-left': '0'}, 230 );
+                    } );
+                    element.sidebar( 'setting', 'onVisible', function(){
+                        $( '.sidebar ~ .pusher' ).animate( {'margin-left': '258px'}, 440 );
+                    } );
+                }
+
+                element.sidebar( 'setting', {
+                    dimPage         : false,
+                    closable        : scope.closable === true ? true : false,
+                    transition      : transition,
+                    mobileTransition: transition
+                } );
                 element.sidebar( 'attach events', scope.buttonClass, 'toggle' );
             }
         };
