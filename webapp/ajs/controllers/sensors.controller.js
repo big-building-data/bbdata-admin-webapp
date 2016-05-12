@@ -29,7 +29,7 @@
 
         self.remove = removeSensor;
         self.edit = editSensor;
-        _init();
+        self.init = _init;
 
         // ===========================================
 
@@ -66,7 +66,7 @@
 
         function _init(){
             RestService.getSensors( function( sensors ){
-                console.log( sensors );
+                console.log( "sensors received" );
                 self.sensors = sensors;
                 $( '.ui.accordion' ).accordion();  // initialise semantic-ui accordion plugin
             }, _handleError );

@@ -31,8 +31,8 @@
             <img class="logo" src="assets/logo.png">BBData
         </a>
         <a class="item" ng-click="$root.page=0">home</a>
-        <a class="item" ng-click="$root.page=1">sensors</a>
-        <a class="item" ng-click="$root.page=2">TLS/SLS</a>
+        <a class="item" ng-click="$root.page=1; page1_init=true">sensors</a>
+        <a class="item" ng-click="$root.page=2; page2_init=true">TLS/SLS</a>
     </div>
 </div>
 
@@ -45,10 +45,10 @@
     <div id="container" ng-show="$root.page==0" class="ui main container home" ng-include
          ng-controller="DisplayController as ctrl"
          src="'/html/display/_main.html'"></div>
-    <div id="container" ng-show="$root.page==1" class="ui main container sensors" ng-include
+    <div id="container" ng-if="page1_init" ng-show="$root.page==1" class="ui main container sensors" ng-include
          ng-controller="SensorsController as ctrl"
          src="'/html/sensors/_main.html'"></div>
-    <div id="container" ng-show="$root.page==2" class="ui main container tls-sls" ng-include
+    <div id="container" ng-if="page2_init" ng-show="$root.page==2" class="ui main container tls-sls" ng-include
          ng-controller="TlsSlsController as ctrl"
          src="'/html/tls-sls/_main.html'"></div>
 
