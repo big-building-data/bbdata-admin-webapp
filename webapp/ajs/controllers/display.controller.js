@@ -34,6 +34,7 @@
         self.onSidebarToggle = onSidebarToggle;
 
 
+
         self.date = {
             from: moment().floor( 1, 'hour' ).subtract( 1, 'hour' ).toDate(),
             to  : moment().floor( 1, 'hour' ).toDate()
@@ -41,7 +42,7 @@
 
         self.applyDate = applyDate;
 
-
+        var sidebarState = 'hide';
         var chart = null;
         var defaultChartOptions = {
             chart        : {
@@ -72,6 +73,12 @@
             RestService.getHierarchy( function( result ){
                 self.captorsHierarchy = result;
             }, _handleError );
+
+            $scope.$watch('$root.page', function(){
+                if(sidebarState != 'hide'){
+                    $('#toggleSidebar' ).click();
+                }
+            });
 
         }
 
@@ -161,10 +168,9 @@
         }
 
         function onSidebarToggle(evt){
-
+            sidebarState = evt;
             if(self.chart){
                 self.chart.reflow();
-                console.log("reflow");
             }
         }
 

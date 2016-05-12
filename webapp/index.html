@@ -25,14 +25,14 @@
 <body ng-app="bbdata.app">
 
 <!--menu-->
-<div class="ui fixed inverted menu">
+<div class="ui fixed inverted menu" ng-init="$root.page=0">
     <div class="ui container">
         <a href="#/" class="header item">
             <img class="logo" src="assets/logo.png">BBData
         </a>
-        <a class="item" active-link="active" href="#/">home</a>
-        <a class="item" active-link="active" href="#/sensors">sensors</a>
-        <a class="item" active-link="active" href="#/tls-sls">TLS/SLS</a>
+        <a class="item" ng-click="$root.page=0">home</a>
+        <a class="item" ng-click="$root.page=1">sensors</a>
+        <a class="item" ng-click="$root.page=2">TLS/SLS</a>
     </div>
 </div>
 
@@ -42,8 +42,15 @@
 <div class="pusher">
 
     <!--main-->
-    <div id="container" class="ui main container {{$root.path}}" ng-view>
-    </div>
+    <div id="container" ng-show="$root.page==0" class="ui main container home" ng-include
+         ng-controller="DisplayController as ctrl"
+         src="'/html/display/_main.html'"></div>
+    <div id="container" ng-show="$root.page==1" class="ui main container sensors" ng-include
+         ng-controller="SensorsController as ctrl"
+         src="'/html/sensors/_main.html'"></div>
+    <div id="container" ng-show="$root.page==2" class="ui main container tls-sls" ng-include
+         ng-controller="TlsSlsController as ctrl"
+         src="'/html/tls-sls/_main.html'"></div>
 
     <!--footer-->
     <div class="ui inverted vertical footer segment">
@@ -69,7 +76,6 @@
 <script type="text/javascript" src="/vendor/angular/angular.min.js"></script>
 <script type="text/javascript" src="/vendor/angular/angular-resource.min.js"></script>
 <script type="text/javascript" src="/vendor/angular/angular-animate.min.js"></script>
-<script type="text/javascript" src="/vendor/angular/angular-route.min.js"></script>
 
 <!--sortable-->
 <script type="text/javascript" src="/vendor/sortable/ng-sortable.js"></script>

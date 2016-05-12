@@ -25,7 +25,6 @@
         [
             'bbdata.rest',
             'ngAnimate',
-            'ngRoute',
             'as.sortable',
             'semantic.modals',
             'semantic.sidebar',
@@ -34,31 +33,4 @@
 
     webapp.constant("RFC3339_FORMAT", "YYYY-MM-DDTHH:mm:ssZ");
 
-    webapp.config(['$routeProvider',
-        function ($routeProvider) {
-            $routeProvider.
-                when('/sensors', {
-                    templateUrl: 'html/sensors/_main.html',
-                    controller: 'SensorsController',
-                    controllerAs: 'ctrl'
-                }).
-                when('/tls-sls', {
-                    templateUrl: 'html/tls-sls/_main.html',
-                    controller: 'TlsSlsController',
-                    controllerAs: 'ctrl'
-                }).
-                otherwise({
-                    redirectTo: '/',
-                    templateUrl: 'html/display/_main.html',
-                    controller: 'DisplayController',
-                    controllerAs: 'ctrl'
-                });
-        }]);
-
-    webapp.run(function ($rootScope, $location) {
-        $rootScope.$on("$locationChangeStart", function (event, next, current) {
-            // handle route changes
-            $rootScope.locationPath = $location.path();
-        });
-    })
 }());
