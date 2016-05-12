@@ -7,7 +7,7 @@
  * Use of this source code is governed by an Apache 2 license
  * that can be found in the LICENSE file.
  */
-(function () {
+(function(){
 
     /**
      * @ngdoc overview
@@ -20,7 +20,7 @@
      * @date     May 2016
      * @context  BBData
      */
-    var webapp = angular.module('bbdata.app',
+    var webapp = angular.module( 'bbdata.app',
         // dependencies
         [
             'bbdata.rest',
@@ -29,8 +29,20 @@
             'semantic.modals',
             'semantic.sidebar',
             'semantic.toggle-button'
-        ]);
+        ] ).run( run );
 
-    webapp.constant("RFC3339_FORMAT", "YYYY-MM-DDTHH:mm:ssZ");
+    webapp.constant( "RFC3339_FORMAT", "YYYY-MM-DDTHH:mm:ssZ" );
+    webapp.constant( "DISPLAY_PAGE", 0 );
+    webapp.constant( "SENSORS_PAGE", 1 );
+    webapp.constant( "TLS_SLS_PAGE", 2 );
+
+    function run( $rootScope ){
+        $rootScope.page = 0;
+        $rootScope.page_init = [false, false, false];
+        $rootScope.$watch( 'page', function( to, from ){
+            $rootScope.page_init[to] = true;
+            $rootScope.$broadcast( 'bbdata.PageChanged', {from: from, to: to} );
+        } );
+    }
 
 }());

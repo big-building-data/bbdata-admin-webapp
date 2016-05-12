@@ -23,7 +23,7 @@
     // --------------------------
 
 
-    function ctrl( RestService, $scope, ModalService ){
+    function ctrl( RestService, $scope, $rootScope, ModalService, TLS_SLS_PAGE ){
 
         var self = this;
 
@@ -50,6 +50,7 @@
         //##--------------init
 
         function _init(){
+
             RestService.getSensors( function( sensors ){
                 console.log( sensors );
                 self.sensors = sensors;
@@ -61,11 +62,21 @@
                         location   : "slkdjf"
                     } );
                 }
-                $( '.ui.sticky' ).sticky( {} );
+
+                _sticky();
+
+                $rootScope.$on( 'bbdata.PageChanged', function( evt, args ){
+                    if( args.to == TLS_SLS_PAGE ){
+                        console.log( "page == TLS/SLS." );
+                        _sticky();
+                    }
+                } );
+
             }, _handleError );
         }
 
 
+        //##--------------
 
         function editTLS( parent, idx ){
             _addEditName( "edit TLS", parent, parent[idx] );
@@ -127,17 +138,17 @@
         //##------------utils
 
         function _addEditName( title, parent, obj, add ){
-            console.log(obj);
+            console.log( obj );
             ModalService.showModal( {
                 title   : title,
                 html    : '<div class="ui labeled input"> <div class="ui label">name</div> <input type="text" ng-model="inputs.obj.name"> </div>',
                 positive: "save",
                 negative: "cancel",
                 inputs  : {
-                    obj: angular.copy(obj)
+                    obj: angular.copy( obj )
                 }
             } ).then( function( result ){
-                console.log(result);
+                console.log( result );
                 if( result.status ){
                     // TODO check for empty names !!!
                     if( add ){
@@ -157,6 +168,13 @@
 
         function splice( arr, idx ){
             arr = arr.splice( idx, 1 );
+        }
+
+        function _sticky(){
+            setTimeout( function(){
+                console.log("apply sticky");
+                $( '.ui.sticky' ).sticky( {} );
+            }, 100 );
         }
     }
 

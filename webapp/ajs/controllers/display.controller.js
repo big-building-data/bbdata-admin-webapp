@@ -22,7 +22,7 @@
 
     // --------------------------
 
-    function ctrl( RestService, $scope, $filter, RFC3339_FORMAT ){
+    function ctrl( RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, DISPLAY_PAGE ){
 
         var self = this;
 
@@ -32,7 +32,6 @@
         self.chkChanged = checkboxChanged;
         self.applyAxisChanges = applyAxisChanges;
         self.onSidebarToggle = onSidebarToggle;
-
 
 
         self.date = {
@@ -74,11 +73,14 @@
                 self.captorsHierarchy = result;
             }, _handleError );
 
-            $scope.$watch('$root.page', function(){
-                if(sidebarState != 'hide'){
-                    $('#toggleSidebar' ).click();
+
+            $rootScope.$on( 'bbdata.PageChanged', function( evt, args ){
+                if( args.from == DISPLAY_PAGE ){
+                    _closeSidebar();
+                }else if( args.to == DISPLAY_PAGE ){
+                    setTimeout(_reflowChart, 100);
                 }
-            });
+            } );
 
         }
 
@@ -144,9 +146,6 @@
                 chart.addAxis( axis );
                 chart.addSeries( serie );
             }
-
-            // fix sticky module TODO
-            sticky();
         }
 
         function removeSerie( item ){
@@ -167,11 +166,9 @@
             return results;
         }
 
-        function onSidebarToggle(evt){
+        function onSidebarToggle( evt ){
             sidebarState = evt;
-            if(self.chart){
-                self.chart.reflow();
-            }
+            _reflowChart();
         }
 
         //##------------utils
@@ -208,11 +205,18 @@
             }, _handleError );
         }
 
-
-        function sticky(){
-            $( '.ui.sticky' ).sticky( {
-                //context: '#stickyContext'
-            } );
+        function _closeSidebar(){
+            if( sidebarState != 'hide' ){
+                $( '#toggleSidebar' ).click();
+            }
         }
+
+        function _reflowChart(){
+            console.log( "reflow" );
+            if( self.chart ){
+                self.chart.reflow();
+            }
+        }
+
     }
 })();
