@@ -17,20 +17,31 @@
             scope     : {
                 buttonClass: '@',
                 transition : '@',
-                closable   : '@'
+                closable   : '@',
+                afterToggle: '&'
             },
 
-            link      : function( scope, element, attrs ){
+            link: function( scope, element, attrs ){
                 element.appendTo( $( 'body' ) );
 
                 var transition = scope.transition ? scope.transition : 'auto';
+
                 if( scope.transition == "marginate" ){
                     transition = "overlay";
                     element.sidebar( 'setting', 'onHide', function(){
-                        $( '.sidebar ~ .pusher' ).animate( {'margin-left': '0'}, 230 );
+                        $( '.sidebar ~ .pusher' ).animate( {'margin-left': '0'}, 270 );
                     } );
                     element.sidebar( 'setting', 'onVisible', function(){
-                        $( '.sidebar ~ .pusher' ).animate( {'margin-left': '258px'}, 440 );
+                        $( '.sidebar ~ .pusher' ).animate( {'margin-left': '265px'}, 440 );
+                    } );
+                }
+
+                if( scope.afterToggle ){
+                    element.sidebar( 'setting', 'onHidden', function(){
+                        scope.afterToggle()( 'hide' );
+                    } );
+                    element.sidebar( 'setting', 'onShow', function(){
+                        scope.afterToggle()( 'show' );
                     } );
                 }
 

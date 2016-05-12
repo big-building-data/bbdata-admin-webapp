@@ -31,7 +31,7 @@
         self.modifiedAxis = null;
         self.chkChanged = checkboxChanged;
         self.applyAxisChanges = applyAxisChanges;
-        _init();
+        self.onSidebarToggle = onSidebarToggle;
 
 
         self.date = {
@@ -55,8 +55,7 @@
             legend: {enabled: true}
         };
 
-
-        $scope.sidebar = {path: '/html/display/_sidebar.html'};
+        _init();
 
         /* *****************************************************************
          * implementation
@@ -159,6 +158,14 @@
             } );
 
             return results;
+        }
+
+        function onSidebarToggle(evt){
+
+            if(self.chart){
+                self.chart.reflow();
+                console.log("reflow");
+            }
         }
 
         //##------------utils

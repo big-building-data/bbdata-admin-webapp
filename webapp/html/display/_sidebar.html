@@ -1,10 +1,16 @@
-<semantic-toggle-button class="fluid"
+<semantic-toggle-button class="basic"
                         id="toggleSidebar"
                         toggle-text="show sidebar:hide sidebar"
-                        toggle-class="blue:teal"></semantic-toggle-button>
+                        style="margin-bottom: 20px"
+                        toggle-class="blue:purple"></semantic-toggle-button>
 
 
-<sidebar button-class="#toggleSidebar" transition="scale down">
+<sidebar button-class="#toggleSidebar"
+         after-toggle="ctrl.onSidebarToggle"
+         transition="marginate"
+         style="padding-top:70px">
+    <!--<sidebar button-class="#toggleSidebar" transition="push">-->
+    <!--<sidebar button-class="#toggleSidebar" transition="scale down">-->
 
     <sidebar-title icon="resize horizontal" title="x axis"></sidebar-title>
     <sidebar-item>
@@ -24,9 +30,7 @@
                  ng-class="{'disabled': equals(date, ctrl.date) }">
                 Apply
             </div>
-            <div style="clear:both">
-
-            </div>
+            <div style="clear:both"></div>
 
         </form>
     </sidebar-item>
