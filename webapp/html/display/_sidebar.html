@@ -1,0 +1,61 @@
+<semantic-toggle-button class="fluid"
+                        id="toggleSidebar"
+                        toggle-text="show sidebar:hide sidebar"
+                        toggle-class="blue:teal"></semantic-toggle-button>
+
+
+<sidebar button-class="#toggleSidebar" transition="scale down">
+
+    <sidebar-title icon="resize horizontal" title="x axis"></sidebar-title>
+    <sidebar-item>
+        <form name="datetimeForm" id="datetimeForm" ng-init="date = copy(ctrl.date)">
+
+            <div class="ui input mini">
+                <input type="datetime-local" id="inputFrom" name="inputFrom" ng-model="date.from" ng-max="date.to"
+                       required/> (from)
+            </div>
+            <div class="ui input mini">
+                <input type="datetime-local" id="inputTo" name="inputTo" ng-model="date.to" ng-min="date.from"
+                       required/> (to)
+            </div>
+            <div class="center tiny marged"><code>month/day/year hr:min</code></div>
+
+            <div class="ui button mini right floated" ng-click="ctrl.applyDate(date)"
+                 ng-class="{'disabled': equals(date, ctrl.date) }">
+                Apply
+            </div>
+            <div style="clear:both">
+
+            </div>
+
+        </form>
+    </sidebar-item>
+
+    <sidebar-title icon="magnet" title="available sensors"></sidebar-title>
+    <sidebar-item>
+        <div class="wrapper">
+            <div class="ck-nested">
+                <div ng-class="{opened: item.opened}" ng-include="'table_tree.html'"
+                     ng-repeat="item in ctrl.captorsHierarchy"></div>
+            </div>
+
+            <script id="table_tree.html" type="text/ng-template">
+                <div ng-class="{parent: item.children}">
+                    <div class="indent" style="padding-left: {{15*level}}px"
+                         ng-click="item.opened = !item.opened"></div>
+                    <div ng-if="level > 0" class="cell-input ui checkbox">
+                        <input ng-change="ctrl.chkChanged(item)" ng-model="item.selected" type="checkbox"/>
+                        <label></label>
+                    </div>
+                    <div class="cell-name" ng-click="item.opened = !item.opened">
+                        {{item.name}}
+                    </div>
+                </div>
+                <div class="children" ng-if="item.children && item.children.length">
+                    <div ng-class="{opened: item.opened}" ng-include="'table_tree.html'" ng-init="level = level + 1"
+                         ng-repeat="item in item.children"></div>
+                </div>
+            </script>
+        </div>
+    </sidebar-item>
+</sidebar>

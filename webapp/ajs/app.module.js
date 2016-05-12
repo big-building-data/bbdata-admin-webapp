@@ -27,7 +27,9 @@
             'ngAnimate',
             'ngRoute',
             'as.sortable',
-            'semantic.modals'
+            'semantic.modals',
+            'semantic.sidebar',
+            'semantic.toggle-button'
         ]);
 
     webapp.constant("RFC3339_FORMAT", "YYYY-MM-DDTHH:mm:ssZ");
