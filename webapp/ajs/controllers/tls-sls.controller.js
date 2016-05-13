@@ -127,7 +127,7 @@
                     icon    : "trash",
                     basic   : true,
                 } ).then( function( result ){
-                    if( result.status ) splice( parent.sls, idx );
+                    if( result.status ) splice( parent, idx );
 
                 }, _handleError );
             }else{
