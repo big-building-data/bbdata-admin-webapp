@@ -1,4 +1,15 @@
-<div ng-include src="'/html/display/_sidebar.html'"></div>
+<span ng-include src="'/html/display/_sidebar.html'"></span>
+
+<semantic-toggle-button class="basic"
+                        id="toggleSidebar"
+                        toggle-text="show sidebar:hide sidebar"
+                        style="margin-bottom: 20px"
+                        toggle-class="blue:purple"></semantic-toggle-button>
+
+<semantic-toggle-button class="basic" toggle-text="yAxis multiple:yAxis shared"
+                        ng-model="ctrl.shareAxis" ng-click="ctrl.toggleShareAxis()"
+                        toggle-class="orange:red"></semantic-toggle-button>
+
 
 <div ng-init="console.log('0')"></div>
 <div class="ui message" ng-show="ctrl.modifiedAxis != null">
@@ -26,6 +37,8 @@
     </form>
 
 </div>
+
+
 <div style="position:relative; width:100%; height: 70vh">
     <div id="graphContainer" style="height:100%; width:100%"></div>
 </div>

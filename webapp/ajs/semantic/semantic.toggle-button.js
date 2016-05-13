@@ -34,8 +34,8 @@
                     }
                 };
 
-                element.on( 'click', toggleFunc );
                 toggleFunc();
+                element.on( 'click', toggleFunc );
             }
         };
     }

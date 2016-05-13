@@ -26,7 +26,6 @@
 
         var self = this;
 
-        self.test = "it works!";
         self.captorsHierarchy = [];
         self.modifiedAxis = null;
         self.chkChanged = checkboxChanged;
@@ -39,10 +38,14 @@
             to  : moment().floor( 1, 'hour' ).toDate()
         };
 
+        self.shareAxis = true;
+        self.toggleShareAxis = toggleShareAxis;
         self.applyDate = applyDate;
 
         var sidebarState = 'hide';
         var chart = null;
+        var seriesAxis = {"default": {id: "y-axis"}};
+
         var defaultChartOptions = {
             chart        : {
                 renderTo: 'graphContainer'
@@ -78,7 +81,7 @@
                 if( args.from == DISPLAY_PAGE ){
                     _closeSidebar();
                 }else if( args.to == DISPLAY_PAGE ){
-                    setTimeout(_reflowChart, 100);
+                    setTimeout( _reflowChart, 100 );
                 }
             } );
 
@@ -104,54 +107,39 @@
             var axis = { // Secondary yAxis
                 id   : item.id + "-axis",
                 title: {
-                    text  : item.name,
-                    events: {
-                        dblclick: function(){
-                            console.log( this );
-                            console.log( this.min, this.max );
-                            if( !this.mydefaults ){
-                                this.mydefaults = [this.min, this.max];
-                            }
-                            self.modifiedAxis = {
-                                title: this.userOptions.title.text,
-                                min  : this.min,
-                                max  : this.max,
-                                elem : this
-                            };
-
-                            $scope.$apply();
-
-                        }
-                    }
+                    text: item.name
                 }
             };
 
             var serie = {
                 name : item.name,
                 id   : item.id + "-serie",
-                yAxis: item.id + "-axis",
+                yAxis: self.shareAxis ? "y-axis" : item.id + "-axis",
                 data : toTrace( values )
             };
+
 
             if( !chart ){
                 var options = angular.copy( defaultChartOptions );
                 options.series = [serie];
-                options.yAxis = axis;
-
+                options.yAxis = [self.shareAxis ? seriesAxis["default"] : axis];
                 chart = new Highcharts.StockChart( options );
                 self.chart = chart;
 
             }else{
                 axis.opposite = true;
-                chart.addAxis( axis );
+                if( !self.shareAxis ) chart.addAxis( axis );
                 chart.addSeries( serie );
             }
+            seriesAxis[item.id] = axis;
         }
+
 
         function removeSerie( item ){
             // remove from graph
             chart.get( item.id + "-serie" ).remove();
-            chart.get( item.id + "-axis" ).remove();
+            if( !self.shareAxis ) chart.get( item.id + "-axis" ).remove();
+            delete seriesAxis[item.id];
             // TODO if modifiedAxis = item, hide it !
         }
 
@@ -194,6 +182,29 @@
             elem.setExtremes( self.modifiedAxis.min, self.modifiedAxis.max );
         }
 
+        function toggleShareAxis(){
+            if( chart ){
+                if( self.shareAxis ){
+                    chart.addAxis( seriesAxis["default"] );
+                }
+                angular.forEach( seriesAxis, function( axis, id ){
+                    if( id == "default" ) return;
+                    if( self.shareAxis ){
+                        chart.get( id + "-serie" ).update( {yAxis: seriesAxis["default"].id}, false );
+                        chart.get( axis.id ).remove( false );
+                    }else{
+                        chart.addAxis( axis );
+                        chart.get( id + "-serie" ).update( {yAxis: axis.id}, false );
+                    }
+                } );
+
+                if( !self.shareAxis ){
+                    chart.get( seriesAxis["default"].id ).remove( false );
+                }
+
+                chart.redraw();
+            }
+        }
 
         function getValues( item ){
             RestService.getValues( {
