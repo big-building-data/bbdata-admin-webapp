@@ -13,21 +13,25 @@
             template  : '<button class="ui button" ' +
             'ng-transclude></button>',
             scope     : {
-                toggleText  : '@',
-                toggleClass : '@',
-                toggleActive: '@'
+                toggleText : '@',
+                toggleClass: '@'
             },
-            link      : function( scope, element, attrs ){
-                scope.active = scope.toggleActive === true ? false : true;
+            require: '?ngModel',
+
+            link      : function( scope, element, attrs, ngModel ){
+                scope.active = ngModel && ngModel.$viewValue  === true ? false : true;
 
                 var texts = scope.toggleText.split( ":" );
-                var cls = scope.toggleClass.split( ":" );
+                var cls = scope.toggleClass ? scope.toggleClass.split( ":" ) : ["",""];
 
                 var toggleFunc = function(){
                     element.text( scope.active ? texts[0] : texts[1] );
                     element.removeClass( scope.active ? cls[1] : cls[0] );
                     element.addClass( scope.active ? cls[0] : cls[1] );
                     scope.active = !scope.active;
+                    if(ngModel){
+                        ngModel.$setViewValue(scope.active);
+                    }
                 };
 
                 element.on( 'click', toggleFunc );
