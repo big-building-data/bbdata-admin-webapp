@@ -32,13 +32,13 @@
     <sidebar-item>
         <div class="wrapper">
             <div class="ck-nested">
-                <div ng-class="{opened: item.opened}" ng-include="'table_tree.html'"
+                <div ng-class="{opened: item.opened}" class="ck-item" ng-include="'table_tree.html'"
                      ng-repeat="item in ctrl.captorsHierarchy"></div>
             </div>
 
             <script id="table_tree.html" type="text/ng-template">
-                <div ng-class="{parent: item.children}">
-                    <div class="indent" style="padding-left: {{15*level}}px"
+                <div ng-class="{parent: item.children}" class="ck-item-{{level}}">
+                    <div class="indent" style="padding-left: {{10*level}}px"
                          ng-click="item.opened = !item.opened"></div>
                     <div ng-if="level > 0" class="cell-input ui checkbox">
                         <input ng-change="ctrl.chkChanged(item)" ng-model="item.selected" type="checkbox"/>
@@ -49,7 +49,8 @@
                     </div>
                 </div>
                 <div class="children" ng-if="item.children && item.children.length">
-                    <div ng-class="{opened: item.opened}" ng-include="'table_tree.html'" ng-init="level = level + 1"
+                    <div ng-class="{opened: item.opened}" ng-include="'table_tree.html'" class="ck-item-{{level}}"
+                         ng-init="level = level + 1"
                          ng-repeat="item in item.children"></div>
                 </div>
             </script>

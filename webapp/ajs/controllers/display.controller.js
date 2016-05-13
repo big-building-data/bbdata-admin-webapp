@@ -73,7 +73,7 @@
 
         function _init(){
             RestService.getHierarchy( function( result ){
-                self.captorsHierarchy = result;
+                self.captorsHierarchy = _hierarchise( result );
             }, _handleError );
 
 
@@ -227,6 +227,38 @@
             if( self.chart ){
                 self.chart.reflow();
             }
+        }
+
+        function _hierarchise( data ){
+            var hierarchy = [];
+
+            angular.forEach( data, function( tls ){
+                var sls_array = []; // shrunk sls
+
+                angular.forEach( tls.sls, function( sls ){
+                    if( !sls.captors )return; // every sls should have at least one captor
+
+                    if( sls.captors.length > 2 ){
+                        // more than one captor: rename them to "children"
+                        sls.children = sls.captors;
+                        delete sls.captors;
+                        sls_array.push( sls );
+                    }else{
+                        // only one captor: make it a "sls"
+                        sls_array.push( sls.captors[0] );
+                    }
+
+                } );
+
+                // rename sls to "children"
+                tls.children = sls_array;
+                delete tls.sls;
+                // add the tls to the hierarchy
+                hierarchy.push( tls );
+            } );
+
+            console.log( JSON.stringify( hierarchy ) );
+            return hierarchy;
         }
 
     }
