@@ -56,3 +56,11 @@ hr {
     font-family: monospace;
 }
 
+
+.align-center {
+    text-align: center;
+}
+
+.align-right {
+    text-align: right;
+}

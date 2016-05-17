@@ -1,0 +1,48 @@
+<form name="form.addform" class="ui form" novalidate>
+    <!--name-->
+    <div class="ui labeled input">
+        <div class="ui label">name</div>
+        <input type="text" ng-model="inputs.sensor.name" required>
+    </div>
+
+    <!--description-->
+    <div class="field">
+        <label>Description</label>
+        <textarea ng-model="inputs.sensor.description" rows="2"></textarea>
+    </div>
+
+    <!--location-->
+    <div class="field">
+        <label>Location</label>
+        <textarea ng-model="inputs.sensor.location" rows="2"></textarea>
+    </div>
+
+    <!--type-->
+    <div class="field">
+        <label>Value type:</label>
+        <select class="ui search dropdown" ng-model="inputs.sensor.type" required>
+            <option value=""></option>
+            <option ng-repeat="t in inputs.types" value="{{t}}">{{t}}</option>
+        </select>
+    </div>
+
+    <!--parser-->
+    <div class="field">
+        <label>Parser:</label>
+        <select class="ui search dropdown" ng-model="inputs.sensor.parser">
+            <option value=""></option>
+            <option ng-repeat="p in inputs.parsers" value="{{p.name}}">{{p.name}} ({{p.description}})</option>
+        </select>
+    </div>
+
+    <!--unit-->
+    <div class="field">
+        <label>Unit:</label>
+        <select class="ui search dropdown" ng-model="inputs.sensor.unit" required>
+            <option value=""></option>
+            <option ng-repeat="u in inputs.units" value="{{u.name}}">{{u.name}} ({{u.symbol}})</option>
+        </select>
+    </div>
+
+    {{inputs.init()}}
+</form>

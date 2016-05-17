@@ -143,6 +143,7 @@
                 title   : title,
                 html    : '<div class="ui labeled input"> <div class="ui label">name</div> <input type="text" ng-model="inputs.obj.name"> </div>',
                 positive: "save",
+                positiveDisable: '!inputs.obj.name',
                 negative: "cancel",
                 inputs  : {
                     obj: angular.copy( obj )

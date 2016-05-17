@@ -1,5 +1,13 @@
 <h2>You sensors</h2>
 <div ng-init="ctrl.init()"></div>
+
+<div class="align-right">
+    <button class="ui labeled icon button small teal" ng-class="{disabled: ctrl.addInfosLoading}" ng-click="ctrl.add()">
+        <i class="add icon"></i>
+        add a sensor
+    </button>
+</div>
+
 <div id="sensors-accordion" class="ui styled accordion">
     <div class="title" ng-repeat-start="sensor in ctrl.sensors">
         <div>

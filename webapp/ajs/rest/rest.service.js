@@ -43,12 +43,30 @@
                 method: 'POST',
                 url: baseUrl + 'sensors',
                 isArray: false
-            } ,
+            },
 
             deleteSensor: {
                 method: 'DELETE',
                 url: baseUrl + 'sensors',
                 isArray: false
+            },
+
+            getUnits: {
+                method: "GET",
+                url: baseUrl + "units",
+                isArray: true
+            },
+
+            getParsers: {
+                method: "GET",
+                url: baseUrl + "parsers",
+                isArray: true
+            },
+
+            getTypes: {
+                method: "GET",
+                url: baseUrl + "types",
+                isArray: true
             }
 
 
