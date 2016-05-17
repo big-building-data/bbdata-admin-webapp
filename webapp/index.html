@@ -37,17 +37,30 @@
 </div>
 
 
-
 <!--page content-->
 <div class="pusher">
 
     <!--main-->
+    <!--
+     page handling: each page has a display number (see the constants in app.module.js).
+     the header link sets the $root.page variable, which controls which page to show.
+     Below, each page has a container with an ng-show="$root.page == <page num>".
+
+     !! for pages where the controller should not be initialized on load, but only
+     when its bound content is actually shown, use the ng-if="$root.page_init[<pagenum>]" directive.
+     It works thanks to a watch in the app.module run method: in short, page_init is set to true
+     on the first page display.
+    -->
+
+    <!--display page-->
     <div id="container" ng-show="$root.page==0" class="ui main container home" ng-include
          ng-controller="DisplayController as ctrl"
          src="'/html/display/_main.html'"></div>
+    <!--sensors page-->
     <div id="container" ng-if="$root.page_init[1]" ng-show="$root.page==1" class="ui main container sensors" ng-include
          ng-controller="SensorsController as ctrl"
          src="'/html/sensors/_main.html'"></div>
+    <!--tls / sls page-->
     <div id="container" ng-if="$root.page_init[2]" ng-show="$root.page==2" class="ui main container tls-sls" ng-include
          ng-controller="TlsSlsController as ctrl"
          src="'/html/tls-sls/_main.html'"></div>
@@ -99,7 +112,7 @@
 <!--semantic helpers-->
 <script type="text/javascript" src="/ajs/semantic/semantic.modals.js"></script>
 <script type="text/javascript" src="/ajs/semantic/semantic.sidebar.js"></script>
-<script type="text/javascript" src="/ajs/semantic/semantic.toggle-button.js"></script>
+<script type="text/javascript" src="/ajs/semantic/semantic.helpers.js"></script>
 
 <!--datetime-->
 <script type="text/javascript" src="/vendor/moment/momentjs.min.js"></script>
@@ -111,7 +124,6 @@
 <script src="http://code.highcharts.com/modules/exporting.js"></script>
 <!--see http://www.highcharts.com/plugin-registry/single/15/Custom-Events-->
 <script type="text/javascript" src="https://rawgithub.com/blacklabel/custom_events/master/customEvents.js"></script>
-
 
 
 </body>

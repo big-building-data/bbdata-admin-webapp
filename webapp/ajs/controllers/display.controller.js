@@ -11,10 +11,11 @@
 
     /**
      * @ngdoc controller
-     * @name bbdata.app.MainCtrl
+     * @name bbdata.app.DisplayController
      *
      * @description
-     * Main controller
+     * Controller in charge of the first page, which draws
+     * the graph and displays the values of the sensors.
      */
     angular
         .module( 'bbdata.app' )
@@ -26,37 +27,39 @@
 
         var self = this;
 
-        self.captorsHierarchy = [];
-        self.modifiedAxis = null;
-        self.chkChanged = checkboxChanged;
-        self.applyAxisChanges = applyAxisChanges;
-        self.onSidebarToggle = onSidebarToggle;
+        // === public variables
 
-
+        self.sensorsHierarchy = []; // the hierarchy TLS > SLS > sensors, shrank
+        // the default X axis extremes
         self.date = {
             from: moment().floor( 1, 'hour' ).subtract( 1, 'hour' ).toDate(),
             to  : moment().floor( 1, 'hour' ).toDate()
         };
 
-        self.shareAxis = true;
-        self.toggleShareAxis = toggleShareAxis;
-        self.applyDate = applyDate;
+        self.shareAxis = false;  // don't share axis by default
 
-        var sidebarState = 'hide';
-        var chart = null;
-        var seriesAxis = {"default": {id: "y-axis"}};
+        // === private variables
 
-        var defaultChartOptions = {
+        var sidebarState = 'hide'; // keep track of the state, to toggle it when page changes
+        var chart = null;  // the chart
+        var seriesAxis = {"default": {id: "y-axis"}}; // the default axis, used when shareAxis = true
+        var defaultChartOptions = { // default options when creating a new graph
             chart        : {
                 renderTo: 'graphContainer'
             },
             rangeSelector: {
                 enabled: false
             },
-
-
             legend: {enabled: true}
         };
+
+        // === public functions
+
+        self.chkChanged = checkboxChanged; // called when a checkbox is toggled -> update the graph
+        self.onSidebarToggle = onSidebarToggle; // called on sidebar toggle, to reflaw the graph
+        self.toggleShareAxis = toggleShareAxis; // apply self.shareAxis modifications
+        self.applyDate = applyDate; // update the X axis with the self.date values
+
 
         _init();
 
@@ -72,11 +75,13 @@
         //##------------init
 
         function _init(){
+            // get the sensors
             RestService.getHierarchy( function( result ){
-                self.captorsHierarchy = _hierarchise( result );
-            }, _handleError );
+                self.sensorsHierarchy = _hierarchise( result );
+            }, _log );
 
-
+            // register listener: close the sidebar on page change +
+            // reflow the graph on page show
             $rootScope.$on( 'bbdata.PageChanged', function( evt, args ){
                 if( args.from == DISPLAY_PAGE ){
                     _closeSidebar();
@@ -87,11 +92,9 @@
 
         }
 
-
-        //##------------available methods
+        //##------------ methods
 
         function checkboxChanged( item ){
-            console.log( item );
             if( item.selected ){
                 // ajax
                 getValues( item );
@@ -102,7 +105,6 @@
         }
 
         function addSerie( item, values ){
-            console.log( values );
 
             var axis = { // Secondary yAxis
                 id   : item.id + "-axis",
@@ -111,7 +113,7 @@
                 }
             };
 
-            var serie = {
+            var serie = {  // the serie to add
                 name : item.name,
                 id   : item.id + "-serie",
                 yAxis: self.shareAxis ? "y-axis" : item.id + "-axis",
@@ -120,6 +122,7 @@
 
 
             if( !chart ){
+                // create a new chart
                 var options = angular.copy( defaultChartOptions );
                 options.series = [serie];
                 options.yAxis = [self.shareAxis ? seriesAxis["default"] : axis];
@@ -127,25 +130,28 @@
                 self.chart = chart;
 
             }else{
+                // add the serie to the existing graph
                 axis.opposite = true;
                 if( !self.shareAxis ) chart.addAxis( axis );
                 chart.addSeries( serie );
             }
+            // keep track of the axis name, in case the shareAxis flag changes
             seriesAxis[item.id] = axis;
         }
 
 
         function removeSerie( item ){
-            // remove from graph
+            // remove serie
             chart.get( item.id + "-serie" ).remove();
+            // if has its own axis, remove it as well
             if( !self.shareAxis ) chart.get( item.id + "-axis" ).remove();
             delete seriesAxis[item.id];
-            // TODO if modifiedAxis = item, hide it !
         }
 
 
+        // convert the values received from the OUTPUT API to
+        // an array usable with highcharts
         function toTrace( measures ){
-
             var results = [];
             angular.forEach( measures, function( m ){
                 results.push( [new Date( m.timestamp ).getTime(), m.value] );
@@ -155,32 +161,18 @@
         }
 
         function onSidebarToggle( evt ){
-            sidebarState = evt;
-            _reflowChart();
+            sidebarState = evt; // keep track of the state
+            _reflowChart(); // adapt the graph to the page
         }
 
-        //##------------utils
-
-        function _handleError( error ){
-            console.log( error );
-        }
-
+        // change the x axis
         function applyDate( d ){
             self.date = angular.copy( d );
-            var selected = $filter( 'selected' )( self.captorsHierarchy );
+            var selected = $filter( 'selected' )( self.sensorsHierarchy );
             chart = null;
             angular.forEach( selected, getValues );
         }
 
-        function applyAxisChanges( reset ){
-            var elem = self.modifiedAxis.elem;
-            if( reset ){
-                self.modifiedAxis.min = elem.mydefaults[0];
-                self.modifiedAxis.max = elem.mydefaults[1];
-
-            }
-            elem.setExtremes( self.modifiedAxis.min, self.modifiedAxis.max );
-        }
 
         function toggleShareAxis(){
             if( chart ){
@@ -206,6 +198,7 @@
             }
         }
 
+
         function getValues( item ){
             RestService.getValues( {
                 cid : item.id,
@@ -213,8 +206,10 @@
                 to  : moment( self.date.to ).format( RFC3339_FORMAT )
             }, function( results ){
                 addSerie( item, results.values );
-            }, _handleError );
+            }, _log );
         }
+
+        //##------------utils
 
         function _closeSidebar(){
             if( sidebarState != 'hide' ){
@@ -229,6 +224,8 @@
             }
         }
 
+        // modifies the hierarchy received fomr the OUTPUT API
+        // to be usable with our ng-repeat (see _sidebar.html)
         function _hierarchise( data ){
             var hierarchy = [];
 
@@ -259,6 +256,12 @@
 
             console.log( JSON.stringify( hierarchy ) );
             return hierarchy;
+        }
+
+
+
+        function _log( msg ){
+            console.log( msg );
         }
 
     }

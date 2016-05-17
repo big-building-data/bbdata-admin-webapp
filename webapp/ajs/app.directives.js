@@ -3,8 +3,6 @@
         .directive( 'activeLink', linkDirective )
         .directive( 'hoverClass', hoverClass )
         .directive( 'stopEvent', stopEvent )
-        .directive( 'semanticPopup', semanticPopup )
-        .directive( 'semanticSticky', semanticSticky )
         .directive('showHide', showHide);
 
 
@@ -67,28 +65,6 @@
         }
     }
 
-    function semanticPopup(){
-        return {
-            restrict: 'A',
-            link    : function( scope, element, attr ){
-                var on = attr.semanticPopup || 'hover';
-                element.popup( {
-                    on: on
-                } );
-            }
-        }
-    }
-
-    function semanticSticky(){
-        return {
-            restrict: 'A',
-            link    : function( scope, element, attr ){
-                element.sticky( {
-                    //context: '#stickyContext'
-                } );
-            }
-        }
-    }
 
     function showHide() {
         return {

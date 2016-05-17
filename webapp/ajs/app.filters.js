@@ -16,11 +16,16 @@
          * @name bbdata.app.selected
          *
          * @description
-         * Main controller
+         * Filters the sensors hierarchy and returns the
+         * only the selected items.
+         *
+         * Used by the display controller to handle the
+         * sensors hierarchy and redraw the graph.
          */
         .filter( 'selected', filterSelected );
 
 
+    // recursively filter the sensorsHierarchy
     function filterSelected( $filter ){
         return function( input ){
             var results = [];

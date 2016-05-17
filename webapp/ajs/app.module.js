@@ -28,19 +28,40 @@
             'as.sortable',
             'semantic.modals',
             'semantic.sidebar',
-            'semantic.toggle-button'
+            'semantic.helpers'
         ] ).run( run );
 
     webapp.constant( "RFC3339_FORMAT", "YYYY-MM-DDTHH:mm:ssZ" );
+
+    /*
+     * number bound to each page.
+     * Useful to watch pages switch inside a controller
+     */
     webapp.constant( "DISPLAY_PAGE", 0 );
     webapp.constant( "SENSORS_PAGE", 1 );
     webapp.constant( "TLS_SLS_PAGE", 2 );
 
+    /*
+     * page switch management.
+     * the variable $root.page contains the number associated
+     * with the page currently shown (see constants + index.html).
+     * Upon page switch, an event "bbdata.PageChanged" is fired.
+     *
+     * Each controller can then watch the page changes and take
+     * action when its bound page is shown/hidden.
+     *
+     * the $root.page_init[<page num>] variable is set to true the
+     * first time the page is shown. Useful for lazy loading (see
+     * index.html and the ng-if directive)
+     */
     function run( $rootScope ){
         $rootScope.page = 0;
         $rootScope.page_init = [false, false, false];
+
         $rootScope.$watch( 'page', function( to, from ){
+            // force page load
             $rootScope.page_init[to] = true;
+            // fire the event
             $rootScope.$broadcast( 'bbdata.PageChanged', {from: from, to: to} );
         } );
     }
