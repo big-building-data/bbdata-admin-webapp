@@ -11,10 +11,10 @@
 
     /**
      * @ngdoc tls sls controller
-     * @name bbdata.app.TlsSlsCtrl
+     * @name bbdata.app.TlsSlsCtontroller
      *
      * @description
-     * Main controller
+     * handles the TLS/SLS page.
      */
     angular
         .module( 'bbdata.app' )
@@ -27,14 +27,31 @@
 
         var self = this;
 
-        self.tls = [{
+        self.tls = [{  // fake data
             name: "TLS 1",
             sls : [{name: "sls1", sensors: [{id: 0, name: "alskdfj"}]}, {name: "sls2", sensors: []}]
-        },
-            {name: "TLS 2", sls: [{name: "sls21", sensors: []}, {name: "sls22", sensors: []}]}];
+        }, {
+            name: "TLS 2", sls: [{name: "sls21", sensors: []}, {name: "sls22", sensors: []}]
+        }];
 
-        self.dragSensorsConfig = {clone: true};
-        self.dragSlsConfig = {allowDuplicates: false};
+        self.dragSensorsConfig = {
+            clone: true, itemMoved: function( evt ){
+                console.log( "drag sensors config" );
+                var sls = evt.dest.sortableScope.sls;
+                var item = evt.dest.sortableScope.modelValue[evt.dest.index];
+                console.log( item.id + " to SLS " + sls.name );
+            }
+        };
+
+        self.dragSlsConfig = {
+            allowDuplicates: false, itemMoved: function( evt ){
+                console.log( "drag SLS config" );
+                var slsFrom = evt.source.sortableScope.sls;
+                var slsTo = evt.dest.sortableScope.sls;
+                var item = evt.dest.sortableScope.modelValue[evt.dest.index];
+                console.log( item.id + " : " + slsFrom.name + " -> " + slsTo.name );
+            }
+        };
 
         self.addTLS = addTLS;
         self.editTLS = editTLS;
@@ -137,15 +154,21 @@
 
         //##------------utils
 
+        /*
+         * @param title the title of the modal
+         * @param parent  the parent array of the item (where to add it)
+         * @param obj the item
+         * @param add true if the item should be add, false if should be edited
+         */
         function _addEditName( title, parent, obj, add ){
             console.log( obj );
             ModalService.showModal( {
-                title   : title,
-                html    : '<div class="ui labeled input"> <div class="ui label">name</div> <input type="text" ng-model="inputs.obj.name"> </div>',
-                positive: "save",
+                title          : title,
+                html           : '<div class="ui labeled input"> <div class="ui label">name</div> <input type="text" ng-model="inputs.obj.name"> </div>',
+                positive       : "save",
                 positiveDisable: '!inputs.obj.name',
-                negative: "cancel",
-                inputs  : {
+                negative       : "cancel",
+                inputs         : {
                     obj: angular.copy( obj )
                 }
             } ).then( function( result ){
@@ -167,12 +190,13 @@
         }
 
         function splice( arr, idx ){
-           arr.splice( idx, 1 );
+            arr.splice( idx, 1 );
         }
 
         function _sticky(){
+            // wait a bit to be sure everything is loaded
             setTimeout( function(){
-                console.log("apply sticky");
+                console.log( "apply sticky" );
                 $( '.ui.sticky' ).sticky( {} );
             }, 100 );
         }
