@@ -4,7 +4,8 @@
         .directive( 'hoverClass', hoverClass )
         .directive( 'stopEvent', stopEvent )
         .directive( 'semanticPopup', semanticPopup )
-        .directive( 'semanticSticky', semanticSticky );
+        .directive( 'semanticSticky', semanticSticky )
+        .directive('showHide', showHide);
 
 
     function linkDirective( $location, $rootScope ){
@@ -85,6 +86,30 @@
                 element.sticky( {
                     //context: '#stickyContext'
                 } );
+            }
+        }
+    }
+
+    function showHide() {
+        return {
+            restrict: 'E',
+            replace: true,
+            transclude: true,
+            template: '<div ng-transclude></div>',
+            link: function(scope, element, attr) {
+                console.log($(attr.target));
+                var showing = attr.showing === "true";
+                if (!showing) element.hide();
+
+                $(attr.target).on('click', function() {
+                    if (showing) {
+                        element.hide();
+                    } else {
+                        element.show();
+                    }
+                    showing = !showing;
+                });
+
             }
         }
     }

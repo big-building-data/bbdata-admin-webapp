@@ -26,6 +26,7 @@
         var self = this;
 
         self.sensors = [];
+        self.tokens = {};   // map sensor.id - tokens
 
         self.addInfosLoading = 3;  // decremented (units,parsers,types), so ok when 0 (false)
         self.units = [];
@@ -36,6 +37,9 @@
         self.remove = removeSensor;
         self.edit = editSensor;
         self.init = _init;
+
+        self.loadTokens = loadTokens;
+
         // ===========================================
 
         function removeSensor(sensor) {
@@ -47,8 +51,10 @@
                 negative: "cancel",
                 basic: true,
                 cancelable: true
-            }).then(function () {
+            }).then(function (results) {
+                if(results.status){
                 RestService.deleteSensor(sensor, _handleError, _handleError);
+                }
             }, _handleError);
         }
 
@@ -63,14 +69,16 @@
                     sensor: angular.copy(sensor)
                 },
                 cancelable: false
-            }).then(function () {
-                // TODO edit sensor
+            }).then(function (results) {
+                if(results.status) {
+                    // TODO edit sensor
+                }
             }, _handleError);
         }
 
         function addSensor() {
             ModalService.showModal({
-                htmlInclude: '/html/sensors//_addModalContent.html',
+                htmlInclude: '/html/sensors/_addModalContent.html',
                 positive: "add",
                 positiveDisable: "form.addform.$invalid",
                 negative: "cancel",
@@ -88,7 +96,9 @@
                     }
                 }
             }).then(function () {
-
+                if(results.status){
+                    // TODO add sensor
+                }
             }, _handleError);
         }
 
@@ -117,6 +127,13 @@
             }, _handleError);
         }
 
+        function loadTokens(sid){
+            if(self.tokens[sid])  return;
+            RestService.getTokens({id: sid}, function(tokens){
+                console.log(tokens);
+                self.tokens[sid] = tokens;
+            }, _handleError);
+        }
 
         //##------------utils
 

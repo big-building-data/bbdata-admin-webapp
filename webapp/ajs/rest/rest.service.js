@@ -67,6 +67,13 @@
                 method: "GET",
                 url: baseUrl + "types",
                 isArray: true
+            } ,
+
+            getTokens: {
+                method: 'GET',
+                url: baseUrl + "sensors/tokens",
+                params: {id: '@id'},
+                isArray: true
             }
 
 

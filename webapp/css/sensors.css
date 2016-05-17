@@ -24,7 +24,7 @@
 /*title and buttons*/
 
 #sensors-accordion .title {
-    background-color: #efefef;
+    /*background-color: #efefef;*/
 }
 
 #sensors-accordion .title div {
@@ -41,13 +41,14 @@
 }
 
 /*icons*/
-#sensors-accordion .title button {
+#sensors-accordion button {
     background: white;
     border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-#sensors-accordion .title button.mouseout .icon {
-    color: rgba(0, 0, 0, .8) !important;
+#sensors-accordion .token-accordion table{
+    width: 80%;
+    margin: auto;
 }
 
 /*#sensors-accordion .title button:hover .remove{*/
