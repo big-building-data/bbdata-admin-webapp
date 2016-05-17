@@ -36,11 +36,16 @@
         self.add = addSensor;
         self.remove = removeSensor;
         self.edit = editSensor;
+
+        self.addToken = addToken;
+        self.removeToken = removeToken;
+        self.editToken = editToken;
+
         self.init = _init;
 
         self.loadTokens = loadTokens;
 
-        // ===========================================
+        // ==================== sensors
 
         function removeSensor(sensor) {
             ModalService.showModal({
@@ -52,8 +57,8 @@
                 basic: true,
                 cancelable: true
             }).then(function (results) {
-                if(results.status){
-                RestService.deleteSensor(sensor, _handleError, _handleError);
+                if (results.status) {
+                    RestService.deleteSensor(sensor, _handleError, _handleError);
                 }
             }, _handleError);
         }
@@ -70,7 +75,7 @@
                 },
                 cancelable: false
             }).then(function (results) {
-                if(results.status) {
+                if (results.status) {
                     // TODO edit sensor
                 }
             }, _handleError);
@@ -96,11 +101,79 @@
                     }
                 }
             }).then(function () {
-                if(results.status){
+                if (results.status) {
                     // TODO add sensor
                 }
             }, _handleError);
         }
+
+        // ==================== tokens
+
+
+        function loadTokens(sid) {
+            if (self.tokens[sid])  return;
+            RestService.getTokens({id: sid}, function (tokens) {
+                console.log(tokens);
+                self.tokens[sid] = tokens;
+            }, _handleError);
+        }
+
+        function removeToken(sensor, index) {
+            ModalService.showModal({
+                title: "confirm",
+                icon: "warning sign orange",
+                html: "are you sure you want to delete this token ?<br />" +
+                "Rights associated with it will all be revoqued.",
+                positive: "proceed",
+                negative: "cancel",
+                basic: true,
+                cancelable: true
+            }).then(function (results) {
+                if (results.status) {
+                    // TODO delete token
+                    var tokens = self.tokens[sensor.id];
+                    tokens.splice(index, 1);
+                }
+            }, _handleError);
+        }
+
+        function editToken(sensor, token) {
+            _addEditToken(sensor, token);
+        }
+
+        function addToken(sensor) {
+            _addEditToken(sensor, null);
+        }
+
+        function _addEditToken(sensor, token) {
+            ModalService.showModal({
+                title: (token ? "edit " : "add") + " token",
+                html: '<div class="ui form"><div class="field"> <label>Description</label> <textarea ng-model="inputs.description" rows="2"></textarea></div></div>',
+                positive: "save",
+                negative: "cancel",
+                inputs: {
+                    description: token ? token.description : ""
+                }
+            }).then(function (result) {
+                if (result.status) {
+                    if (token == null) {
+                        // TODO put token
+                        self.tokens[sensor.id].push({
+                            id: sensor.id,
+                            secret: "saldkfjasédlkfja",
+                            description: result.inputs.description
+                        });
+                    } else {
+                        // TODO update +
+                        token.description = result.inputs.description;
+                    }
+                }
+
+            }, _handleError);
+        }
+
+
+        // ==================== other
 
         //##--------------init
 
@@ -124,14 +197,6 @@
             RestService.getTypes(function (response) {
                 self.types = response;
                 self.addInfosLoading--;
-            }, _handleError);
-        }
-
-        function loadTokens(sid){
-            if(self.tokens[sid])  return;
-            RestService.getTokens({id: sid}, function(tokens){
-                console.log(tokens);
-                self.tokens[sid] = tokens;
             }, _handleError);
         }
 

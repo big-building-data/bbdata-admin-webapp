@@ -40,15 +40,21 @@ var sensors = JSON.parse('[ { "id" : 3329, "address" : "1.22.128",  "creationdat
 var hierarchy = JSON.parse('[{ "id": 18, "name": "Box 22B, blueFACTORY, Fribourg", "owner": { "firstname": "Jean", "lastname": "Dupont", "email": "jean.dupont@example.com" }, "sls": [{ "id": 27, "name": "Températures", "captors": [{ "id": 3, "name": "Température au plafond", "address": "noaddress" }, { "id": 45, "name": "Température au sol 1", "address": "noaddress" }, { "id": 6, "name": "Température au sol 2", "address": "noaddress" }] }, { "sls-id": 2, "name": "Présence box 33", "captors": [{ "id": 12345, "name": "Présence box 33", "address": "1.1.23" }] }] }]');
 
 router.get('/sensors/tokens', function (req, res) {
-    res.send([{
-        "id": 1,
-        "secret": "q2345464676324123",
-        "description": ""
-    }, {
-        "id": 2,
-        "secret": "q234adsf5464676324123",
-        "description": "pour l'app XY"
-    }]);
+    var r = random.integer(0, 1);
+    if (r) {
+        res.send([{
+            "id": 1,
+            "secret": "q2345464676324123",
+            "description": ""
+        }, {
+            "id": 2,
+            "secret": "q234adsf5464676324123",
+            "description": "pour l'app XY"
+        }]);
+
+    } else {
+        res.send([]);
+    }
 
 });
 

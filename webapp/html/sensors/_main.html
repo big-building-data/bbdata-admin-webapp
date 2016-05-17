@@ -72,7 +72,7 @@
                     </button>
                 </div>
                 <!--table-->
-                <table class="ui unstackable table" ng-show="ctrl.tokens[sensor.id]">
+                <table class="ui unstackable table very basic">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -84,13 +84,13 @@
                     <tbody>
                     <tr ng-repeat="t in ctrl.tokens[sensor.id]">
                         <td class="left aligned collapsing">{{t.id}}</td>
-                        <td class="left aligned collapsing" semantic-popup="click" data-content="{{t.secret}}"><i>show</i></td>
+                        <td class="left aligned collapsing link" semantic-popup="click" data-html="<div class='tt'>{{t.secret}}</div>"><i>show</i></td>
                         <td>{{t.description}}</td>
                         <td class="right aligned collapsing">
                             <button class="circular ui icon small button" stop-event="click" hover-class="mouseout:mousein" ng-click="ctrl.editToken(sensor, t)">
                                 <i class="icon edit green"></i>
                             </button>
-                            <button class="circular ui icon small button" hover-class="mouseout:mousein" stop-event="click" ng-click="ctrl.removeToken(sensor, t)">
+                            <button class="circular ui icon small button" hover-class="mouseout:mousein" stop-event="click" ng-click="ctrl.removeToken(sensor, $index)">
                                 <i class="icon remove circle red"></i>
                             </button>
                         </td>

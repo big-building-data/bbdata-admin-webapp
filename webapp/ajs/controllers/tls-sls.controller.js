@@ -151,7 +151,6 @@
             } ).then( function( result ){
                 console.log( result );
                 if( result.status ){
-                    // TODO check for empty names !!!
                     if( add ){
                         parent.push( result.inputs.obj );
                     }else{
@@ -168,7 +167,7 @@
         }
 
         function splice( arr, idx ){
-            arr = arr.splice( idx, 1 );
+           arr.splice( idx, 1 );
         }
 
         function _sticky(){

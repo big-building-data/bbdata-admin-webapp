@@ -51,6 +51,10 @@
     margin: auto;
 }
 
+#sensors-accordion .token-accordion .ng-hide{
+    display:none !important;
+}
+
 /*#sensors-accordion .title button:hover .remove{*/
 /*color: #db2828!important;*/
 /*}*/
