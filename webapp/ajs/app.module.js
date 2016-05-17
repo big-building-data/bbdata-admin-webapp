@@ -54,9 +54,16 @@
      * first time the page is shown. Useful for lazy loading (see
      * index.html and the ng-if directive)
      */
-    function run( $rootScope ){
-        $rootScope.page = 0;
+    function run( $rootScope, $location ){
+
         $rootScope.page_init = [false, false, false];
+        $rootScope.page = 0;
+
+        // try to get the current page from url (#X)
+        var n = parseInt( $location.path().substr( 1 ) );
+        if( !isNaN( n ) && n > 0 && n < 3 ){
+            $rootScope.page = n;
+        }
 
         $rootScope.$watch( 'page', function( to, from ){
             // force page load

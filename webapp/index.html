@@ -25,14 +25,14 @@
 <body ng-app="bbdata.app">
 
 <!--menu-->
-<div class="ui fixed inverted menu" ng-init="$root.page=0">
+<div class="ui fixed inverted menu">
     <div class="ui container">
         <a href="#/" class="header item">
             <img class="logo" src="assets/logo.png">BBData
         </a>
-        <a class="item" ng-click="$root.page=0">home</a>
-        <a class="item" ng-click="$root.page=1">sensors</a>
-        <a class="item" ng-click="$root.page=2">TLS/SLS</a>
+        <a class="item" href="#" ng-click="$root.page=0">home</a>
+        <a class="item" href="#1" ng-click="$root.page=1">sensors</a>
+        <a class="item" href="#2" ng-click="$root.page=2">TLS/SLS</a>
     </div>
 </div>
 
