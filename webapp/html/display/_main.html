@@ -10,6 +10,11 @@
                         ng-model="ctrl.shareAxis" ng-click="ctrl.toggleShareAxis()"
                         toggle-class="orange:red"></semantic-toggle-button>
 
+<semantic-toggle-button class="basic" toggle-text="no SMA:  SMA  "
+                        ng-model="ctrl.sma" ng-click="ctrl.toggleSMA()"
+                        semantic-popup="hover" data-content="Simple Moving Average"
+                        toggle-class="green:olive"></semantic-toggle-button>
+
 
 
 <div class="ui message" ng-show="ctrl.modifiedAxis != null">

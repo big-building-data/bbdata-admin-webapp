@@ -7,7 +7,7 @@
  * Use of this source code is governed by an Apache 2 license
  * that can be found in the LICENSE file.
  */
-(function(){
+(function () {
 
     /**
      * @ngdoc controller
@@ -18,12 +18,12 @@
      * the graph and displays the values of the sensors.
      */
     angular
-        .module( 'bbdata.app' )
-        .controller( 'DisplayController', ctrl );
+        .module('bbdata.app')
+        .controller('DisplayController', ctrl);
 
     // --------------------------
 
-    function ctrl( RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, DISPLAY_PAGE ){
+    function ctrl(RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, DISPLAY_PAGE) {
 
         var self = this;
 
@@ -32,11 +32,13 @@
         self.sensorsHierarchy = []; // the hierarchy TLS > SLS > sensors, shrank
         // the default X axis extremes
         self.date = {
-            from: moment().floor( 1, 'hour' ).subtract( 1, 'hour' ).toDate(),
-            to  : moment().floor( 1, 'hour' ).toDate()
+            from: moment().floor(1, 'hour').subtract(1, 'hour').toDate(),
+            to: moment().floor(1, 'hour').toDate()
         };
 
         self.shareAxis = false;  // don't share axis by default
+        self.sma = false;  //   simple moving average
+        self.smaPeriod = 5; // window size for SMA
 
         // === private variables
 
@@ -44,7 +46,7 @@
         var chart = null;  // the chart
         var seriesAxis = {"default": {id: "y-axis"}}; // the default axis, used when shareAxis = true
         var defaultChartOptions = { // default options when creating a new graph
-            chart        : {
+            chart: {
                 renderTo: 'graphContainer'
             },
             rangeSelector: {
@@ -58,6 +60,7 @@
         self.chkChanged = checkboxChanged; // called when a checkbox is toggled -> update the graph
         self.onSidebarToggle = onSidebarToggle; // called on sidebar toggle, to reflaw the graph
         self.toggleShareAxis = toggleShareAxis; // apply self.shareAxis modifications
+        self.toggleSMA = toggleSMA; // apply self.sma modifications
         self.applyDate = applyDate; // update the X axis with the self.date values
 
 
@@ -74,195 +77,233 @@
 
         //##------------init
 
-        function _init(){
+        function _init() {
             // get the sensors
-            RestService.getHierarchy( function( result ){
-                self.sensorsHierarchy = _hierarchise( result );
-            }, _log );
+            RestService.getHierarchy(function (result) {
+                self.sensorsHierarchy = _hierarchise(result);
+            }, _log);
 
             // register listener: close the sidebar on page change +
             // reflow the graph on page show
-            $rootScope.$on( 'bbdata.PageChanged', function( evt, args ){
-                if( args.from == DISPLAY_PAGE ){
+            $rootScope.$on('bbdata.PageChanged', function (evt, args) {
+                if (args.from == DISPLAY_PAGE) {
                     _closeSidebar();
-                }else if( args.to == DISPLAY_PAGE ){
-                    setTimeout( _reflowChart, 100 );
+                } else if (args.to == DISPLAY_PAGE) {
+                    setTimeout(_reflowChart, 100);
                 }
-            } );
+            });
 
         }
 
         //##------------ methods
 
-        function checkboxChanged( item ){
-            if( item.selected ){
+        function checkboxChanged(item) {
+            if (item.selected) {
                 // ajax
-                getValues( item );
+                getValues(item);
 
-            }else{
-                removeSerie( item );
+            } else {
+                removeSerie(item);
             }
         }
 
-        function addSerie( item, values ){
+        function addSerie(item, values) {
 
             var axis = { // Secondary yAxis
-                id   : item.id + "-axis",
+                id: item.id + "-axis",
                 title: {
                     text: item.name
                 }
             };
 
             var serie = {  // the serie to add
-                name : item.name,
-                id   : item.id + "-serie",
+                name: item.name,
+                id: item.id + "-serie",
                 yAxis: self.shareAxis ? "y-axis" : item.id + "-axis",
-                data : toTrace( values )
+                data: toTrace(values)
             };
 
 
-            if( !chart ){
+            if (!chart) {
                 // create a new chart
-                var options = angular.copy( defaultChartOptions );
+                var options = angular.copy(defaultChartOptions);
                 options.series = [serie];
                 options.yAxis = [self.shareAxis ? seriesAxis["default"] : axis];
-                chart = new Highcharts.StockChart( options );
+                chart = new Highcharts.StockChart(options);
                 self.chart = chart;
 
-            }else{
+            } else {
                 // add the serie to the existing graph
                 axis.opposite = true;
-                if( !self.shareAxis ) chart.addAxis( axis );
-                chart.addSeries( serie );
+                if (!self.shareAxis) chart.addAxis(axis);
+                chart.addSeries(serie);
             }
             // keep track of the axis name, in case the shareAxis flag changes
             seriesAxis[item.id] = axis;
+
+            // add sma if needed
+            if(self.sma) _addSma(item.id, serie.name, true);
         }
 
 
-        function removeSerie( item ){
+        function removeSerie(item) {
+            // remove linked sma, if any
+            if (self.sma) chart.get(item.id + "-sma").remove();
             // remove serie
-            chart.get( item.id + "-serie" ).remove();
+            chart.get(item.id + "-serie").remove();
             // if has its own axis, remove it as well
-            if( !self.shareAxis ) chart.get( item.id + "-axis" ).remove();
+            if (!self.shareAxis) chart.get(item.id + "-axis").remove();
             delete seriesAxis[item.id];
         }
 
 
         // convert the values received from the OUTPUT API to
         // an array usable with highcharts
-        function toTrace( measures ){
+        function toTrace(measures) {
             var results = [];
-            angular.forEach( measures, function( m ){
-                results.push( [new Date( m.timestamp ).getTime(), m.value] );
-            } );
+            angular.forEach(measures, function (m) {
+                results.push([new Date(m.timestamp).getTime(), m.value]);
+            });
 
             return results;
         }
 
-        function onSidebarToggle( evt ){
+        function onSidebarToggle(evt) {
             sidebarState = evt; // keep track of the state
             _reflowChart(); // adapt the graph to the page
         }
 
         // change the x axis
-        function applyDate( d ){
-            self.date = angular.copy( d );
-            var selected = $filter( 'selected' )( self.sensorsHierarchy );
+        function applyDate(d) {
+            self.date = angular.copy(d);
+            var selected = $filter('selected')(self.sensorsHierarchy);
             chart = null;
-            angular.forEach( selected, getValues );
+            angular.forEach(selected, getValues);
         }
 
 
-        function toggleShareAxis(){
-            if( chart ){
-                if( self.shareAxis ){
-                    chart.addAxis( seriesAxis["default"] );
+        function toggleShareAxis() {
+            if (chart) {
+                if (self.shareAxis) {
+                    chart.addAxis(seriesAxis["default"]);
                 }
-                angular.forEach( seriesAxis, function( axis, id ){
-                    if( id == "default" ) return;
-                    if( self.shareAxis ){
-                        chart.get( id + "-serie" ).update( {yAxis: seriesAxis["default"].id}, false );
-                        chart.get( axis.id ).remove( false );
-                    }else{
-                        chart.addAxis( axis );
-                        chart.get( id + "-serie" ).update( {yAxis: axis.id}, false );
+                angular.forEach(seriesAxis, function (axis, id) {
+                    if (id == "default") return;
+                    var smaSerie = chart.get(id + "-sma");
+                    if (self.shareAxis) {
+                        chart.get(id + "-serie").update({yAxis: seriesAxis["default"].id}, false);
+                        if(smaSerie) smaSerie.update({yAxis: seriesAxis["default"].id}, false);
+                        chart.get(axis.id).remove(false);
+                    } else {
+                        chart.addAxis(axis);
+                        chart.get(id + "-serie").update({yAxis: axis.id}, false);
+                        if(smaSerie) smaSerie.update({yAxis: axis.id}, false);
                     }
-                } );
+                });
 
-                if( !self.shareAxis ){
-                    chart.get( seriesAxis["default"].id ).remove( false );
+                if (!self.shareAxis) {
+                    chart.get(seriesAxis["default"].id).remove(false);
                 }
 
                 chart.redraw();
             }
         }
 
+        function toggleSMA() {
+            if (!chart) return;
 
-        function getValues( item ){
-            RestService.getValues( {
-                cid : item.id,
-                from: moment( self.date.from ).format( RFC3339_FORMAT ),
-                to  : moment( self.date.to ).format( RFC3339_FORMAT )
-            }, function( results ){
-                addSerie( item, results.values );
-            }, _log );
+            angular.forEach(seriesAxis, function (axis, id) {
+                if(!axis.title) return; // default axis
+                if (self.sma) _addSma(id, axis.title.text, false);
+                else chart.get(id + "-sma").remove(false);
+            });
+
+            chart.redraw();
+        }
+
+
+        function _addSma(id, serieName, redraw) {
+            var smaSerie = {
+                name: serieName + ' (SMA ' + self.smaPeriod + ')',
+                yAxis: self.shareAxis ? seriesAxis["default"].id : (id + "-axis"),
+                linkedTo: id + "-serie",
+                id: id + "-sma",
+                showInLegend: true,
+                type: 'trendline',
+                algorithm: 'SMA',
+                periods: self.smaPeriod
+            };
+
+            chart.addSeries(smaSerie, redraw);
+
+            console.log("added sma", smaSerie);
+        }
+
+
+        function getValues(item) {
+            RestService.getValues({
+                cid: item.id,
+                from: moment(self.date.from).format(RFC3339_FORMAT),
+                to: moment(self.date.to).format(RFC3339_FORMAT)
+            }, function (results) {
+                addSerie(item, results.values);
+            }, _log);
         }
 
         //##------------utils
 
-        function _closeSidebar(){
-            if( sidebarState != 'hide' ){
-                $( '#toggleSidebar' ).click();
+        function _closeSidebar() {
+            if (sidebarState != 'hide') {
+                $('#toggleSidebar').click();
             }
         }
 
-        function _reflowChart(){
-            console.log( "reflow" );
-            if( self.chart ){
+        function _reflowChart() {
+            console.log("reflow");
+            if (self.chart) {
                 self.chart.reflow();
             }
         }
 
         // modifies the hierarchy received fomr the OUTPUT API
         // to be usable with our ng-repeat (see _sidebar.html)
-        function _hierarchise( data ){
+        function _hierarchise(data) {
             var hierarchy = [];
 
-            angular.forEach( data, function( tls ){
+            angular.forEach(data, function (tls) {
                 var sls_array = []; // shrunk sls
 
-                angular.forEach( tls.sls, function( sls ){
-                    if( !sls.captors )return; // every sls should have at least one captor
+                angular.forEach(tls.sls, function (sls) {
+                    if (!sls.captors)return; // every sls should have at least one captor
 
-                    if( sls.captors.length > 2 ){
+                    if (sls.captors.length > 2) {
                         // more than one captor: rename them to "children"
                         sls.children = sls.captors;
                         delete sls.captors;
-                        sls_array.push( sls );
-                    }else{
+                        sls_array.push(sls);
+                    } else {
                         // only one captor: make it a "sls"
-                        sls_array.push( sls.captors[0] );
+                        sls_array.push(sls.captors[0]);
                     }
 
-                } );
+                });
 
                 // rename sls to "children"
                 tls.children = sls_array;
                 delete tls.sls;
                 // add the tls to the hierarchy
-                hierarchy.push( tls );
-            } );
+                hierarchy.push(tls);
+            });
 
-            console.log( JSON.stringify( hierarchy ) );
+            console.log(JSON.stringify(hierarchy));
             return hierarchy;
         }
 
 
-
-        function _log( msg ){
-            console.log( msg );
+        function _log(msg) {
+            console.log(msg);
         }
 
     }
-})();
+})
+();
