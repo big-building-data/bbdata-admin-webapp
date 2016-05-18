@@ -133,7 +133,7 @@
 
                     }
                 }
-            } ).then( function(){
+            } ).then( function(results){
                 if( results.status ){
                     // TODO add sensor
                 }

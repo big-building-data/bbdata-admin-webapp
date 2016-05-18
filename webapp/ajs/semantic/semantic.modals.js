@@ -72,10 +72,10 @@
                     modalScope.close = function( result ){
 
                         modalElement.modal( 'hide' );
-
                         //  Resolve the 'close' promise.
                         closeDeferred.resolve( {status: result, inputs: modalScope.inputs} );
 
+                        modalElement.remove();
                         closeDeferred = null;
                         modalElement = null;
                         modalScope = null;
@@ -115,10 +115,21 @@
                         element   : modalElement
                     };
 
+
                     $( modalElement )  //
                     // closable by default
                         .modal( 'setting', 'closable', options.cancelable === false ? false : true )  //
                         .modal( 'show' );
+
+                    setTimeout( function(){
+                        // fix the weird positioning
+                        var height = modalElement.height();
+                        modalElement.css( 'top', '40%' );
+                        modalElement.css( 'margin-top', (-height / 2) + 'px' );
+                        // or this: (but not responsive on page height change
+                        //var pageHeight = $( window ).height();
+                        //modalElement.css( 'top', (pageHeight / 2) - (height / 2) + 'px' );
+                    }, 100 );
 
                 }, function(){
                     // if the template failed
@@ -145,15 +156,14 @@
 
                 var html;
                 if( options.basic ){
-                    html = '<div class="ui basic modal small" style="text-align:center"> <i class="close icon" ng-click="close(false)"></i> <div class="header">{{title}}</div> <div class="image content" ng-show="icon"><div class="image" style="margin:auto"><i style="font-size:4rem" class="{{icon}} icon"></i></div> </div> <div class="description"> <p ng-show="text">{{text}}</p> ' + content + ' </div> <div class="actions"> <div class="ui inverted buttons"> <div class="ui red basic inverted button" ng-click="close(false)" ng-show="negative" style="margin-right:6px"> <i class="remove icon"></i> {{negative}} </div> <div class="ui green basic inverted button" ng-click="close(true)" ng-class="{disabled: '+ options.positiveDisable + '}" ng-show="positive"> <i class="checkmark icon"></i> {{positive}} </div> </div> </div> </div>';
-
+                    html = '<div class="ui basic modal small" style="text-align:center"> <i class="close icon" ng-click="close(false)"></i> <div class="header">{{title}}</div> <div class="image content" ng-show="icon"><div class="image" style="margin:auto"><i style="font-size:4rem" class="{{icon}} icon"></i></div> </div> <div class="description"> <p ng-show="text">{{text}}</p> ' + content + ' </div> <div class="actions"> <div class="ui inverted buttons"> <div class="ui red basic inverted button" ng-click="close(false)" ng-show="negative" style="margin-right:6px"> <i class="remove icon"></i> {{negative}} </div> <div class="ui green basic inverted button" ng-click="close(true)" ng-class="{disabled: ' + options.positiveDisable + '}" ng-show="positive"> <i class="checkmark icon"></i> {{positive}} </div> </div> </div> </div>';
 
 
                 }else{
-                    html = '<div class="ui small modal"> <i class="close icon"></i> <div class="header">' +
+                    html = '<div class="ui small modal"> <i class="close icon" ng-click="close(false)"></i> <div class="header">' +
                         ' {{title}}' +
                         ' </div>' +
-                        ' <div class="image content"> <div class="description"> <p ng-show="text">{{text}}</p>' + content + ' </div> </div> <div class="actions"> <div class="ui black deny button" ng-click="close(false)" ng-show="negative"> {{negative}} </div> <div class="ui positive right labeled icon button" ng-click="close(true)" ng-class="{disabled:  '+ options.positiveDisable + '}" ng-show="positive"> {{positive}} <i class="checkmark icon"></i> </div> </div> </div>';
+                        ' <div class="image content"> <div class="description"> <p ng-show="text">{{text}}</p>' + content + ' </div> </div> <div class="actions"> <div class="ui black deny button" ng-click="close(false)" ng-show="negative"> {{negative}} </div> <div class="ui positive right labeled icon button" ng-click="close(true)" ng-class="{disabled:  ' + options.positiveDisable + '}" ng-show="positive"> {{positive}} <i class="checkmark icon"></i> </div> </div> </div>';
                 }
 
                 deferred.resolve( html );
