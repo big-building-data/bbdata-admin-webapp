@@ -23,7 +23,7 @@
 
     // --------------------------
 
-    function ctrl(RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, DISPLAY_PAGE) {
+    function ctrl(RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, DISPLAY_PAGE, Graph, Serie) {
 
         var self = this;
 
@@ -36,31 +36,22 @@
             to: moment().floor(1, 'hour').toDate()
         };
 
-        self.shareAxis = false;  // don't share axis by default
         self.sma = false;  //   simple moving average
         self.smaPeriod = 5; // window size for SMA
+
+        self.graph = new Graph(false);  // the chart shareAxis to false by default
 
         // === private variables
 
         var sidebarState = 'hide'; // keep track of the state, to toggle it when page changes
-        var chart = null;  // the chart
         var seriesAxis = {"default": {id: "y-axis"}}; // the default axis, used when shareAxis = true
-        var defaultChartOptions = { // default options when creating a new graph
-            chart: {
-                renderTo: 'graphContainer'
-            },
-            rangeSelector: {
-                enabled: false
-            },
-            legend: {enabled: true}
-        };
 
         // === public functions
 
         self.chkChanged = checkboxChanged; // called when a checkbox is toggled -> update the graph
         self.onSidebarToggle = onSidebarToggle; // called on sidebar toggle, to reflaw the graph
         self.toggleShareAxis = toggleShareAxis; // apply self.shareAxis modifications
-        self.toggleSMA = toggleSMA; // apply self.sma modifications
+        //self.toggleSMA = toggleSMA; // apply self.sma modifications
         self.applyDate = applyDate; // update the X axis with the self.date values
 
 
@@ -103,70 +94,59 @@
                 getValues(item);
 
             } else {
-                removeSerie(item);
+               self.graph.removeAssociatedSerie(item);
             }
         }
 
-        function addSerie(item, values) {
+        //function addSerie(item, values) {
+        //
+        //    var axis = { // Secondary yAxis
+        //        id: item.id + "-axis",
+        //        title: {
+        //            text: item.name
+        //        }
+        //    };
+        //
+        //    var serie = {  // the serie to add
+        //        name: item.name,
+        //        id: item.id + "-serie",
+        //        yAxis: self.shareAxis ? "y-axis" : item.id + "-axis",
+        //        data: toTrace(values)
+        //    };
+        //
+        //
+        //    if (!chart) {
+        //        // create a new chart
+        //        var options = angular.copy(defaultChartOptions);
+        //        options.series = [serie];
+        //        options.yAxis = [self.shareAxis ? seriesAxis["default"] : axis];
+        //        chart = new Highcharts.StockChart(options);
+        //        self.chart = chart;
+        //
+        //    } else {
+        //        // add the serie to the existing graph
+        //        axis.opposite = true;
+        //        if (!self.shareAxis) chart.addAxis(axis);
+        //        chart.addSeries(serie);
+        //    }
+        //    // keep track of the axis name, in case the shareAxis flag changes
+        //    seriesAxis[item.id] = axis;
+        //
+        //    // add sma if needed
+        //    if(self.sma) _addSma(item.id, serie.name, true);
+        //}
 
-            var axis = { // Secondary yAxis
-                id: item.id + "-axis",
-                title: {
-                    text: item.name
-                }
-            };
+        //
+        //function removeSerie(item) {
+        //    // remove linked sma, if any
+        //    if (self.sma) chart.get(item.id + "-sma").remove();
+        //    // remove serie
+        //    chart.get(item.id + "-serie").remove();
+        //    // if has its own axis, remove it as well
+        //    if (!self.shareAxis) chart.get(item.id + "-axis").remove();
+        //    delete seriesAxis[item.id];
+        //}
 
-            var serie = {  // the serie to add
-                name: item.name,
-                id: item.id + "-serie",
-                yAxis: self.shareAxis ? "y-axis" : item.id + "-axis",
-                data: toTrace(values)
-            };
-
-
-            if (!chart) {
-                // create a new chart
-                var options = angular.copy(defaultChartOptions);
-                options.series = [serie];
-                options.yAxis = [self.shareAxis ? seriesAxis["default"] : axis];
-                chart = new Highcharts.StockChart(options);
-                self.chart = chart;
-
-            } else {
-                // add the serie to the existing graph
-                axis.opposite = true;
-                if (!self.shareAxis) chart.addAxis(axis);
-                chart.addSeries(serie);
-            }
-            // keep track of the axis name, in case the shareAxis flag changes
-            seriesAxis[item.id] = axis;
-
-            // add sma if needed
-            if(self.sma) _addSma(item.id, serie.name, true);
-        }
-
-
-        function removeSerie(item) {
-            // remove linked sma, if any
-            if (self.sma) chart.get(item.id + "-sma").remove();
-            // remove serie
-            chart.get(item.id + "-serie").remove();
-            // if has its own axis, remove it as well
-            if (!self.shareAxis) chart.get(item.id + "-axis").remove();
-            delete seriesAxis[item.id];
-        }
-
-
-        // convert the values received from the OUTPUT API to
-        // an array usable with highcharts
-        function toTrace(measures) {
-            var results = [];
-            angular.forEach(measures, function (m) {
-                results.push([new Date(m.timestamp).getTime(), m.value]);
-            });
-
-            return results;
-        }
 
         function onSidebarToggle(evt) {
             sidebarState = evt; // keep track of the state
@@ -177,67 +157,44 @@
         function applyDate(d) {
             self.date = angular.copy(d);
             var selected = $filter('selected')(self.sensorsHierarchy);
-            chart = null;
+            self.graph.deleteGraph();
             angular.forEach(selected, getValues);
         }
 
 
         function toggleShareAxis() {
-            if (chart) {
-                if (self.shareAxis) {
-                    chart.addAxis(seriesAxis["default"]);
-                }
-                angular.forEach(seriesAxis, function (axis, id) {
-                    if (id == "default") return;
-                    var smaSerie = chart.get(id + "-sma");
-                    if (self.shareAxis) {
-                        chart.get(id + "-serie").update({yAxis: seriesAxis["default"].id}, false);
-                        if(smaSerie) smaSerie.update({yAxis: seriesAxis["default"].id}, false);
-                        chart.get(axis.id).remove(false);
-                    } else {
-                        chart.addAxis(axis);
-                        chart.get(id + "-serie").update({yAxis: axis.id}, false);
-                        if(smaSerie) smaSerie.update({yAxis: axis.id}, false);
-                    }
-                });
-
-                if (!self.shareAxis) {
-                    chart.get(seriesAxis["default"].id).remove(false);
-                }
-
-                chart.redraw();
-            }
+            self.graph.toggleShareAxis();
         }
 
-        function toggleSMA() {
-            if (!chart) return;
+        //function toggleSMA() {
+        //    if (!chart) return;
+        //
+        //    angular.forEach(seriesAxis, function (axis, id) {
+        //        if(!axis.title) return; // default axis
+        //        if (self.sma) _addSma(id, axis.title.text, false);
+        //        else chart.get(id + "-sma").remove(false);
+        //    });
+        //
+        //    chart.redraw();
+        //}
 
-            angular.forEach(seriesAxis, function (axis, id) {
-                if(!axis.title) return; // default axis
-                if (self.sma) _addSma(id, axis.title.text, false);
-                else chart.get(id + "-sma").remove(false);
-            });
 
-            chart.redraw();
-        }
-
-
-        function _addSma(id, serieName, redraw) {
-            var smaSerie = {
-                name: serieName + ' (SMA ' + self.smaPeriod + ')',
-                yAxis: self.shareAxis ? seriesAxis["default"].id : (id + "-axis"),
-                linkedTo: id + "-serie",
-                id: id + "-sma",
-                showInLegend: true,
-                type: 'trendline',
-                algorithm: 'SMA',
-                periods: self.smaPeriod
-            };
-
-            chart.addSeries(smaSerie, redraw);
-
-            console.log("added sma", smaSerie);
-        }
+        //function _addSma(id, serieName, redraw) {
+        //    var smaSerie = {
+        //        name: serieName + ' (SMA ' + self.smaPeriod + ')',
+        //        yAxis: self.shareAxis ? seriesAxis["default"].id : (id + "-axis"),
+        //        linkedTo: id + "-serie",
+        //        id: id + "-sma",
+        //        showInLegend: true,
+        //        type: 'trendline',
+        //        algorithm: 'SMA',
+        //        periods: self.smaPeriod
+        //    };
+        //
+        //    chart.addSeries(smaSerie, redraw);
+        //
+        //    console.log("added sma", smaSerie);
+        //}
 
 
         function getValues(item) {
@@ -246,7 +203,7 @@
                 from: moment(self.date.from).format(RFC3339_FORMAT),
                 to: moment(self.date.to).format(RFC3339_FORMAT)
             }, function (results) {
-                addSerie(item, results.values);
+                self.graph.addSerie(new Serie(item, results.values));
             }, _log);
         }
 
@@ -260,9 +217,7 @@
 
         function _reflowChart() {
             console.log("reflow");
-            if (self.chart) {
-                self.chart.reflow();
-            }
+            self.graph.reflow();
         }
 
         // modifies the hierarchy received fomr the OUTPUT API
