@@ -55,15 +55,15 @@
     <!--display page-->
     <div id="container" ng-show="$root.page==0" class="ui main container home" ng-include
          ng-controller="DisplayController as ctrl"
-         src="'/html/display/_main.html'"></div>
+         src="'/ajs/bbdata/display/partials/_main.html'"></div>
     <!--sensors page-->
     <div id="container" ng-if="$root.page_init[1]" ng-show="$root.page==1" class="ui main container sensors" ng-include
          ng-controller="SensorsController as ctrl"
-         src="'/html/sensors/_main.html'"></div>
+         src="'/ajs/bbdata/sensors/partials/_main.html'"></div>
     <!--tls / sls page-->
     <div id="container" ng-if="$root.page_init[2]" ng-show="$root.page==2" class="ui main container tls-sls" ng-include
          ng-controller="TlsSlsController as ctrl"
-         src="'/html/tls-sls/_main.html'"></div>
+         src="'/ajs/bbdata/tls-sls/partials/_main.html'"></div>
 
     <!--footer-->
     <div class="ui inverted vertical footer segment">
@@ -100,13 +100,13 @@
 <script type="text/javascript" src="/ajs/rest/rest.service.js"></script>
 
 <!--app-->
-<script type="text/javascript" src="/ajs/app.module.js"></script>
-<script type="text/javascript" src="/ajs/app.filters.js"></script>
-<script type="text/javascript" src="/ajs/app.directives.js"></script>
+<script type="text/javascript" src="/ajs/bbdata/app.module.js"></script>
+<script type="text/javascript" src="/ajs/bbdata/app.filters.js"></script>
+<script type="text/javascript" src="/ajs/bbdata/app.directives.js"></script>
 
-<script type="text/javascript" src="/ajs/controllers/display.controller.js"></script>
-<script type="text/javascript" src="/ajs/controllers/sensors.controller.js"></script>
-<script type="text/javascript" src="/ajs/controllers/tls-sls.controller.js"></script>
+<script type="text/javascript" src="/ajs/bbdata/display/display.controller.js"></script>
+<script type="text/javascript" src="/ajs/bbdata/sensors/sensors.controller.js"></script>
+<script type="text/javascript" src="/ajs/bbdata/tls-sls/tls-sls.controller.js"></script>
 
 
 <!--semantic helpers-->

@@ -99,7 +99,7 @@
         function editSensor( sensor ){
             ModalService.showModal( {
                 title          : "edit " + sensor.name,
-                htmlInclude    : "/html/sensors/_editModalContent.html",
+                htmlInclude    : "/ajs/bbdata/sensors/partials/_editModalContent.html",
                 positive       : "save",
                 positiveDisable: 'form.editform.$invalid',
                 negative       : "cancel",
@@ -116,7 +116,7 @@
 
         function addSensor(){
             ModalService.showModal( {
-                htmlInclude    : '/html/sensors/_addModalContent.html',
+                htmlInclude    : '/ajs/bbdata/sensors/partials/_addModalContent.html',
                 positive       : "add",
                 positiveDisable: "form.addform.$invalid",
                 negative       : "cancel",
