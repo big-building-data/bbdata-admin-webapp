@@ -10,17 +10,17 @@
         <form name="datetimeForm" id="datetimeForm" ng-init="date = copy(ctrl.date)">
 
             <div class="ui input mini">
-                <input type="datetime-local" id="inputFrom" name="inputFrom" ng-model="date.from" ng-max="date.to"
+                <input type="datetime-local" id="inputFrom" name="inputFrom" ng-model="date.from" max="{{date.to | date:'yyyy-MM-ddTHH:mm:ss'}}"
                        required/> (from)
             </div>
             <div class="ui input mini">
-                <input type="datetime-local" id="inputTo" name="inputTo" ng-model="date.to" ng-min="date.from"
+                <input type="datetime-local" id="inputTo" name="inputTo" ng-model="date.to" min="{{date.from | date:'yyyy-MM-ddTHH:mm:ss'}}"
                        required/> (to)
             </div>
             <div class="center tiny marged"><code>month/day/year hr:min</code></div>
 
             <div class="ui button mini right floated" ng-click="ctrl.applyDate(date)"
-                 ng-class="{'disabled': equals(date, ctrl.date) }">
+                 ng-class="{'disabled': equals(date, ctrl.date) || datetimeForm.$invalid }">
                 Apply
             </div>
             <div style="clear:both"></div>

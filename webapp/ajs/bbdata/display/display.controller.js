@@ -98,55 +98,6 @@
             }
         }
 
-        //function addSerie(item, values) {
-        //
-        //    var axis = { // Secondary yAxis
-        //        id: item.id + "-axis",
-        //        title: {
-        //            text: item.name
-        //        }
-        //    };
-        //
-        //    var serie = {  // the serie to add
-        //        name: item.name,
-        //        id: item.id + "-serie",
-        //        yAxis: self.shareAxis ? "y-axis" : item.id + "-axis",
-        //        data: toTrace(values)
-        //    };
-        //
-        //
-        //    if (!chart) {
-        //        // create a new chart
-        //        var options = angular.copy(defaultChartOptions);
-        //        options.series = [serie];
-        //        options.yAxis = [self.shareAxis ? seriesAxis["default"] : axis];
-        //        chart = new Highcharts.StockChart(options);
-        //        self.chart = chart;
-        //
-        //    } else {
-        //        // add the serie to the existing graph
-        //        axis.opposite = true;
-        //        if (!self.shareAxis) chart.addAxis(axis);
-        //        chart.addSeries(serie);
-        //    }
-        //    // keep track of the axis name, in case the shareAxis flag changes
-        //    seriesAxis[item.id] = axis;
-        //
-        //    // add sma if needed
-        //    if(self.sma) _addSma(item.id, serie.name, true);
-        //}
-
-        //
-        //function removeSerie(item) {
-        //    // remove linked sma, if any
-        //    if (self.sma) chart.get(item.id + "-sma").remove();
-        //    // remove serie
-        //    chart.get(item.id + "-serie").remove();
-        //    // if has its own axis, remove it as well
-        //    if (!self.shareAxis) chart.get(item.id + "-axis").remove();
-        //    delete seriesAxis[item.id];
-        //}
-
 
         function onSidebarToggle(evt) {
             sidebarState = evt; // keep track of the state
@@ -165,37 +116,6 @@
         function toggleShareAxis() {
             self.graph.toggleShareAxis();
         }
-
-        //function toggleSMA() {
-        //    if (!chart) return;
-        //
-        //    angular.forEach(seriesAxis, function (axis, id) {
-        //        if(!axis.title) return; // default axis
-        //        if (self.sma) _addSma(id, axis.title.text, false);
-        //        else chart.get(id + "-sma").remove(false);
-        //    });
-        //
-        //    chart.redraw();
-        //}
-
-
-        //function _addSma(id, serieName, redraw) {
-        //    var smaSerie = {
-        //        name: serieName + ' (SMA ' + self.smaPeriod + ')',
-        //        yAxis: self.shareAxis ? seriesAxis["default"].id : (id + "-axis"),
-        //        linkedTo: id + "-serie",
-        //        id: id + "-sma",
-        //        showInLegend: true,
-        //        type: 'trendline',
-        //        algorithm: 'SMA',
-        //        periods: self.smaPeriod
-        //    };
-        //
-        //    chart.addSeries(smaSerie, redraw);
-        //
-        //    console.log("added sma", smaSerie);
-        //}
-
 
         function getValues(item) {
             RestService.getValues({

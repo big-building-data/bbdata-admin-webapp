@@ -50,11 +50,12 @@
 
 
         Graph.prototype.reflow = function () {
-            if (this.graph) this.graph.reflow();
+            if (this.chart) this.chart.reflow();
         };
 
         Graph.prototype.deleteGraph = function () {
-            this.graph = null;
+            this.chart = null;
+            this.series = {};
         };
 
         // add the serie, creating the graph if needed
