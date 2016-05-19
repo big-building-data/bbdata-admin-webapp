@@ -68,7 +68,7 @@
                 // axis on the right
                 s.axis.opposite = true;
                 // add the serie to the existing graph
-                if (!self.shareAxis) this.chart.addAxis(s.axis);
+                if (!this.shareAxis) this.chart.addAxis(s.axis);
 
                 this.chart.addSeries({  // the serie to add
                     name: s.name,
