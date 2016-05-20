@@ -29,14 +29,21 @@
             this.name = sensor.name;
             this.id = sensor.id + "-serie";
             this.data = toTrace( data );
-            this.axis = axis = {
+            this.axis = {
                 id: sensor.id + "-axis",
                 title: {
                     text: sensor.name
                 }
             };
 
-            this.smaId = sensor.id + "-sma";
+            this.sma =  {
+                name: this.name + ' SMA',
+                id: this.id + "-sma",
+                linkedTo: this.id,
+                showInLegend: true,
+                type: 'trendline',
+                algorithm: 'SMA'
+            };
         }
 
 

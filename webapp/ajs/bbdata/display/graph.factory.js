@@ -27,6 +27,8 @@
         function Graph( shareAxis ){
             this.chart = null;
             this.shareAxis = shareAxis;
+            this.smaPeriod = 5;
+            this.sma = false;
             this.series = {};
 
         }
@@ -52,6 +54,11 @@
 
             legend: {enabled: true}
         };
+
+        // SMA:
+        // add sma
+        // .get(serie).hide()
+        // .get(serie).update({"showInLegend": false}, true)
 
 
         Graph.prototype.reflow = function(){
@@ -84,6 +91,7 @@
             }
 
             this.series[s.id] = s;
+            if( this.sma ) addSma( this, s );
         };
 
 
@@ -115,6 +123,9 @@
         Graph.prototype.removeAssociatedSerie = function( sensor ){
             var serie = this.series[sensor.id + "-serie"];
 
+            // remove sma
+            var sma = this.chart.get( serie.sma.id );
+            if( sma ) sma.remove();
             // remove serie
             this.chart.get( serie.id ).remove();
             // if has its own axis, remove it as well
@@ -123,6 +134,24 @@
 
             // update list
             delete this.series[serie.id];
+        };
+
+
+        Graph.prototype.SmaToggled = function(){
+            var self = this;
+            if( this.sma ){
+                angular.forEach( this.series, function( serie ){
+                    addSma( self, serie );
+                } );
+            }else{
+                angular.forEach( this.series, function( serie ){
+                    self.chart.get( serie.sma.id ).remove();
+                    var s = self.chart.get( serie.id );
+                    s.update( {showInLegend: true, color: serie.color}, false );
+                } );
+            }
+
+            this.chart.redraw();
         };
 
         // ----------------------------------------------------
@@ -140,10 +169,18 @@
             self.chart = new Highcharts.StockChart( options );
         }
 
-
         // returns the axis or the default axis depending on shareAxis
         function axis( self, ax ){
             return self.shareAxis ? defaultAxis : ax;
+        }
+
+        function addSma( self, serie ){
+            serie.sma.periods = self.smaPeriod;
+            serie.sma.yAxis = axis( self, serie.axis ).id;
+            self.chart.addSeries( serie.sma );
+            var s = self.chart.get( serie.id );
+            serie.color = s.color;
+            s.update( {showInLegend: false, color: "#00000000"} );
         }
 
 
@@ -153,6 +190,7 @@
             // remove the axis of all the series
             angular.forEach( self.series, function( serie, id ){
                 self.chart.get( id ).update( {yAxis: defaultAxis.id}, false );
+                if( self.sma ) self.chart.get( serie.sma.id ).update( {yAxis: defaultAxis.id}, false );
                 self.chart.get( serie.axis.id ).remove( false );
             } );
 
@@ -165,6 +203,7 @@
             angular.forEach( self.series, function( serie, id ){
                 self.chart.addAxis( serie.axis, false );
                 self.chart.get( id ).update( {yAxis: serie.axis.id}, false );
+                if( self.sma ) self.chart.get( serie.sma.id ).update( {yAxis: serie.axis.id}, false );
             } );
 
             // remove  shared axis
