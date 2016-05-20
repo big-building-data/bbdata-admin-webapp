@@ -54,12 +54,32 @@
         //self.toggleSMA = toggleSMA; // apply self.sma modifications
         self.applyDate = applyDate; // update the X axis with the self.date values
 
+        self.yAxisModeChanged = yAxisModeChanged;
+        self.changeAxisY = changeAxisY;
+
 
         _init();
 
         /* *****************************************************************
          * implementation
          * ****************************************************************/
+
+        function yAxisModeChanged(axis) {
+                console.log("yAxisModeChanged ", axis);
+            if (axis.manual) {
+                changeAxisY(axis);
+            } else {
+                resetAxisY(axis);
+            }
+        }
+
+        function changeAxisY(axis) {
+            self.graph.setExtremesOf(axis.id, axis.min, axis.max);
+        }
+
+        function resetAxisY(axis) {
+            self.graph.setExtremesOf(axis.id);
+        }
 
         //##------------scope power
 
@@ -94,7 +114,8 @@
                 getValues(item);
 
             } else {
-               self.graph.removeAssociatedSerie(item);
+                $scope.modifiedAxis = null;
+                self.graph.removeAssociatedSerie(item);
             }
         }
 
@@ -115,6 +136,7 @@
 
         function toggleShareAxis() {
             self.graph.toggleShareAxis();
+            $scope.modifiedAxis = null;
         }
 
         function getValues(item) {

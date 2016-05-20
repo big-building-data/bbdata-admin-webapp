@@ -32,7 +32,9 @@
          * Syntax: "inactive class:active class"
          * See <a href="http://semantic-ui.com/modules/sticky.html">sticky</a>.
          */
-        .directive( 'semanticToggleButton', toggleButton );
+        .directive( 'semanticToggleButton', toggleButton )
+
+        .directive( 'semanticDropdown', dropdown );
 
 
     function semanticPopup(){
@@ -89,6 +91,23 @@
 
                 toggleFunc();
                 element.on( 'click', toggleFunc );
+            }
+        };
+    }
+
+    function dropdown(){
+        return {
+            restrict  : 'E',
+            replace   : true,
+            transclude: true,
+            template  : '<select class="ui dropdown" ' +
+            'ng-transclude></select>',
+            //require   : '?ngModel',
+
+            link: function( scope, element, attrs, ngModel ){
+                setTimeout( function(){
+                    element.dropdown( {on: 'click'} );
+                }, 200 );
             }
         };
     }

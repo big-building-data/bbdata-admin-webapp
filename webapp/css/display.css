@@ -88,3 +88,16 @@ input {
 input.ng-invalid {
     border-color: red !important;
 }
+
+/*yaxis form*/
+
+#yaxisForm {
+    padding: 10px 0;
+}
+#yaxisForm .nbr {
+    padding: 10px 0;
+}
+
+#yaxisForm input {
+    width: 40%;
+}

@@ -10,11 +10,13 @@
         <form name="datetimeForm" id="datetimeForm" ng-init="date = copy(ctrl.date)">
 
             <div class="ui input mini">
-                <input type="datetime-local" id="inputFrom" name="inputFrom" ng-model="date.from" max="{{date.to | date:'yyyy-MM-ddTHH:mm:ss'}}"
+                <input type="datetime-local" id="inputFrom" name="inputFrom" ng-model="date.from"
+                       max="{{date.to | date:'yyyy-MM-ddTHH:mm:ss'}}"
                        required/> (from)
             </div>
             <div class="ui input mini">
-                <input type="datetime-local" id="inputTo" name="inputTo" ng-model="date.to" min="{{date.from | date:'yyyy-MM-ddTHH:mm:ss'}}"
+                <input type="datetime-local" id="inputTo" name="inputTo" ng-model="date.to"
+                       min="{{date.from | date:'yyyy-MM-ddTHH:mm:ss'}}"
                        required/> (to)
             </div>
             <div class="center tiny marged"><code>month/day/year hr:min</code></div>
@@ -28,11 +30,57 @@
         </form>
     </sidebar-item>
 
+    <sidebar-title icon="settings" title="Y axes" ng-click="yaxisShow = !yaxisShow">
+    </sidebar-title>
+    <sidebar-item ng-show="yaxisShow">
+        <select ng-model="modifiedAxis" style="width: 96%"
+                ng-options="item as item.title.text for item in ctrl.graph.chart.options.yAxis">
+            <!--<option value=""></option>-->
+            <!--<option ng-repeat="axis in ctrl.graph.chart.options.yAxis" value="{{axis}}">{{axis.title.text}}</option>-->
+        </select>
+
+        <div ng-show="modifiedAxis">
+            <form name="yaxisForm" id="yaxisForm">
+
+                <div class="field">
+                    <div class=" ui checkbox">
+                        <input ng-model="modifiedAxis.manual"
+                               ng-change="ctrl.yAxisModeChanged(modifiedAxis)" type="checkbox"/>
+                        <label>manual handling</label>
+                    </div>
+                </div>
+
+                <div ng-show="modifiedAxis.manual" class="nbr">
+
+                    <input type="number" ng-model="modifiedAxis.min"
+                           ng-max="modifiedAxis.max" ng-change="ctrl.changeAxisY(modifiedAxis)" step="10"
+                           required/>
+                    =>
+                    <input type="number" step="10" ng-model="modifiedAxis.max"
+                           ng-min="modifiedAxis.min" ng-change="ctrl.changeAxisY(modifiedAxis)" required/>
+                    <!--<div class="ui input">-->
+                    <!--<input type="number" ng-model="modifiedAxis.min"-->
+                    <!--ng-max="modifiedAxis.max" ng-change="ctrl.changeAxisY(modifiedAxis)" step="10"-->
+                    <!--required/>-->
+                    <!--</div>-->
+                    <!--=>-->
+                    <!--<div class="ui input">-->
+                    <!--<input type="number" step="10" ng-model="modifiedAxis.max"-->
+                    <!--ng-min="modifiedAxis.min" ng-change="ctrl.changeAxisY(modifiedAxis)" required/>-->
+                    <!--</div>-->
+
+                </div>
+
+                {{form.axisForm.$valid}}
+            </form>
+        </div>
+    </sidebar-item>
+
     <sidebar-title icon="magnet" title="available sensors"></sidebar-title>
     <sidebar-item>
         <div class="wrapper">
             <div class="ck-nested">
-                <div ng-class="{opened: item.opened}" class="ck-item" ng-include="'table_tree.html'"
+                <div ng-class="{opened: item.opened}" class="ck-item opened" ng-include="'table_tree.html'"
                      ng-repeat="item in ctrl.sensorsHierarchy"></div>
             </div>
 

@@ -7,7 +7,7 @@
  * Use of this source code is governed by an Apache 2 license
  * that can be found in the LICENSE file.
  */
-(function () {
+(function(){
 
     /**
      * @ngdoc controller
@@ -18,13 +18,13 @@
      * the graph and displays the values of the sensors.
      */
     angular
-        .module('bbdata.app')
-        .factory('Graph', GraphFactory);
+        .module( 'bbdata.app' )
+        .factory( 'Graph', GraphFactory );
 
-    function GraphFactory(Serie) {
+    function GraphFactory( Serie ){
 
         // constructor
-        function Graph(shareAxis) {
+        function Graph( shareAxis ){
             this.chart = null;
             this.shareAxis = shareAxis;
             this.series = {};
@@ -39,74 +39,87 @@
         var defaultAxis = {id: "y-axis"};
 
         var defaultChartOptions = { // default options when creating a new graph
-            chart: {
-                renderTo: 'graphContainer'
+            chart        : {
+                renderTo: 'graphContainer',
+                zoomType: 'xy'
+            },
+            navigator    : {
+                enabled: false
             },
             rangeSelector: {
                 enabled: false
             },
+
             legend: {enabled: true}
         };
 
 
-        Graph.prototype.reflow = function () {
-            if (this.chart) this.chart.reflow();
+        Graph.prototype.reflow = function(){
+            if( this.chart ) this.chart.reflow();
         };
 
-        Graph.prototype.deleteGraph = function () {
+        Graph.prototype.deleteGraph = function(){
             this.chart = null;
             this.series = {};
         };
 
         // add the serie, creating the graph if needed
-        Graph.prototype.addSerie = function (s) {
+        Graph.prototype.addSerie = function( s ){
 
-            if (!this.chart) {
+            if( !this.chart ){
                 // create new graph
-                createGraph(this, s);
-            } else {
+                createGraph( this, s );
+            }else{
                 // axis on the right
                 s.axis.opposite = true;
                 // add the serie to the existing graph
-                if (!this.shareAxis) this.chart.addAxis(s.axis);
+                if( !this.shareAxis ) this.chart.addAxis( s.axis );
 
-                this.chart.addSeries({  // the serie to add
-                    name: s.name,
-                    id: s.id,
-                    data: s.data,
-                    yAxis: axis(this, s.axis).id
-                });
+                this.chart.addSeries( {  // the serie to add
+                    name : s.name,
+                    id   : s.id,
+                    data : s.data,
+                    yAxis: axis( this, s.axis ).id
+                } );
             }
 
             this.series[s.id] = s;
         };
 
 
-        Graph.prototype.toggleShareAxis = function () {
-            this.setShareAxis(!this.shareAxis);
+        Graph.prototype.toggleShareAxis = function(){
+            this.setShareAxis( !this.shareAxis );
         };
 
-        Graph.prototype.setShareAxis = function (shareAxis) {
-            if (this.shareAxis === shareAxis) return;
-            this.shareAxis = shareAxis;
-
-            if (!this.chart) return;
-
-            if (shareAxis) {
-                regroupAxis(this);
-            } else {
-                splitAxis(this);
+        Graph.prototype.setExtremesOf = function( axisname, min, max ){
+            if( !this.chart ) return;
+            var axis = this.chart.get( axisname );
+            if( axis ){
+                axis.setExtremes( min, max );
             }
         };
 
-        Graph.prototype.removeAssociatedSerie = function (sensor) {
+        Graph.prototype.setShareAxis = function( shareAxis ){
+            if( this.shareAxis === shareAxis ) return;
+            this.shareAxis = shareAxis;
+
+            if( !this.chart ) return;
+
+            if( shareAxis ){
+                regroupAxis( this );
+            }else{
+                splitAxis( this );
+            }
+        };
+
+        Graph.prototype.removeAssociatedSerie = function( sensor ){
             var serie = this.series[sensor.id + "-serie"];
 
             // remove serie
-            this.chart.get(serie.id).remove();
+            this.chart.get( serie.id ).remove();
             // if has its own axis, remove it as well
-            var axis = this.chart.get(serie.axis.id);
-            if (axis) axis.remove();
+            var axis = this.chart.get( serie.axis.id );
+            if( axis ) axis.remove();
 
             // update list
             delete this.series[serie.id];
@@ -115,47 +128,47 @@
         // ----------------------------------------------------
 
         // create the graph with the serie
-        function createGraph(self, serie) {
-            var options = angular.copy(defaultChartOptions);
+        function createGraph( self, serie ){
+            var options = angular.copy( defaultChartOptions );
             options.series = [{  // the serie to add
-                name: serie.name,
-                id: serie.id,
-                data: serie.data,
-                yAxis: axis(this, serie.axis).id
+                name : serie.name,
+                id   : serie.id,
+                data : serie.data,
+                yAxis: axis( this, serie.axis ).id
             }];
-            options.yAxis = [axis(self, serie.axis)];
-            self.chart = new Highcharts.StockChart(options);
+            options.yAxis = [axis( self, serie.axis )];
+            self.chart = new Highcharts.StockChart( options );
         }
 
 
         // returns the axis or the default axis depending on shareAxis
-        function axis(self, ax) {
+        function axis( self, ax ){
             return self.shareAxis ? defaultAxis : ax;
         }
 
 
-        function regroupAxis(self) {
+        function regroupAxis( self ){
             // add shared axis
-            self.chart.addAxis(defaultAxis);
+            self.chart.addAxis( defaultAxis );
             // remove the axis of all the series
-            angular.forEach(self.series, function (serie, id) {
-                self.chart.get(id).update({yAxis: defaultAxis.id}, false);
-                self.chart.get(serie.axis.id).remove(false);
-            });
+            angular.forEach( self.series, function( serie, id ){
+                self.chart.get( id ).update( {yAxis: defaultAxis.id}, false );
+                self.chart.get( serie.axis.id ).remove( false );
+            } );
 
             // update graph
             self.chart.redraw();
         }
 
-        function splitAxis(self) {
+        function splitAxis( self ){
             // add the axis of all the series
-            angular.forEach(self.series, function (serie, id) {
-                self.chart.addAxis(serie.axis, false);
-                self.chart.get(id).update({yAxis: serie.axis.id}, false);
-            });
+            angular.forEach( self.series, function( serie, id ){
+                self.chart.addAxis( serie.axis, false );
+                self.chart.get( id ).update( {yAxis: serie.axis.id}, false );
+            } );
 
             // remove  shared axis
-            self.chart.get(defaultAxis.id).remove(false);
+            self.chart.get( defaultAxis.id ).remove( false );
             // update graph
             self.chart.redraw();
         }
