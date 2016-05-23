@@ -21,7 +21,7 @@
         .module( 'bbdata.app' )
         .factory( 'Graph', GraphFactory );
 
-    function GraphFactory( Serie ){
+    function GraphFactory(Serie){
 
         // constructor
         function Graph( shareAxis ){
@@ -29,16 +29,19 @@
             this.shareAxis = shareAxis;
             this.smaPeriod = 5;
             this.sma = false;
-            this.series = {};
+            this.series = {}; // serie id (sensor-"serie") mapped to the serie object
 
         }
 
 
-        // static
-        Graph.DEFAULT_AXIS = defaultAxis;
-        Graph.DEFAULTchart_OPTIONS = defaultChartOptions;
+        var defaultSerie = new Serie( {
+            id    : Serie.toSensorId( "y" ), // so we have the axis.id = y-axis
+            name  : "values",
+            values: []
+        }, [] );
 
-        var defaultAxis = {id: "y-axis"};
+        var defaultAxis = defaultSerie.axis;
+
 
         var defaultChartOptions = { // default options when creating a new graph
             chart        : {
@@ -54,6 +57,11 @@
 
             legend: {enabled: true}
         };
+
+        // static
+        Graph.DEFAULT_SERIE = defaultSerie;
+
+        Graph.DEFAULTchart_OPTIONS = defaultChartOptions;
 
         // SMA:
         // add sma
@@ -92,6 +100,9 @@
 
             this.series[s.id] = s;
             if( this.sma ) addSma( this, s );
+            if( s.manual ){
+                this.setExtremesOf( s.axis.id, s.min, s.max );
+            }
         };
 
 
@@ -99,9 +110,9 @@
             this.setShareAxis( !this.shareAxis );
         };
 
-        Graph.prototype.setExtremesOf = function( axisname, min, max ){
+        Graph.prototype.setExtremesOf = function( axisId, min, max ){
             if( !this.chart ) return;
-            var axis = this.chart.get( axisname );
+            var axis = this.chart.get( axisId );
             if( axis ){
                 axis.setExtremes( min, max );
             }
@@ -187,10 +198,16 @@
         function regroupAxis( self ){
             // add shared axis
             self.chart.addAxis( defaultAxis );
+            // set min max of default axis y if in manual mode
+            if( defaultSerie.manual ) self.setExtremesOf(defaultAxis.id, defaultSerie.min, defaultSerie.max );
+
             // remove the axis of all the series
             angular.forEach( self.series, function( serie, id ){
-                self.chart.get( id ).update( {yAxis: defaultAxis.id}, false );
-                if( self.sma ) self.chart.get( serie.sma.id ).update( {yAxis: defaultAxis.id}, false );
+                // update axis
+                var options = {yAxis: defaultAxis.id};
+                self.chart.get( id ).update( options, false );
+                if( self.sma ) self.chart.get( serie.sma.id ).update( options, false );
+                // remove the non-shared axis
                 self.chart.get( serie.axis.id ).remove( false );
             } );
 
@@ -202,8 +219,11 @@
             // add the axis of all the series
             angular.forEach( self.series, function( serie, id ){
                 self.chart.addAxis( serie.axis, false );
-                self.chart.get( id ).update( {yAxis: serie.axis.id}, false );
-                if( self.sma ) self.chart.get( serie.sma.id ).update( {yAxis: serie.axis.id}, false );
+                var options = {yAxis: serie.axis.id};
+                self.chart.get( id ).update( options, false );
+                if( self.sma ) self.chart.get( serie.sma.id ).update( options, false );
+                // set min max of default axis y if in manual mode
+                if( serie.manual ) self.setExtremesOf( serie.axis.id, serie.min, serie.max );
             } );
 
             // remove  shared axis
