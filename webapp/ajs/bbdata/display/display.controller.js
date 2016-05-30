@@ -23,7 +23,7 @@
 
     // --------------------------
 
-    function ctrl( RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, DISPLAY_PAGE, Graph, Serie, $window ){
+    function ctrl( RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, DISPLAY_PAGE, Graph, Serie, $window, ModalService ){
 
         var self = this;
 
@@ -67,15 +67,42 @@
          * ****************************************************************/
 
         function createNewWindow(){
-            var popupWindow = $window.open('window.html');
-            setTimeout(function(){
-                popupWindow.angular.element( '[ng-app]' ).scope().ctrl.setData( [{
-                    "id"     : 45,
-                    "name"   : "Température au sol 1",
-                    "address": "noaddress"
-                }], moment.duration( 1, 'hours' ), 6000 );
+            ModalService.showModal( {
+                title          : "edit",
+                htmlInclude    : "/ajs/bbdata/display/partials/_newWindowContent.html",
+                positive       : "generate",
+                positiveDisable: "form.nwForm.$invalid",
+                negative       : "cancel",
+                basic          : false,
+                cancelable     : false,
+                inputs         : {
+                    sensors     : self.all_sensors,
+                    durationInt : 1,
+                    durationType: 'hours',
+                    refreshRate : 1000
+                }
 
-            }, 200);
+            } ).then( function( result ){
+                if( result.status ){
+                    var duration = moment.duration( result.inputs.durationInt, result.inputs.durationType );
+                    var sensor = result.inputs.selectedSensor;
+                    var refreshRate = result.inputs.refreshRate;
+                    _createNewWindow( sensor, duration, refreshRate );
+                }
+            }, function(){
+                console.log( "error" );
+            } );
+        }
+
+        function _createNewWindow( sensor, duration, refreshRate ){
+            var popupWindow = $window.open( 'window.html' );
+            var interval = setInterval( function(){
+                var scope = popupWindow.angular.element( '[ng-app]' ).scope();
+                if( scope ){
+                    clearInterval( interval );
+                    scope.ctrl.setData( [sensor], duration, refreshRate );
+                }
+            }, 100 );
         }
 
         function yAxisModeChanged( axis ){
@@ -207,7 +234,9 @@
         // modifies the hierarchy received fomr the OUTPUT API
         // to be usable with our ng-repeat (see _sidebar.html)
         function _hierarchise( data ){
+
             var hierarchy = [];
+            var all = [];
 
             angular.forEach( data, function( tls ){
                 var sls_array = []; // shrunk sls
@@ -217,12 +246,22 @@
 
                     if( sls.sensors.length > 2 ){
                         // more than one captor: rename them to "children"
-                        sls.children = sls.sensors;
+                        var children = sls.sensors;
                         delete sls.sensors;
+
+                        // keep track of all sensors
+                        all.push( sls );
+                        all = all.concat( children );
+                        // end track
+
+                        sls.children = children;
                         sls_array.push( sls );
                     }else{
                         // only one captor: make it a "sls"
-                        sls_array.push( sls.sensors[0] );
+                        var s = sls.sensors[0];
+                        sls_array.push( s );
+                        // keep track of all sensors
+                        all.push( s );
                     }
 
                 } );
@@ -234,7 +273,11 @@
                 hierarchy.push( tls );
             } );
 
-            console.log( JSON.stringify( hierarchy ) );
+            // TODO
+            self.all_sensors = all;
+            console.log( "hierarchy", hierarchy );
+            console.log( "all sensors", all );
+
             return hierarchy;
         }
 

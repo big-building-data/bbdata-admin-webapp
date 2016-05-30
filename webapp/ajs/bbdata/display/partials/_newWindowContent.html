@@ -1,0 +1,29 @@
+<form name="form.nwForm" class="ui form">
+    <div class="field">
+        <label>axis x width:</label>
+        <div class="two fields">
+            <div class="field">
+                <input type="number" ng-model="inputs.durationInt" min="1" max="500" required/>
+            </div>
+            <div class="field" ng-init="durationTypes = ['seconds', 'minutes', 'hours']">
+                <semantic-dropdown class="ui fluid dropdown" ng-model="inputs.durationType"
+                                   ng-options="item for item in durationTypes" required>
+                </semantic-dropdown>
+            </div>
+        </div>
+    </div>
+
+    <div class="fields">
+        <div class="six wide field">
+            <label>refresh rate (ms)</label>
+            <input type="number" ng-model="inputs.refreshRate" min="1" step="100" required/>
+        </div>
+        <div class="six wide field">
+            <label>sensor:</label>
+            <semantic-dropdown ng-model="inputs.selectedSensor" class="ui select dropdown fluid"
+                               ng-options="s as s.name for s in inputs.sensors" required>
+            </semantic-dropdown>
+        </div>
+    </div>
+
+</form>
