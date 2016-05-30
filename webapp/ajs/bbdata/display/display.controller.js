@@ -23,7 +23,7 @@
 
     // --------------------------
 
-    function ctrl( RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, DISPLAY_PAGE, Graph, Serie ){
+    function ctrl( RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, DISPLAY_PAGE, Graph, Serie, $window ){
 
         var self = this;
 
@@ -58,12 +58,25 @@
         self.yAxisModeChanged = yAxisModeChanged; // the currently modified axis changed between manual/auto
         self.changeAxisY = changeAxisY; // axis in manual mode and new extremes set
 
+        self.newWindow = createNewWindow;
 
         _init();
 
         /* *****************************************************************
          * implementation
          * ****************************************************************/
+
+        function createNewWindow(){
+            var popupWindow = $window.open('window.html');
+            setTimeout(function(){
+                popupWindow.angular.element( '[ng-app]' ).scope().ctrl.setData( [{
+                    "id"     : 45,
+                    "name"   : "Température au sol 1",
+                    "address": "noaddress"
+                }], moment.duration( 1, 'hours' ), 6000 );
+
+            }, 200);
+        }
 
         function yAxisModeChanged( axis ){
             console.log( "yAxisModeChanged ", axis );

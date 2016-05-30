@@ -12,11 +12,11 @@
         .module( 'bbdata.window.app' )
         .controller( 'MainCtrl', ctrl );
 
-    function ctrl( RestService, RFC3339_FORMAT ){
+    function ctrl( RestService, RFC3339_FORMAT, $window ){
         var self = this;
         self.setData = setData;
-
-        setData([{ "id": 45, "name": "Température au sol 1", "address": "noaddress" }], moment.duration(1, 'hours'), 6000);
+        $window.setData = setData;
+        // setData([{ "id": 45, "name": "Température au sol 1", "address": "noaddress" }], moment.duration(1, 'hours'), 6000);
 
 
         function setData( sensors, interval, refreshRate ){
