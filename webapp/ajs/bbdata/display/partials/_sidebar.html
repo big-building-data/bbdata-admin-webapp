@@ -33,7 +33,7 @@
     <sidebar-title icon="settings" title="Y axes" ng-click="yaxisShow = !yaxisShow">
     </sidebar-title>
     <sidebar-item ng-show="yaxisShow">
-        <select ng-model="modifiedAxis" style="width: 96%"
+        <select ng-model="yAxisSelected" style="width: 96%" ng-change="ctrl.yAxisSelectChanged(yAxisSelected)"
                 ng-options="item as item.title.text for item in ctrl.graph.chart.options.yAxis">
             <!--<option value=""></option>-->
             <!--<option ng-repeat="axis in ctrl.graph.chart.options.yAxis" value="{{axis}}">{{axis.title.text}}</option>-->

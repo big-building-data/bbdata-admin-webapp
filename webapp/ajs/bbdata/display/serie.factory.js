@@ -28,13 +28,16 @@
             this.sensor = sensor;
             this.name = sensor.name;
             this.id = sensor.id + "-serie";
-            this.data = toTrace( data );
+            this.update(data);
             this.axis = {
                 id: sensor.id + "-axis",
                 title: {
                     text: sensor.name
                 }
             };
+
+            this.manual = false;
+            // this.max and this.min are undefined in auto mode
 
             this.sma =  {
                 name: this.name + ' SMA',
@@ -46,9 +49,15 @@
             };
         }
 
+        Serie.prototype.update = function(data){
+            this.data = toTrace(data);
+        };
+
+
 
         // static
         Serie.toTrace = toTrace;
+        Serie.toSensorId = toSensorId;
         // ----------------------------------------------------
 
         // convert the values received from the OUTPUT API to
@@ -61,6 +70,10 @@
             } );
 
             return results;
+        }
+
+        function toSensorId(serieId){
+            return serieId.replace(/-(sma|axis|serie)$/, "")
         }
 
         return Serie;
