@@ -56,7 +56,8 @@
         function toTrace( measures ){
             var results = [];
             angular.forEach( measures, function( m ){
-                results.push( [new Date( m.timestamp ).getTime(), m.value] );
+                // TODO: type from metadata and do not show strings !!!
+                results.push( [new Date( m.timestamp ).getTime(), parseFloat(m.value)] );
             } );
 
             return results;

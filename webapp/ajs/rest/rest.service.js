@@ -25,11 +25,11 @@
 
         return $resource('', {}, {
 
-            getHierarchy: {method: 'GET', url: baseUrl + 'hierarchy', isArray: true},
+            getHierarchy: {method: 'GET', url: baseUrl + 'values/tree', isArray: true},
 
             getValues: {
-                method: 'POST',
-                url: baseUrl + 'values',
+                method: 'GET',
+                url: baseUrl + 'values/sensors',
                 isArray: false
             },
 

@@ -23,15 +23,17 @@
     // ----------------------------------------------------
 
     function configure( $httpProvider ){
+        // delete header from client:
+        // cf: http://stackoverflow.com/questions/17289195/angularjs-post-data-to-external-rest-api
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
         // handle the from/to base64 (program argument only)
-        //$httpProvider.defaults.transformRequest.unshift( function( data, headerGetter ){
-        //    if( data && data.program ){
-        //        data.program = $base64.encode( JSON.stringify( data.program ) );
-        //    }
+        // $httpProvider.defaults.transformRequest.unshift( function( data, headerGetter ){
+        //    console.log("data ", data);
         //    return data;
-        //} );
-        //
+        // } );
+
         //$httpProvider.defaults.transformResponse.push( function( data, headerGetter ){
         //    if( data && data.hasOwnProperty("program") ){
         //        if(data.program) {

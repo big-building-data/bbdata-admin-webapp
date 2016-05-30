@@ -141,7 +141,8 @@
 
         function getValues(item) {
             RestService.getValues({
-                cid: item.id,
+                id: item.id,
+                address: item.address,
                 from: moment(self.date.from).format(RFC3339_FORMAT),
                 to: moment(self.date.to).format(RFC3339_FORMAT)
             }, function (results) {
@@ -171,16 +172,16 @@
                 var sls_array = []; // shrunk sls
 
                 angular.forEach(tls.sls, function (sls) {
-                    if (!sls.captors)return; // every sls should have at least one captor
+                    if (!sls.sensors)return; // every sls should have at least one captor
 
-                    if (sls.captors.length > 2) {
+                    if (sls.sensors.length > 2) {
                         // more than one captor: rename them to "children"
-                        sls.children = sls.captors;
-                        delete sls.captors;
+                        sls.children = sls.sensors;
+                        delete sls.sensors;
                         sls_array.push(sls);
                     } else {
                         // only one captor: make it a "sls"
-                        sls_array.push(sls.captors[0]);
+                        sls_array.push(sls.sensors[0]);
                     }
 
                 });

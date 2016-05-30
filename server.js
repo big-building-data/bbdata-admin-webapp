@@ -22,13 +22,12 @@ var port = process.env.PORT || 8088;        // set our port
 var router = express.Router();              // get an instance of the express Router
                                             // (accessed at GET http://localhost:8080/api)
 
-router.post('/values', function (req, res) {
-    params = req.body;
-    res.send(randomValues(req.body));
+router.get('/values/sensors', function (req, res) {
+    res.send(randomValues({from: req.param('from'), to: req.param('to')}));
 
 });
 
-router.get('/hierarchy', function (req, res) {
+router.get('/values/tree', function (req, res) {
     res.json(hierarchy);
 });
 
@@ -37,9 +36,9 @@ router.get('/hierarchy', function (req, res) {
 var sensors = JSON.parse('[ { "id" : 3329, "address" : "1.22.128",  "creationdate" : "2017-12-31T15:59:60+02:00", "name" : "Température 22b", "location" : "Plafond du bloc 22b, blueFACTORY, Fribourg", "description" : "Température au plafond du bloc 22b. La précision est à +- 0.05K", "parser" : { "name" : "knx-semi-parser" }, "type" : { "name" : "double64" }, "unit" : { "name" : "Kelvin", "symbol" : "K" } },{ "id" : 3929, "address" : "1.22.129",  "creationdate" : "2017-12-31T03:09:60+02:00", "name" : "Température 23b", "location" : "Plafond du bloc 23b, blueFACTORY, Fribourg", "description" : "Température au plafond du bloc 23b. La précision est à +- 0.05K", "parser" : { "name" : "knx-semi-parser" }, "type" : { "name" : "double64" }, "unit" : { "name" : "Kelvin", "symbol" : "K" } },{ "id" : 3, "address" : "noaddress",  "creationdate" : "2017-12-31T04:19:00+02:00", "name" : "Présence 23b", "location" : "Bloc de Mr. Lala Blum", "description" : "Capteur de présence de Mr. Blum", "type" : { "name" : "boolean" }, "unit" : { "name" : "Présence", "symbol" : "P" } }]');
 
 
-var hierarchy = JSON.parse('[{ "id": 18, "name": "Box 22B, blueFACTORY, Fribourg", "owner": { "firstname": "Jean", "lastname": "Dupont", "email": "jean.dupont@example.com" }, "sls": [{ "id": 27, "name": "Températures", "captors": [{ "id": 3, "name": "Température au plafond", "address": "noaddress" }, { "id": 45, "name": "Température au sol 1", "address": "noaddress" }, { "id": 6, "name": "Température au sol 2", "address": "noaddress" }] }, { "sls-id": 2, "name": "Présence box 33", "captors": [{ "id": 12345, "name": "Présence box 33", "address": "1.1.23" }] }] }]');
+var hierarchy = JSON.parse('[{ "id": 18, "name": "Box 22B, blueFACTORY, Fribourg", "owner": { "firstname": "Jean", "lastname": "Dupont", "email": "jean.dupont@example.com" }, "sls": [{ "id": 27, "name": "Températures", "sensors": [{ "id": 3, "name": "Température au plafond", "address": "noaddress" }, { "id": 45, "name": "Température au sol 1", "address": "noaddress" }, { "id": 6, "name": "Température au sol 2", "address": "noaddress" }] }, { "sls-id": 2, "name": "Présence box 33", "sensors": [{ "id": 12345, "name": "Présence box 33", "address": "1.1.23" }] }] }]');
 
-router.get('/sensors/tokens', function (req, res) {
+router.get('/sensors/values', function (req, res) {
     var r = random.integer(0, 1);
     if (r) {
         res.send([{
@@ -124,7 +123,7 @@ function randomValues(params) {
     for (var i = from; i < to; i += increment) {
         measures.push({
             timestamp: moment(i).format("YYYY-MM-DDTHH:mm:ssZ"),
-            value: random.integer(0, 20) + mean
+            value: "" + (random.integer(0, 20) + mean)
         });
     }
 
