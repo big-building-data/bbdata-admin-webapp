@@ -11,7 +11,7 @@
 
     /**
      * @ngdoc overview
-     * @name thymioCaptain.app
+     * @name bbdata.app
      * @description This module is the one responsible for the whole BBData App.
      * It is mainly composed of controllers.
 

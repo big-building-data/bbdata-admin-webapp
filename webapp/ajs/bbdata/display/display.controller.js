@@ -118,6 +118,14 @@
                 }
             } );
 
+            // use utc
+            Highcharts.setOptions( {
+                // This is for all plots, change Date axis to local timezone
+                global: {
+                    useUTC: false
+                }
+            } );
+
         }
 
         //##------------ methods
@@ -191,17 +199,17 @@
             angular.forEach( data, function( tls ){
                 var sls_array = []; // shrunk sls
 
-                angular.forEach(tls.sls, function (sls) {
-                    if (!sls.sensors)return; // every sls should have at least one captor
+                angular.forEach( tls.sls, function( sls ){
+                    if( !sls.sensors )return; // every sls should have at least one captor
 
-                    if (sls.sensors.length > 2) {
+                    if( sls.sensors.length > 2 ){
                         // more than one captor: rename them to "children"
                         sls.children = sls.sensors;
                         delete sls.sensors;
-                        sls_array.push(sls);
-                    } else {
+                        sls_array.push( sls );
+                    }else{
                         // only one captor: make it a "sls"
-                        sls_array.push(sls.sensors[0]);
+                        sls_array.push( sls.sensors[0] );
                     }
 
                 } );
