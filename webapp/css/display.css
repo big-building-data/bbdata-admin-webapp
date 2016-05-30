@@ -94,10 +94,18 @@ input.ng-invalid {
 #yaxisForm {
     padding: 10px 0;
 }
+
 #yaxisForm .nbr {
     padding: 10px 0;
 }
 
 #yaxisForm input {
     width: 40%;
+}
+
+/*period sma input*/
+#periodInput {
+    width: 50px;
+    margin-left: 10px;
+
 }

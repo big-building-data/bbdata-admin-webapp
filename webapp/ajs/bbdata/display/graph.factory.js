@@ -148,7 +148,7 @@
         };
 
 
-        Graph.prototype.SmaToggled = function(){
+        Graph.prototype.smaToggled = function(){
             var self = this;
             if( this.sma ){
                 angular.forEach( this.series, function( serie ){
@@ -163,6 +163,18 @@
             }
 
             this.chart.redraw();
+        };
+
+        Graph.prototype.smaPeriodChanged = function(period){
+            if(!this.chart || !this.sma) return; // nothing to do
+            var self = this;
+            angular.forEach( this.series, function( serie ){
+                var options = {periods : period};
+                self.chart.get( serie.sma.id ).update(options, false);
+            } );
+            self.smaPeriod = period;
+            console.log("period changed", period);
+            self.chart.redraw();
         };
 
         // ----------------------------------------------------

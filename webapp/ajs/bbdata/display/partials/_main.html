@@ -6,19 +6,36 @@
                         style="margin-bottom: 20px"
                         toggle-class="blue:purple"></semantic-toggle-button>
 
-<semantic-toggle-button class="basic" toggle-text="yAxis multiple:yAxis shared"
-                        ng-model="ctrl.shareAxis" ng-click="ctrl.toggleShareAxis()"
+<semantic-toggle-button class="basic"
+                        ng-show="ctrl.graph.chart"
+                        toggle-text="yAxis multiple:yAxis shared"
+                        ng-model="ctrl.shareAxis"
+                        ng-click="ctrl.toggleShareAxis()"
                         toggle-class="orange:red"></semantic-toggle-button>
 
-<semantic-toggle-button class="basic" toggle-text="no SMA:  SMA  "
-                        ng-model="ctrl.graph.sma" ng-click="ctrl.graph.SmaToggled()"
-                        semantic-popup="hover" data-content="Simple Moving Average"
+<semantic-toggle-button class="basic"
+                        ng-show="ctrl.graph.chart"
+                        toggle-text="no SMA:  SMA  "
+                        ng-model="ctrl.graph.sma"
+                        ng-click="ctrl.graph.smaToggled()"
+                        semantic-popup="hover"
+                        data-content="Simple Moving Average"
                         toggle-class="green:olive"></semantic-toggle-button>
 
-<button class="ui button" ng-click="ctrl.newWindow()">
+
+<div ng-show="ctrl.graph.chart && ctrl.graph.sma" style="display:inline-block; margin-left: 10px">
+    <div class="ui transparent input" ng-init="smaPeriod = ctrl.graph.smaPeriod">
+        <label for="periodInput"><i>SMA period:</i></label>
+        <input type="number" id="periodInput" min="1" max="20"
+               ng-model="smaPeriod"
+               ng-change="ctrl.graph.smaPeriodChanged(smaPeriod)"/>
+    </div>
+</div>
+
+
+<button class="ui button right floated" ng-click="ctrl.newWindow()">
     new window
 </button>
-
 
 
 <div class="ui message" ng-show="ctrl.modifiedAxis != null">
