@@ -203,7 +203,7 @@
 
         function getValues( item ){
             RestService.getValues( {
-                cid : item.id,
+                id : item.id,
                 from: moment( self.date.from ).format( RFC3339_FORMAT ),
                 to  : moment( self.date.to ).format( RFC3339_FORMAT )
             }, function( results ){
