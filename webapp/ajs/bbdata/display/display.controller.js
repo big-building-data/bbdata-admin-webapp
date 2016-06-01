@@ -155,7 +155,7 @@
                 if( args.from == DISPLAY_PAGE ){
                     _closeSidebar();
                 }else if( args.to == DISPLAY_PAGE ){
-                    if(!self.graph.chart) _showSidebar();
+                    if( !self.graph.chart ) _showSidebar();
                     setTimeout( _reflowChart, 100 );
                 }
             } );
@@ -209,6 +209,12 @@
                 from: moment( self.date.from ).format( RFC3339_FORMAT ),
                 to  : moment( self.date.to ).format( RFC3339_FORMAT )
             }, function( results ){
+                if( !results.values.length ){
+                    // don't bother with empty values
+                    toaster.pop( "warning", "No data", "No data for sensor <i>'" + item.name + "</i>' during this" +
+                        " interval.",  null, 'trustedHtml');
+                    return;
+                }
                 var s = series[item.id];
                 if( s ){
                     s.update( results.values );

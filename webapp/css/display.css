@@ -49,6 +49,22 @@ div.parent > .indent:before {
 }
 
 /* *****************************************************************
+ * sidebar
+ * ****************************************************************/
+.ui.custom.sidebar {
+    width: 315px !important;
+    margin-left: -315px !important;
+}
+
+.ui.visible.custom.sidebar {
+    margin-left: 0px !important;
+}
+
+.ui.visible.right.custom.sidebar {
+    margin-left: -315px !important;
+}
+
+/* *****************************************************************
  * other
  * ****************************************************************/
 

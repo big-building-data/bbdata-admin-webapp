@@ -1,6 +1,7 @@
 <sidebar button-class="#toggleSidebar"
          after-toggle="ctrl.onSidebarToggle"
          transition="marginate"
+         class="custom"
          style="padding-top:70px">
     <!--<sidebar button-class="#toggleSidebar" transition="push">-->
     <!--<sidebar button-class="#toggleSidebar" transition="scale down">-->
@@ -53,7 +54,7 @@
                 <div ng-show="modifiedAxis.manual" class="nbr">
 
                     <input type="number" ng-model="modifiedAxis.min"
-                           ng-max="modifiedAxis.max" ng-change="ctrl.changeAxisY(modifiedAxis)" step="10"
+                           ng-max="modifiedAxis.max" ng-change="ctrl.changeAxisY(modifiedAxis)"
                            required/>
                     =>
                     <input type="number" step="10" ng-model="modifiedAxis.max"
