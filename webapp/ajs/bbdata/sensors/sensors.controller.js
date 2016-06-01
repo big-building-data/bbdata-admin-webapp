@@ -22,7 +22,7 @@
 
     // --------------------------
 
-    function ctrl( RestService, ModalService ){
+    function ctrl( RestService, ModalService, toaster ){
         var self = this;
 
         self.sensors = []; // all the sensors
@@ -133,7 +133,7 @@
 
                     }
                 }
-            } ).then( function(results){
+            } ).then( function( results ){
                 if( results.status ){
                     // TODO add sensor
                 }
@@ -212,6 +212,7 @@
 
         function _handleError( error ){
             console.log( error );
+            toaster.error( {body: error} );
         }
     }
 

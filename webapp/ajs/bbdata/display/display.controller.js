@@ -23,7 +23,7 @@
 
     // --------------------------
 
-    function ctrl( RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, DISPLAY_PAGE, Graph, Serie, $window, ModalService ){
+    function ctrl( RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, DISPLAY_PAGE, Graph, Serie, $window, ModalService, toaster ){
 
         var self = this;
 
@@ -146,6 +146,7 @@
             // get the sensors
             RestService.getHierarchy( function( result ){
                 self.sensorsHierarchy = _hierarchise( result );
+                if( $rootScope.page == DISPLAY_PAGE ) _showSidebar();
             }, _log );
 
             // register listener: close the sidebar on page change +
@@ -154,6 +155,7 @@
                 if( args.from == DISPLAY_PAGE ){
                     _closeSidebar();
                 }else if( args.to == DISPLAY_PAGE ){
+                    if(!self.graph.chart) _showSidebar();
                     setTimeout( _reflowChart, 100 );
                 }
             } );
@@ -203,7 +205,7 @@
 
         function getValues( item ){
             RestService.getValues( {
-                id : item.id,
+                id  : item.id,
                 from: moment( self.date.from ).format( RFC3339_FORMAT ),
                 to  : moment( self.date.to ).format( RFC3339_FORMAT )
             }, function( results ){
@@ -222,6 +224,12 @@
 
         function _closeSidebar(){
             if( sidebarState != 'hide' ){
+                $( '#toggleSidebar' ).click();
+            }
+        }
+
+        function _showSidebar(){
+            if( sidebarState != 'show' ){
                 $( '#toggleSidebar' ).click();
             }
         }
@@ -283,6 +291,7 @@
 
 
         function _log( msg ){
+            toaster.error( {body: msg} );
             console.log( msg );
         }
 

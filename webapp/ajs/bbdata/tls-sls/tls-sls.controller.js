@@ -23,7 +23,7 @@
     // --------------------------
 
 
-    function ctrl( RestService, $scope, $rootScope, ModalService, TLS_SLS_PAGE ){
+    function ctrl( RestService, $scope, $rootScope, ModalService, TLS_SLS_PAGE, toaster ){
 
         var self = this;
 
@@ -187,6 +187,7 @@
 
         function _handleError( error ){
             console.log( error );
+            toaster.error( {body: error} );
         }
 
         function splice( arr, idx ){

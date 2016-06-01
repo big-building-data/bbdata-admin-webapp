@@ -28,7 +28,8 @@
             'as.sortable',
             'semantic.modals',
             'semantic.sidebar',
-            'semantic.helpers'
+            'semantic.helpers'  ,
+            'toaster'
         ] ).run( run );
 
     webapp.constant( "RFC3339_FORMAT", "YYYY-MM-DDTHH:mm:ssZ" );

@@ -12,8 +12,8 @@
     <!--includes css-->
     <link rel="stylesheet" href="/vendor/semantic/semantic.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/vendor/sticky/sticky.min.css">
     <link rel="stylesheet" href="/vendor/sortable/ng-sortable.style.min.css">
+    <link rel="stylesheet" href="/vendor/toaster/toaster.min.css">
     <!--my css-->
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/display.css">
@@ -79,11 +79,12 @@
 
 </div>
 
+<toaster-container toaster-options="{'time-out': 10000, 'tap-to-dismiss':true}"></toaster-container>
+
 <!--=================== scripts include ================= -->
 
 <script type="text/javascript" src="/vendor/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="/vendor/semantic/semantic.min.js"></script>
-<script type="text/javascript" src="/vendor/sticky/sticky.min.js"></script>
 
 <!--angular-->
 <script type="text/javascript" src="/vendor/angular/angular.min.js"></script>
@@ -93,6 +94,8 @@
 <!--sortable-->
 <script type="text/javascript" src="/vendor/sortable/ng-sortable.js"></script>
 
+<!--toast-->
+<script type="text/javascript" src="/vendor/toaster/toaster.min.js"></script>
 
 <!--rest-->
 <script type="text/javascript" src="/ajs/rest/rest.module.js"></script>
@@ -128,6 +131,7 @@
 <!--see http://www.highcharts.com/plugin-registry/single/15/Custom-Events-->
 <script type="text/javascript" src="https://rawgithub.com/blacklabel/custom_events/master/customEvents.js"></script>
 <script type="text/javascript" src="https://rawgit.com/laff/technical-indicators/master/technical-indicators.src.js"></script>
+
 
 </body>
 
