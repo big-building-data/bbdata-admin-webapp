@@ -48,6 +48,10 @@ div.parent > .indent:before {
     display: table-row;
 }
 
+/*TODO for now, hide the sls checkbox (if has chidren), since the server does not support means yet*/
+ .ck-item-1.parent > .checkbox {
+     display: none;
+ }
 /* *****************************************************************
  * sidebar
  * ****************************************************************/
