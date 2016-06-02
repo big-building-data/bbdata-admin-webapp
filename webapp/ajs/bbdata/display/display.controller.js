@@ -146,14 +146,14 @@
             // get the sensors
             RestService.getHierarchy( function( result ){
                 self.sensorsHierarchy = _hierarchise( result );
-                if( $rootScope.page == DISPLAY_PAGE ) _showSidebar();
+                if( $rootScope.page == DISPLAY_PAGE ) setTimeout(function(){_showSidebar(); }, 100);
             }, _log );
 
             // register listener: close the sidebar on page change +
             // reflow the graph on page show
             $rootScope.$on( 'bbdata.PageChanged', function( evt, args ){
                 if( args.from == DISPLAY_PAGE ){
-                    _closeSidebar();
+                    if( args.to != DISPLAY_PAGE ) _closeSidebar();
                 }else if( args.to == DISPLAY_PAGE ){
                     if( !self.graph.chart ) _showSidebar();
                     setTimeout( _reflowChart, 100 );

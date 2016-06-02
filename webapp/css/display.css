@@ -61,7 +61,13 @@ div.parent > .indent:before {
 }
 
 .ui.visible.right.custom.sidebar {
-    margin-left: -315px !important;
+    margin-left: -315px !important;  /* vs 265px */
+}
+
+.sidebar.visible ~ .pusher > #container {
+    padding-left: 60px;
+    padding-right: 20px;
+    transition: all .5s ease;
 }
 
 /* *****************************************************************
