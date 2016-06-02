@@ -186,7 +186,7 @@
                 name : serie.name,
                 id   : serie.id,
                 data : serie.data,
-                yAxis: axis( this, serie.axis ).id
+                yAxis: axis( self, serie.axis ).id
             }];
             options.yAxis = [axis( self, serie.axis )];
             self.chart = new Highcharts.StockChart( options );
