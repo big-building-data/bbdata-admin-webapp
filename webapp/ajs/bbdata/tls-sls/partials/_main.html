@@ -22,7 +22,7 @@
             </div>
             <div>
                <!--add sls button-->
-                <button class="ui labeled icon tiny button right floated" ng-click="ctrl.addSLS(tls.sls)">
+                <button class="ui labeled icon tiny button right floated" ng-click="ctrl.addSLS(tls)">
                     <i class="add icon"></i>
                     add SLS
                 </button>
@@ -35,8 +35,8 @@
                  ng-model="sls.sensors">
                 <!--sls title and buttons-->
                 <div class="ui top attached label">
-                    <i class="icon edit link" hover-class=":teal" ng-click="ctrl.editSLS(tls.sls, $index)"></i>
-                    <i class="icon remove link" hover-class=":red" ng-click="ctrl.deleteSLS(tls.sls, $index)"></i>
+                    <i class="icon edit link" hover-class=":teal" ng-click="ctrl.editSLS(tls, $index)"></i>
+                    <i class="icon remove link" hover-class=":red" ng-click="ctrl.deleteSLS(tls, $index)"></i>
                    <span class="title">{{sls.name}}</span>
                 </div>
 

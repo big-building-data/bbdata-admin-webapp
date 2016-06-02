@@ -42,6 +42,8 @@
     webapp.constant( "SENSORS_PAGE", 1 );
     webapp.constant( "TLS_SLS_PAGE", 2 );
 
+
+    webapp.factory('errorParser', errorParser);
     /*
      * page switch management.
      * the variable $root.page contains the number associated
@@ -72,6 +74,23 @@
             // fire the event
             $rootScope.$broadcast( 'bbdata.PageChanged', {from: from, to: to} );
         } );
+    }
+
+    function errorParser(){
+        // TODO put it somewhere else
+        reRootCause = /root cause<\/b> <pre>(.*)/g;
+        return {
+            parse: function(error){
+                if(error.statusText) {
+                var match = reRootCause.exec(error);
+                if(match.length > 0) return match[1];
+                return error;
+                }else{
+                    // TODO
+                    return error.status;
+                }
+            }
+        }
     }
 
 }());

@@ -21,7 +21,6 @@
     <div class="field">
         <label>Value type:</label>
         <select class="ui search dropdown" ng-model="inputs.sensor.type" required>
-            <option value=""></option>
             <option ng-repeat="t in inputs.types" value="{{t}}">{{t}}</option>
         </select>
     </div>
@@ -30,7 +29,7 @@
     <div class="field">
         <label>Parser:</label>
         <select class="ui search dropdown" ng-model="inputs.sensor.parser">
-            <option value=""></option>
+            <option value=" "></option>
             <option ng-repeat="p in inputs.parsers" value="{{p.name}}">{{p.name}} ({{p.description}})</option>
         </select>
     </div>

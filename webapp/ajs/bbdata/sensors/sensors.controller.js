@@ -22,7 +22,7 @@
 
     // --------------------------
 
-    function ctrl( RestService, ModalService, toaster ){
+    function ctrl( RestService, ModalService, toaster, errorParser ){
         var self = this;
 
         self.sensors = []; // all the sensors
@@ -96,6 +96,7 @@
             }, _handleError );
         }
 
+        //TODO parser with value " " == no parser
         function editSensor( sensor ){
             ModalService.showModal( {
                 title          : "edit " + sensor.name,
@@ -148,7 +149,7 @@
             RestService.getTokens( {id: sid}, function( tokens ){
                 console.log( tokens );
                 self.tokens[sid] = tokens;
-            }, _handleError );
+            } );
         }
 
         function removeToken( sensor, index ){
@@ -212,7 +213,7 @@
 
         function _handleError( error ){
             console.log( error );
-            toaster.error( {body: error} );
+            toaster.error( {body: errorParser.parse(error)} );
         }
     }
 

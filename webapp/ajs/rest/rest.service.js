@@ -74,7 +74,60 @@
                 url: baseUrl + "sensors/tokens",
                 params: {id: '@id'},
                 isArray: true
+            },
+
+            getSets: {
+                method: 'GET',
+                url: baseUrl + "sets",
+                isArray: true
+            }   ,
+
+            addTLS: {
+                method: 'POST',
+                url: baseUrl + "sets/tls",
+                params: {name: '@name', "id": "@id"},
+                isArray: false
+            },
+            editTLS: {
+                method: 'PUT',
+                url: baseUrl + "sets/tls",
+                params: {name: '@name', "id": "@id"},
+                isArray: false
+            },
+            deleteTLS: {
+                method: 'DELETE',
+                url: baseUrl + "sets/tls",
+                params: {"id": "@id"},
+                isArray: false
+            },
+
+            addSLS: {
+                method: 'POST',
+                url: baseUrl + "sets/sls",
+                params: {name: '@name', "tls-id": "@tls_id"},
+                isArray: false
+            },
+            editSLS: {
+                method: 'PUT',
+                params: {name: '@name', "id": "@id"},
+                url: baseUrl + "sets/sls",
+                isArray: false
+            },
+            deleteSLS: {
+                method: 'DELETE',
+                params: {"id": "@id"},
+                url: baseUrl + "sets/sls",
+                isArray: false
+            },
+
+            addSensorToSls: {
+                method: 'POST',
+                url: baseUrl + 'sets/sensors',
+                params: {"sls-id": '@sls_id', "sensor-id": "@id", "address": "@address"},
+                isArray: false
             }
+
+
 
 
             ///**
