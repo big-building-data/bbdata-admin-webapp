@@ -23,29 +23,37 @@
     // --------------------------
 
 
-    function ctrl( RestService, $scope, $rootScope, ModalService, TLS_SLS_PAGE, toaster, $q ){
+    function ctrl( RestService, $scope, $rootScope, ModalService, TLS_SLS_PAGE, toaster, $q, errorParser ){
 
         var self = this;
 
         self.tls = [];
 
         self.dragSensorsConfig = {
-            clone: true, itemMoved: function( evt ){
-                console.log( "drag sensors config" );
+            clone    : true,
+            itemMoved: function( evt ){
                 var sls = evt.dest.sortableScope.sls;
                 var item = evt.dest.sortableScope.modelValue[evt.dest.index];
-                RestService.addSensorToSls({sls_id: sls.id, id: item.id, address: item.address}, function(){
-                }, _handleError);
+                addSensorToSls(item, sls, null,
+                 function(){
+                    // error, go back TODO
+                    sls.sensors.splice( evt.dest.index, 1 );
+                } );
                 console.log( item.id + " to SLS " + sls.name );
             }
         };
 
         self.dragSlsConfig = {
-            allowDuplicates: false, itemMoved: function( evt ){
+            allowDuplicates: false,
+            itemMoved      : function( evt ){
                 console.log( "drag SLS config" );
                 var slsFrom = evt.source.sortableScope.sls;
                 var slsTo = evt.dest.sortableScope.sls;
                 var item = evt.dest.sortableScope.modelValue[evt.dest.index];
+                // add and then delete
+                addSensorToSls( item, slsTo, function(){
+                    deleteSensorFromSls( item, slsFrom );
+                } );
                 console.log( item.id + " : " + slsFrom.name + " -> " + slsTo.name );
             }
         };
@@ -56,7 +64,7 @@
         self.addSLS = addSLS;
         self.editSLS = editSLS;
         self.deleteSLS = deleteSLS;
-
+        self.deleteSensorFromSls = deleteSensorFromSls;
         $scope.splice = splice;
 
         _init();
@@ -64,12 +72,12 @@
         //##--------------init
 
         function _init(){
-            console.log("tls sls init");
+            console.log( "tls sls init" );
 
             RestService.getSets( function( sets ){
-                RestService.getSensors(function(sensors){
+                RestService.getSensors( function( sensors ){
                     self.sensors = sensors;
-                }, _handleError);
+                }, _handleError );
                 console.log( "sets", sets );
                 self.tls = sets;
                 _sticky();
@@ -88,31 +96,31 @@
         //##--------------
 
         function addTLS( parent, idx ){
-            _addEditNameModal( "add TLS", "").then(function(name){
-                RestService.addTLS({name: name}, function(tls){
-                    if(!tls.hasOwnProperty("sls")) tls.sls = [];
-                    parent.push(tls);
-                }, _handleError);
-            });
+            _addEditNameModal( "add TLS", "" ).then( function( name ){
+                RestService.addTLS( {name: name}, function( tls ){
+                    if( !tls.hasOwnProperty( "sls" ) ) tls.sls = [];
+                    parent.push( tls );
+                }, _handleError );
+            } );
         }
 
         function editTLS( parent, idx ){
             var tls = parent[idx];
 
-            _addEditNameModal( "edit TLS", tls.name).then(function(name){
-                RestService.editTLS({id: tls.id, name: name}, function(tls){
+            _addEditNameModal( "edit TLS", tls.name ).then( function( name ){
+                RestService.editTLS( {id: tls.id, name: name}, function( tls ){
                     tls.name = name;
-                }, _handleError);
-            });
+                }, _handleError );
+            } );
         }
 
         function deleteTLS( parent, idx ){
             var tls = parent[idx];
 
             var deleteCallback = function(){
-                RestService.deleteTLS({id: tls.id}, function(){
+                RestService.deleteTLS( {id: tls.id}, function(){
                     splice( parent, idx );
-                }, _handleError);
+                }, _handleError );
             };
 
             if( tls.sls && tls.sls.length ){
@@ -135,31 +143,31 @@
         }
 
         function addSLS( parent, idx ){
-            _addEditNameModal( "add SLS", "").then(function(name){
-                RestService.addSLS({name: name, tls_id: parent.id}, function(sls){
-                    if(!sls.hasOwnProperty("sensors")) sls.sensors = [];
-                    parent.sls.push(sls);
-                }, _handleError);
-            });
+            _addEditNameModal( "add SLS", "" ).then( function( name ){
+                RestService.addSLS( {name: name, tls_id: parent.id}, function( sls ){
+                    if( !sls.hasOwnProperty( "sensors" ) ) sls.sensors = [];
+                    parent.sls.push( sls );
+                }, _handleError );
+            } );
         }
 
         function editSLS( parent, idx ){
             var sls = parent.sls[idx];
 
-            _addEditNameModal( "edit SLS", sls.name).then(function(name){
-                RestService.editSLS({id: sls.id, name: name, "tls-id": parent.id}, function(sls){
+            _addEditNameModal( "edit SLS", sls.name ).then( function( name ){
+                RestService.editSLS( {id: sls.id, name: name, "tls-id": parent.id}, function( sls ){
                     sls.name = name;
-                }, _handleError);
-            });
+                }, _handleError );
+            } );
         }
 
         function deleteSLS( parent, idx ){
             var sls = parent.sls[idx];
 
             var deleteCallback = function(){
-                RestService.deleteSLS({id: sls.id}, function(){
+                RestService.deleteSLS( {id: sls.id}, function(){
                     splice( parent.sls, idx );
-                }, _handleError);
+                }, _handleError );
             };
 
             if( sls.sensors && sls.sensors.length ){
@@ -200,8 +208,8 @@
                     name: name
                 }
             } ).then( function( result ){
-                if( result.status && name !== result.inputs.name){
-                    deferred.resolve(result.inputs.name);
+                if( result.status && name !== result.inputs.name ){
+                    deferred.resolve( result.inputs.name );
                 }else{
                     deferred.reject();
                 }
@@ -214,7 +222,7 @@
 
         function _handleError( error ){
             console.log( error );
-            toaster.error( {body: error} );
+            toaster.error( {body: errorParser.parse(error)} );
         }
 
         function splice( arr, idx ){
@@ -227,6 +235,28 @@
                 console.log( "apply sticky" );
                 $( '.ui.sticky' ).sticky( {} );
             }, 100 );
+        }
+
+        function addSensorToSls( sensor, sls, resolve, reject ){
+            if(!reject) reject = _handleError;
+            RestService.addSensorToSls( {
+                "sls-id" : sls.id,
+                id     : sensor.id,
+                address: sensor.address
+            }, resolve, reject );
+        }
+
+        function deleteSensorFromSls( sensor, sls, resolve, reject ){
+            if(!reject) reject = _handleError;
+            RestService.deleteSensorFromSls( {
+                "sls-id" : sls.id,
+                id     : sensor.id,
+                address: sensor.address
+            }, function(){
+                var idx = sls.sensors.indexOf(sensor);
+                sls.sensors.splice(idx, 1);
+                resolve();
+            }, reject );
         }
     }
 

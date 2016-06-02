@@ -81,13 +81,13 @@
         reRootCause = /root cause<\/b> <pre>(.*)/g;
         return {
             parse: function(error){
-                if(error.statusText) {
+                if(error.data) {
                 var match = reRootCause.exec(error);
-                if(match.length > 0) return match[1];
-                return error;
+                if(match) return match[1];
+                return error.statusText;
                 }else{
                     // TODO
-                    return error.status;
+                    return error.status + ": unknown error (" + error.statusText + ")";
                 }
             }
         }

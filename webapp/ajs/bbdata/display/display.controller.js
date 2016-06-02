@@ -23,7 +23,7 @@
 
     // --------------------------
 
-    function ctrl( RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, DISPLAY_PAGE, Graph, Serie, $window, ModalService, toaster ){
+    function ctrl( RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, DISPLAY_PAGE, Graph, Serie, $window, ModalService, toaster, errorParser ){
 
         var self = this;
 
@@ -79,7 +79,7 @@
                     sensors     : self.all_sensors,
                     durationInt : 1,
                     durationType: 'hours',
-                    refreshRate : 1000
+                    refreshRate : 10000
                 }
 
             } ).then( function( result ){
@@ -273,9 +273,11 @@
                     }else{
                         // only one captor: make it a "sls"
                         var s = sls.sensors[0];
-                        sls_array.push( s );
-                        // keep track of all sensors
-                        all.push( s );
+                        if(s){
+                            sls_array.push( s );
+                            // keep track of all sensors
+                            all.push( s );
+                        }
                     }
 
                 } );
@@ -297,7 +299,7 @@
 
 
         function _log( msg ){
-            toaster.error( {body: msg} );
+            toaster.error( {body: errorParser.parse(msg)} );
             console.log( msg );
         }
 

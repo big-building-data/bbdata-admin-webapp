@@ -72,7 +72,6 @@
             getTokens: {
                 method: 'GET',
                 url: baseUrl + "sensors/tokens",
-                params: {id: '@id'},
                 isArray: true
             },
 
@@ -123,7 +122,14 @@
             addSensorToSls: {
                 method: 'POST',
                 url: baseUrl + 'sets/sensors',
-                params: {"sls-id": '@sls_id', "sensor-id": "@id", "address": "@address"},
+                params: {"sls-id": "@sls-id", "sensor-id": "@id", "address": "@address"},
+                isArray: false
+            },
+            
+            deleteSensorFromSls: {
+                method: 'DELETE',
+                url: baseUrl + 'sets/sensors',
+                //params: {"sls-id": "sls-id", "sensor-id": "id", "address": "address"},
                 isArray: false
             }
 

@@ -10,6 +10,6 @@
 (function(){
     angular
         .module( 'bbdata.rest' )
-        .constant( 'baseUrl', 'http://localhost:8088/api/' );
-        // .constant( 'baseUrl', 'http://10.10.0.22:2525/output-api/' );
+        //.constant( 'baseUrl', 'http://localhost:8088/api/' );
+        .constant( 'baseUrl', 'http://10.10.0.23:2525/output-api/' );
 }());

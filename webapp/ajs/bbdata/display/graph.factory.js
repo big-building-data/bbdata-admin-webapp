@@ -133,12 +133,14 @@
 
         Graph.prototype.removeAssociatedSerie = function( sensor ){
             var serie = this.series[sensor.id + "-serie"];
+            if(!serie) return; // nothing to do
 
             // remove sma
             var sma = this.chart.get( serie.sma.id );
             if( sma ) sma.remove();
             // remove serie
-            this.chart.get( serie.id ).remove();
+            var s = this.chart.get( serie.id );
+            if(s) s.remove();
             // if has its own axis, remove it as well
             var axis = this.chart.get( serie.axis.id );
             if( axis ) axis.remove();

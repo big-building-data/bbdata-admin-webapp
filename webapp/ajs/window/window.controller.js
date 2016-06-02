@@ -18,6 +18,9 @@
         $window.setData = setData;
         // setData([{ "id": 45, "name": "Température au sol 1", "address": "noaddress" }], moment.duration(1, 'hours'), 6000);
 
+        function _now(){
+            return moment(new Date()).subtract(moment.duration(2, "minutes"));
+        }
 
         function setData( sensors, interval, refreshRate ){
             self.sensors = sensors;
@@ -27,7 +30,7 @@
         }
 
         function init(){
-            var to = moment(new Date());
+            var to = _now();
             self.xAxisUpperBound = angular.copy(to);
             var series = [];
 
@@ -56,19 +59,20 @@
         function loadEvent(){
 
             setInterval(function () {
-                var to = moment();
+                var to = _now();
                 var from = self.xAxisUpperBound;
                 self.xAxisUpperBound = to;
 
                 self.sensors.forEach(function(sensor, idx){
+                    console.log("refresh ", moment());
                     RestService.getValues({
-                        lala: true,
                         id: sensor.id,
                         address: sensor.address,
                         from: from.format(RFC3339_FORMAT),
                         to: to.format(RFC3339_FORMAT)
 
                     }, function(data){
+                        console.log(data);
                         var trace = toTrace(data.values);
                         console.log(trace);
                         var serie = self.chart.get(sensor.serieId);
