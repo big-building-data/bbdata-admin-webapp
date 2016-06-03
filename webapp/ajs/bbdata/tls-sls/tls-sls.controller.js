@@ -240,7 +240,7 @@
         function addSensorToSls( sensor, sls, resolve, reject ){
             if(!reject) reject = _handleError;
             RestService.addSensorToSls( {
-                "sls-id" : sls.id,
+                sls_id : sls.id,
                 id     : sensor.id,
                 address: sensor.address
             }, resolve, reject );

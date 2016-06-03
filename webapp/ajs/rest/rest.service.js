@@ -122,7 +122,7 @@
             addSensorToSls: {
                 method: 'POST',
                 url: baseUrl + 'sets/sensors',
-                params: {"sls-id": "@sls-id", "sensor-id": "@id", "address": "@address"},
+                params: {"sls_id": "@sls_id", "sensor-id": "@id", "address": "@address"},
                 isArray: false
             },
             
