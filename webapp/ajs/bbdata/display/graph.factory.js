@@ -21,7 +21,7 @@
         .module( 'bbdata.app' )
         .factory( 'Graph', GraphFactory );
 
-    function GraphFactory(Serie){
+    function GraphFactory( Serie ){
 
         // constructor
         function Graph( shareAxis ){
@@ -133,14 +133,14 @@
 
         Graph.prototype.removeAssociatedSerie = function( sensor ){
             var serie = this.series[sensor.id + "-serie"];
-            if(!serie) return; // nothing to do
+            if( !serie ) return; // nothing to do
 
             // remove sma
             var sma = this.chart.get( serie.sma.id );
             if( sma ) sma.remove();
             // remove serie
             var s = this.chart.get( serie.id );
-            if(s) s.remove();
+            if( s ) s.remove();
             // if has its own axis, remove it as well
             var axis = this.chart.get( serie.axis.id );
             if( axis ) axis.remove();
@@ -167,16 +167,77 @@
             this.chart.redraw();
         };
 
-        Graph.prototype.smaPeriodChanged = function(period){
-            if(!this.chart || !this.sma) return; // nothing to do
+        Graph.prototype.smaPeriodChanged = function( period ){
+            if( !this.chart || !this.sma ) return; // nothing to do
             var self = this;
             angular.forEach( this.series, function( serie ){
-                var options = {periods : period};
-                self.chart.get( serie.sma.id ).update(options, false);
+                var options = {periods: period};
+                self.chart.get( serie.sma.id ).update( options, false );
             } );
             self.smaPeriod = period;
-            console.log("period changed", period);
+            console.log( "period changed", period );
             self.chart.redraw();
+        };
+
+        Graph.prototype.export = function(){
+            if( !this.chart || !this.chart.series.length ){
+                return null;
+            }
+
+            var self = this;
+
+            csv = [];
+            var xAxisExtremes = self.chart.xAxis[0].getExtremes();
+            // first row: infos
+            csv.push( [
+                "X Min", moment( xAxisExtremes.min ).toString(),
+                "X max", moment( xAxisExtremes.max ).toString(),
+                "Export date", moment().toString()
+            ].join( "," ) );
+
+            var columns = [];
+            var max = 0;
+            var momentMin = moment( xAxisExtremes.min );
+
+            angular.forEach( self.series, function( serie, id ){
+                if( !serie ) return;
+                var serieObj = self.chart.get( id );
+
+                // process timestamps
+                var xData = serieObj.points.map( function( p ){
+                    return p.x;
+                } );
+
+                if( xData.length > max ){
+                    max = xData.length;
+                }
+
+                var xDataStr = xData.map( function( ts ){
+                    var ms = moment( ts ).diff( momentMin );
+                    var d = moment.duration( ms );
+                    return Math.floor( d.asHours() ) + moment.utc( ms ).format( ":mm:ss" );
+                } );
+
+                columns.push( ["timestamp"].concat( xDataStr ) );
+
+                // process y data
+                var yData = serieObj.points.map( function( p ){
+                    return p.y;
+                } );
+                yData.shift();  // remove points outside of the graph
+                columns.push( [serie.name].concat( yData ) );
+            } );
+
+            // create the csv rows
+            for( var i = 0; i < max; i++ ){
+                var row = [];
+                for( var j = 0; j < columns.length; j++ ){
+                    row.push( columns[j].shift() || "" );
+                }
+                csv.push( row.join( "," ) )
+            }
+
+            return csv.join( "\n" );
         };
 
         // ----------------------------------------------------
@@ -213,7 +274,7 @@
             // add shared axis
             self.chart.addAxis( defaultAxis );
             // set min max of default axis y if in manual mode
-            if( defaultSerie.manual ) self.setExtremesOf(defaultAxis.id, defaultSerie.min, defaultSerie.max );
+            if( defaultSerie.manual ) self.setExtremesOf( defaultAxis.id, defaultSerie.min, defaultSerie.max );
 
             // remove the axis of all the series
             angular.forEach( self.series, function( serie, id ){
