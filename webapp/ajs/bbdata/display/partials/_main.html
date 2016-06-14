@@ -23,6 +23,13 @@
                         toggle-class="green:olive"></semantic-toggle-button>
 
 
+<button class="ui button basic blue"
+        ng-show="ctrl.graph.chart"
+        ng-click="ctrl.exportCSV()">
+    export to CSV
+</button>
+
+
 <div ng-show="ctrl.graph.chart && ctrl.graph.sma" style="display:inline-block; margin-left: 10px">
     <div class="ui transparent input" ng-init="smaPeriod = ctrl.graph.smaPeriod">
         <label for="periodInput"><i>SMA period:</i></label>

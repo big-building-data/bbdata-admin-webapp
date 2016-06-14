@@ -28,8 +28,9 @@
             'as.sortable',
             'semantic.modals',
             'semantic.sidebar',
-            'semantic.helpers'  ,
-            'toaster'
+            'semantic.helpers',
+            'toaster',
+            'ngFileSaver'
         ] ).run( run );
 
     webapp.constant( "RFC3339_FORMAT", "YYYY-MM-DDTHH:mm:ssZ" );
@@ -43,7 +44,7 @@
     webapp.constant( "TLS_SLS_PAGE", 2 );
 
 
-    webapp.factory('errorParser', errorParser);
+    webapp.factory( 'errorParser', errorParser );
     /*
      * page switch management.
      * the variable $root.page contains the number associated
@@ -80,11 +81,11 @@
         // TODO put it somewhere else
         reRootCause = /root cause<\/b> <pre>(.*)/g;
         return {
-            parse: function(error){
-                if(error.data) {
-                var match = reRootCause.exec(error);
-                if(match) return match[1];
-                return error.statusText;
+            parse: function( error ){
+                if( error.data ){
+                    var match = reRootCause.exec( error );
+                    if( match ) return match[1];
+                    return error.statusText;
                 }else{
                     // TODO
                     return error.status + ": unknown error (" + error.statusText + ")";

@@ -23,7 +23,8 @@
 
     // --------------------------
 
-    function ctrl( RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, DISPLAY_PAGE, Graph, Serie, $window, ModalService, toaster, errorParser ){
+    function ctrl( RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, FileSaver, Blob,
+                   DISPLAY_PAGE, Graph, Serie, $window, ModalService, toaster, errorParser ){
 
         var self = this;
 
@@ -32,7 +33,8 @@
         self.sensorsHierarchy = []; // the hierarchy TLS > SLS > sensors, shrank
         // the default X axis extremes
         self.date = {
-            from: moment().floor( 1, 'hour' ).subtract( 1, 'hour' ).toDate(),
+            // TODO: reset to default
+            from: new Date(1464760800000), //moment().floor( 1, 'hour' ).subtract( 1, 'hour' ).toDate(),
             to  : moment().floor( 1, 'hour' ).toDate()
         };
 
@@ -44,7 +46,7 @@
         // === private variables
 
         var sidebarState = 'hide'; // keep track of the state, to toggle it when page changes
-        var series = {}; // keep series in cache, indexed by sensor id
+        var series = {}; // keep series in cache (without data), indexed by sensor id
 
         // === public functions
 
@@ -60,11 +62,20 @@
 
         self.newWindow = createNewWindow;
 
+        self.exportCSV = exportCSV;
+
         _init();
 
         /* *****************************************************************
          * implementation
          * ****************************************************************/
+
+        function exportCSV(){
+            var csv = self.graph.export();
+            console.log(csv);
+            var data = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+            FileSaver.saveAs(data, 'bbdata-export.csv');
+        }
 
         function createNewWindow(){
             ModalService.showModal( {
