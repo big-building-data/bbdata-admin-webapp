@@ -19,7 +19,7 @@
         // setData([{ "id": 45, "name": "Température au sol 1", "address": "noaddress" }], moment.duration(1, 'hours'), 6000);
 
         function _now(){
-            return moment(new Date()).subtract(moment.duration(2, "minutes"));
+            return moment(new Date()).subtract(moment.duration(20, "seconds"));
         }
 
         function setData( sensors, interval, refreshRate ){
@@ -77,8 +77,9 @@
                         console.log(trace);
                         var serie = self.chart.get(sensor.serieId);
                         trace.forEach(function(point){
-                            serie.addPoint(point, true, true);
+                            serie.addPoint(point, false, serie.data.length > 20, true);
                         });
+                        self.chart.redraw();
                     });
                 });
 
@@ -100,6 +101,7 @@
 
 
         function createChart( series ){
+            console.log("create chart", series);
             // Create the chart
             self.chart = new Highcharts.StockChart({
                 chart: {

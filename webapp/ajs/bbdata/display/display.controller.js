@@ -34,7 +34,7 @@
         // the default X axis extremes
         self.date = {
             // TODO: reset to default
-            from: new Date(1464760800000), //moment().floor( 1, 'hour' ).subtract( 1, 'hour' ).toDate(),
+            from: moment().floor( 1, 'hour' ).subtract( 1, 'hour' ).toDate(),
             to  : moment().floor( 1, 'hour' ).toDate()
         };
 
@@ -88,9 +88,9 @@
                 cancelable     : false,
                 inputs         : {
                     sensors     : self.all_sensors,
-                    durationInt : 1,
-                    durationType: 'hours',
-                    refreshRate : 10000
+                    durationInt : 10,
+                    durationType: 'minutes',
+                    refreshRate : 1000
                 }
 
             } ).then( function( result ){

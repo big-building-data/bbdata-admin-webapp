@@ -37,7 +37,7 @@
                 addSensorToSls(item, sls, null,
                  function(){
                     // error, go back TODO
-                    sls.sensors.splice( evt.dest.index, 1 );
+                    //sls.sensors.splice( evt.dest.index, 1 );
                 } );
                 console.log( item.id + " to SLS " + sls.name );
             }
@@ -255,7 +255,7 @@
             }, function(){
                 var idx = sls.sensors.indexOf(sensor);
                 sls.sensors.splice(idx, 1);
-                resolve();
+                if(resolve) resolve();
             }, reject );
         }
     }
