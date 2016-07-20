@@ -10,8 +10,11 @@
 .cell-name,
 .indent {
     display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 182px;
+    overflow: hidden;
 }
-
 .ck-nested .parent > .cell-name {
     cursor: pointer;
 }

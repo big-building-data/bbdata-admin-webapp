@@ -86,7 +86,7 @@
             </div>
 
             <script id="table_tree.html" type="text/ng-template">
-                <div ng-class="{parent: item.children}" class="ck-item-{{level}}">
+                <div ng-class="{parent: item.children}" class="ck-item-{{level}}" title="{{item.name}}">
                     <div class="indent" style="padding-left: {{10*level}}px"
                          ng-click="item.opened = !item.opened"></div>
                     <div ng-if="level > 0" class="cell-input ui checkbox">
