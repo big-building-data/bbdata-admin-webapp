@@ -75,7 +75,7 @@
             console.log( "tls sls init" );
 
             RestService.getSets( function( sets ){
-                RestService.getSensors( function( sensors ){
+                RestService.getObjects( function( sensors ){
                     self.sensors = sensors;
                 }, _handleError );
                 console.log( "sets", sets );

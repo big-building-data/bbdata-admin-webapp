@@ -10,33 +10,33 @@
 (function(){
 
     /**
-     * @ngdoc sensors controller
-     * @name bbdata.app.SensorController
+     * @ngdoc objects controller
+     * @name bbdata.app.objectController
      *
      * @description
-     * handles the sensors page: add, edit, remove, manage tokens.
+     * handles the objects page: add, edit, remove, manage tokens.
      */
     angular
         .module( 'bbdata.app' )
-        .controller( 'SensorsController', ctrl );
+        .controller( 'ObjectsController', ctrl );
 
     // --------------------------
 
     function ctrl( RestService, ModalService, toaster, errorParser ){
         var self = this;
 
-        self.sensors = []; // all the sensors
-        self.tokens = {};   // map sensor.id - tokens
+        self.objects = []; // all the objects
+        self.tokens = {};   // map object.id - tokens
 
-        self.addInfosLoading = 3;  // decremented (units,parsers,types), so ok when 0 (false)
+        self.addInfosLoading = 2;  // decremented (units,types), so ok when 0 (false)
         self.units = [];    // all the available units (add modal)
         self.parsers = [];  // all the available parsers (add modal)
         self.types = [];    // all the available value types (add modal)
 
-        // manage sensors
-        self.add = addSensor;
-        self.remove = removeSensor;
-        self.edit = editSensor;
+        // manage objects
+        self.add = addObject;
+        self.remove = removeObject;
+        self.edit = editObject;
 
         // manage tokens
         self.loadTokens = loadTokens; // lazy loading
@@ -54,10 +54,10 @@
         //##--------------init
 
         function _init(){
-            // get the sensors list
-            RestService.getSensors( function( sensors ){
-                console.log( "sensors received" );
-                self.sensors = sensors;
+            // get the objects list
+            RestService.getObjects( function( objects ){
+                console.log( "objects received" );
+                self.objects = objects;
                 $( '.ui.accordion' ).accordion();  // initialise semantic-ui accordion plugin
             }, _handleError );
 
@@ -67,23 +67,18 @@
                 self.addInfosLoading--;
             }, _handleError );
 
-            RestService.getParsers( function( response ){
-                self.parsers = response;
-                self.addInfosLoading--;
-            }, _handleError );
-
             RestService.getTypes( function( response ){
                 self.types = response;
                 self.addInfosLoading--;
             }, _handleError );
         }
 
-        // ==================== sensors
+        // ==================== objects
 
-        function removeSensor( sensor ){
+        function removeObject( object ){
             ModalService.showModal( {
                 title     : "confirm",
-                html      : "are you sure you want to delete sensor <strong>" + sensor.name + "</strong> (" + sensor.id + ") ?<br />The" +
+                html      : "are you sure you want to delete object <strong>" + object.name + "</strong> (" + object.id + ") ?<br />The" +
                 " action cannot be undone",
                 positive  : "proceed",
                 negative  : "cancel",
@@ -91,43 +86,49 @@
                 cancelable: true
             } ).then( function( results ){
                 if( results.status ){
-                    RestService.deleteSensor( sensor, _handleError, _handleError );
+                    RestService.deleteObject( {id: object.id}, function(){
+                        self.objects.splice(self.objects.indexOf(object),1);
+                    }, _handleError );
                 }
             }, _handleError );
         }
 
         //TODO parser with value " " == no parser
-        function editSensor( sensor ){
+        function editObject( object ){
             ModalService.showModal( {
-                title          : "edit " + sensor.name,
-                htmlInclude    : "/ajs/bbdata/sensors/partials/_editModalContent.html",
+                title          : "edit " + object.name,
+                htmlInclude    : "/ajs/bbdata/objects/partials/_editModalContent.html",
                 positive       : "save",
                 positiveDisable: 'form.editform.$invalid',
                 negative       : "cancel",
                 inputs         : {
-                    sensor: angular.copy( sensor )
+                    object: angular.copy( object )
                 },
                 cancelable     : false
             } ).then( function( results ){
                 if( results.status ){
-                    // TODO edit sensor
+                    var obj = results.inputs.object;
+                    RestService.editObject( {id: object.id}, {name: obj.name, description: obj.description},
+                        function(  ){
+                            object.name = obj.name;
+                            object.description = obj.description;
+                        }, _handleError );
                 }
             }, _handleError );
         }
 
-        function addSensor(){
+        function addObject(){
             ModalService.showModal( {
-                htmlInclude    : '/ajs/bbdata/sensors/partials/_addModalContent.html',
+                htmlInclude    : '/ajs/bbdata/objects/partials/_addModalContent.html',
                 positive       : "add",
                 positiveDisable: "form.addform.$invalid",
                 negative       : "cancel",
                 cancelable     : false,
                 inputs         : {
-                    sensor : {},
-                    types  : self.types,
-                    parsers: self.parsers,
-                    units  : self.units,
-                    init   : function(){
+                    object: {},
+                    types : self.types,
+                    units : self.units,
+                    init  : function(){
                         setTimeout( function(){
                             $( 'select.dropdown' ).dropdown();
                         }, 500 );
@@ -136,7 +137,7 @@
                 }
             } ).then( function( results ){
                 if( results.status ){
-                    // TODO add sensor
+                    // TODO add object
                 }
             }, _handleError );
         }
@@ -152,7 +153,7 @@
             } );
         }
 
-        function removeToken( sensor, index ){
+        function removeToken( object, index ){
             ModalService.showModal( {
                 title     : "confirm",
                 icon      : "warning sign orange",
@@ -165,21 +166,21 @@
             } ).then( function( results ){
                 if( results.status ){
                     // TODO delete token
-                    var tokens = self.tokens[sensor.id];
+                    var tokens = self.tokens[object.id];
                     tokens.splice( index, 1 );
                 }
             }, _handleError );
         }
 
-        function editToken( sensor, token ){
-            _addEditToken( sensor, token );
+        function editToken( object, token ){
+            _addEditToken( object, token );
         }
 
-        function addToken( sensor ){
-            _addEditToken( sensor, null );
+        function addToken( object ){
+            _addEditToken( object, null );
         }
 
-        function _addEditToken( sensor, token ){
+        function _addEditToken( object, token ){
             ModalService.showModal( {
                 title   : (token ? "edit " : "add") + " token",
                 html    : '<div class="ui form"><div class="field"> <label>Description</label> <textarea ng-model="inputs.description" rows="2"></textarea></div></div>',
@@ -192,8 +193,8 @@
                 if( result.status ){
                     if( token == null ){
                         // TODO put token
-                        self.tokens[sensor.id].push( {
-                            id         : sensor.id,
+                        self.tokens[object.id].push( {
+                            id         : object.id,
                             secret     : "saldkfjasédlkfja",
                             description: result.inputs.description
                         } );
@@ -213,7 +214,7 @@
 
         function _handleError( error ){
             console.log( error );
-            toaster.error( {body: errorParser.parse(error)} );
+            toaster.error( {body: errorParser.parse( error )} );
         }
     }
 

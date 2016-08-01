@@ -1,65 +1,58 @@
-<h2>You sensors</h2>
+<h2>You objects</h2>
 <div ng-init="ctrl.init()"></div>
 
 <div class="align-right">
     <button class="ui labeled icon button small teal" ng-class="{disabled: ctrl.addInfosLoading}" ng-click="ctrl.add()">
         <i class="add icon"></i>
-        add a sensor
+        add a object
     </button>
 </div>
 
-<div id="sensors-accordion" class="ui styled accordion">
-    <div class="title" ng-repeat-start="sensor in ctrl.sensors">
+<div id="objects-accordion" class="ui styled accordion">
+    <div class="title" ng-repeat-start="object in ctrl.objects">
         <div>
-            <i class="dropdown icon"></i> {{sensor.name}} ({{sensor.id}}/{{sensor.address}})
+            <i class="dropdown icon"></i> {{object.name}} (id:{{object.id}})
         </div>
         <div>
             <button class="circular ui icon small button"
                     stop-event="click"
                     hover-class="mouseout:mousein"
-                    ng-click="ctrl.edit(sensor)">
+                    ng-click="ctrl.edit(object)">
                 <i class="icon edit green"></i>
             </button>
             <button class="circular ui icon small button"
                     hover-class="mouseout:mousein"
                     stop-event="click"
-                    ng-click="ctrl.remove(sensor)">
+                    ng-click="ctrl.remove(object)">
                 <i class="icon remove circle red"></i>
             </button>
         </div>
     </div>
 
     <div class="content" ng-repeat-end>
-        <p>
-            {{sensor.description}}
-        </p>
-        <table class="ui very basic table sensor-details">
+        <table class="ui very basic table object-details">
             <tr>
-                <td>id / address</td>
-                <td class="tt">{{sensor.id}}/{{sensor.address}}</td>
+                <td>id</td>
+                <td class="tt">{{object.id}}</td>
             </tr>
             <tr>
                 <td>unit</td>
-                <td>{{sensor.unit.name}} ({{sensor.unit.symbol}})</td>
-            </tr>
-            <tr ng-show="sensor.parser.name">
-                <td>parser</td>
-                <td class="tt">{{sensor.parser.name}}</td>
+                <td>{{object.unit.name}} ({{object.unit.symbol}})</td>
             </tr>
             <tr>
                 <td>creation date</td>
-                <td>{{sensor.creationdate | date:"MM/dd/yyyy 'at' h:mma"}}</td>
+                <td>{{object.creationdate | date:"MM/dd/yyyy 'at' h:mma"}}</td>
             </tr>
             <tr>
-                <td>location</td>
-                <td>{{sensor.location}}</td>
+                <td>description</td>
+                <td>{{object.description || '-'}}</td>
             </tr>
         </table>
 
         <!--tokens-->
 
         <div class="token-accordion" class="ui accordion">
-            <div class="title" ng-click="ctrl.loadTokens(sensor.id)">
+            <div class="title" ng-click="ctrl.loadTokens(object.id)">
                 <div>
                     <i class="dropdown icon"></i> tokens
                 </div>
@@ -67,7 +60,7 @@
             <div class="content">
                 <!--add button-->
                 <div class="align-right">
-                    <button class="ui icon button small circular" ng-click="ctrl.addToken(sensor)">
+                    <button class="ui icon button small circular" ng-click="ctrl.addToken(object)">
                         <i class="add icon"></i>
                     </button>
                 </div>
@@ -82,15 +75,15 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="t in ctrl.tokens[sensor.id]">
+                    <tr ng-repeat="t in ctrl.tokens[object.id]">
                         <td class="left aligned collapsing">{{t.id}}</td>
                         <td class="left aligned collapsing link" semantic-popup="click" data-html="<div class='tt'>{{t.secret}}</div>"><i>show</i></td>
                         <td>{{t.description}}</td>
                         <td class="right aligned collapsing">
-                            <button class="circular ui icon small button" stop-event="click" hover-class="mouseout:mousein" ng-click="ctrl.editToken(sensor, t)">
+                            <button class="circular ui icon small button" stop-event="click" hover-class="mouseout:mousein" ng-click="ctrl.editToken(object, t)">
                                 <i class="icon edit green"></i>
                             </button>
-                            <button class="circular ui icon small button" hover-class="mouseout:mousein" stop-event="click" ng-click="ctrl.removeToken(sensor, $index)">
+                            <button class="circular ui icon small button" hover-class="mouseout:mousein" stop-event="click" ng-click="ctrl.removeToken(object, $index)">
                                 <i class="icon remove circle red"></i>
                             </button>
                         </td>

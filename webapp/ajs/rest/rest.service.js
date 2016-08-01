@@ -25,41 +25,36 @@
 
         return $resource('', {}, {
 
-            getHierarchy: {method: 'GET', url: baseUrl + 'values/tree', isArray: true},
-
-            getValues: {
+            getObjects: {
                 method: 'GET',
-                url: baseUrl + 'values/sensors',
-                isArray: false
-            },
-
-            getSensors: {
-                method: 'GET',
-                url: baseUrl + 'sensors',
+                url: baseUrl + 'objects',
                 isArray: true
             },
 
-            addSensor: {
-                method: 'POST',
-                url: baseUrl + 'sensors',
+            addObject: {
+                method: 'PUT',
+                url: baseUrl + 'objects/:id',
+                params: {id: '@id'},
                 isArray: false
             },
 
-            deleteSensor: {
+            editObject: {
+                method: 'POST',
+                url: baseUrl + 'objects/:id',
+                params: {id: '@id'},
+                isArray: false
+            },
+
+            deleteObject: {
                 method: 'DELETE',
-                url: baseUrl + 'sensors',
+                url: baseUrl + 'objects/:id',
+                params: {id: '@id'},
                 isArray: false
             },
 
             getUnits: {
                 method: "GET",
                 url: baseUrl + "units",
-                isArray: true
-            },
-
-            getParsers: {
-                method: "GET",
-                url: baseUrl + "parsers",
                 isArray: true
             },
 
@@ -71,66 +66,9 @@
 
             getTokens: {
                 method: 'GET',
-                url: baseUrl + "sensors/tokens",
+                url: baseUrl + "objects/:id/tokens",
+                params: {id: '@id'},
                 isArray: true
-            },
-
-            getSets: {
-                method: 'GET',
-                url: baseUrl + "sets",
-                isArray: true
-            }   ,
-
-            addTLS: {
-                method: 'POST',
-                url: baseUrl + "sets/tls",
-                params: {name: '@name', "id": "@id"},
-                isArray: false
-            },
-            editTLS: {
-                method: 'PUT',
-                url: baseUrl + "sets/tls",
-                params: {name: '@name', "id": "@id"},
-                isArray: false
-            },
-            deleteTLS: {
-                method: 'DELETE',
-                url: baseUrl + "sets/tls",
-                params: {"id": "@id"},
-                isArray: false
-            },
-
-            addSLS: {
-                method: 'POST',
-                url: baseUrl + "sets/sls",
-                params: {name: '@name', "tls-id": "@tls_id"},
-                isArray: false
-            },
-            editSLS: {
-                method: 'PUT',
-                params: {name: '@name', "id": "@id"},
-                url: baseUrl + "sets/sls",
-                isArray: false
-            },
-            deleteSLS: {
-                method: 'DELETE',
-                params: {"id": "@id"},
-                url: baseUrl + "sets/sls",
-                isArray: false
-            },
-
-            addSensorToSls: {
-                method: 'POST',
-                url: baseUrl + 'sets/sensors',
-                params: {"sls_id": "@sls_id", "sensor-id": "@id", "address": "@address"},
-                isArray: false
-            },
-            
-            deleteSensorFromSls: {
-                method: 'DELETE',
-                url: baseUrl + 'sets/sensors',
-                //params: {"sls-id": "sls-id", "sensor-id": "id", "address": "address"},
-                isArray: false
             }
 
 

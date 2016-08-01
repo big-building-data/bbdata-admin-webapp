@@ -2,59 +2,59 @@
  * accordion
  * ****************************************************************/
 
-#sensors-accordion {
+#objects-accordion {
     margin: 10px auto;
     min-width: 80%;
 }
 
-.table.sensor-details {
+.table.object-details {
     font-size: .9em;
 }
 
-.table.sensor-details td:first-child {
+.table.object-details td:first-child {
     font-weight: bold;
 }
 
 @media only screen and (min-width: 767px) {
-    .table.sensor-details td:first-child {
+    .table.object-details td:first-child {
         text-align: right;
     }
 }
 
 /*title and buttons*/
 
-#sensors-accordion .title {
+#objects-accordion .title {
     /*background-color: #efefef;*/
 }
 
-#sensors-accordion .title div {
+#objects-accordion .title div {
     display: inline-block;
 }
 
-#sensors-accordion .title > div {
+#objects-accordion .title > div {
     width: 80%;
 }
 
-#sensors-accordion .title > div + div {
+#objects-accordion .title > div + div {
     width: 19%;
     text-align: right;
 }
 
 /*icons*/
-#sensors-accordion button {
+#objects-accordion button {
     background: white;
     border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-#sensors-accordion .token-accordion table{
+#objects-accordion .token-accordion table{
     width: 80%;
     margin: auto;
 }
 
-#sensors-accordion .token-accordion .ng-hide{
+#objects-accordion .token-accordion .ng-hide{
     display:none !important;
 }
 
-/*#sensors-accordion .title button:hover .remove{*/
+/*#objects-accordion .title button:hover .remove{*/
 /*color: #db2828!important;*/
 /*}*/

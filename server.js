@@ -1,6 +1,6 @@
 // server.js
 
-var API_SERVER_HOST = "http://10.10.10.103:8081/output-api";
+var API_SERVER_HOST = "http://localhost:8080/bbdata2/api";
 
 // call the packages we need
 var express = require( 'express' );

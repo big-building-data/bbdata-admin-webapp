@@ -26,6 +26,8 @@
         // delete header from client:
         // cf: http://stackoverflow.com/questions/17289195/angularjs-post-data-to-external-rest-api
         $httpProvider.defaults.useXDomain = true;
+        $httpProvider.defaults.headers.common['bbuser'] = 1;
+        $httpProvider.defaults.headers.common['bbtoken'] = 'lala';
         delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
         // handle the from/to base64 (program argument only)

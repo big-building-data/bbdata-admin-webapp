@@ -1,0 +1,32 @@
+<form name="form.addform" class="ui form" novalidate>
+    <!--name-->
+    <div class="ui labeled input">
+        <div class="ui label">name</div>
+        <input type="text" ng-model="inputs.object.name" required>
+    </div>
+
+    <!--description-->
+    <div class="field">
+        <label>Description</label>
+        <textarea ng-model="inputs.object.description" rows="2"></textarea>
+    </div>
+
+    <!--type-->
+    <div class="field">
+        <label>Value type:</label>
+        <select class="ui search dropdown" ng-model="inputs.object.type" required>
+            <option ng-repeat="t in inputs.types" value="{{t}}">{{t}}</option>
+        </select>
+    </div>
+
+    <!--unit-->
+    <div class="field">
+        <label>Unit:</label>
+        <select class="ui search dropdown" ng-model="inputs.object.unit" required>
+            <option value=""></option>
+            <option ng-repeat="u in inputs.units" value="{{u.name}}">{{u.name}} ({{u.symbol}})</option>
+        </select>
+    </div>
+
+    {{inputs.init()}}
+</form>

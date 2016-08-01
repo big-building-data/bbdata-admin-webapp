@@ -17,7 +17,7 @@
     <!--my css-->
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/display.css">
-    <link rel="stylesheet" href="/css/sensors.css">
+    <link rel="stylesheet" href="/css/objects.css">
     <link rel="stylesheet" href="/css/tls-sls.css">
 
 
@@ -31,7 +31,7 @@
             <img class="logo" src="assets/logo.png">BBData
         </a>
         <a class="item" href="#" ng-click="$root.page=0">home</a>
-        <a class="item" href="#1" ng-click="$root.page=1">sensors</a>
+        <a class="item" href="#1" ng-click="$root.page=1">objects</a>
         <a class="item" href="#2" ng-click="$root.page=2">TLS/SLS</a>
     </div>
 </div>
@@ -52,18 +52,18 @@
      on the first page display.
     -->
 
-    <!--display page-->
-    <div id="container" ng-show="$root.page==0" class="ui main container home" ng-include
-         ng-controller="DisplayController as ctrl"
-         src="'/ajs/bbdata/display/partials/_main.html'"></div>
-    <!--sensors page-->
-    <div id="container" ng-if="$root.page_init[1]" ng-show="$root.page==1" class="ui main container sensors" ng-include
-         ng-controller="SensorsController as ctrl"
-         src="'/ajs/bbdata/sensors/partials/_main.html'"></div>
+    <!--objects page-->
+    <div id="container" ng-show="$root.page==0" class="ui main container objects" ng-include
+         ng-controller="ObjectsController as ctrl"
+         src="'/ajs/bbdata/objects/partials/_main.html'"></div>
     <!--tls / sls page-->
-    <div id="container" ng-if="$root.page_init[2]" ng-show="$root.page==2" class="ui main container tls-sls" ng-include
+    <div id="container" ng-if="$root.page_init[1]" ng-show="$root.page==1" class="ui main container tls-sls" ng-include
          ng-controller="TlsSlsController as ctrl"
          src="'/ajs/bbdata/tls-sls/partials/_main.html'"></div>
+    <!--display page-->
+    <div id="container" ng-if="$root.page_init[2]" ng-show="$root.page==2" class="ui main container home" ng-include
+         ng-controller="DisplayController as ctrl"
+         src="'/ajs/bbdata/display/partials/_main.html'"></div>
 
     <!--footer-->
     <div class="ui inverted vertical footer segment">
@@ -114,7 +114,7 @@
 <script type="text/javascript" src="/ajs/bbdata/display/display.controller.js"></script>
 <script type="text/javascript" src="/ajs/bbdata/display/serie.factory.js"></script>
 <script type="text/javascript" src="/ajs/bbdata/display/graph.factory.js"></script>
-<script type="text/javascript" src="/ajs/bbdata/sensors/sensors.controller.js"></script>
+<script type="text/javascript" src="/ajs/bbdata/objects/objects.controller.js"></script>
 <script type="text/javascript" src="/ajs/bbdata/tls-sls/tls-sls.controller.js"></script>
 
 
@@ -133,7 +133,8 @@
 <script src="/vendor/highcharts/exporting.js"></script>
 
 
-<script type="text/javascript" src="https://rawgit.com/laff/technical-indicators/master/technical-indicators.src.js"></script>
+<script type="text/javascript"
+        src="https://rawgit.com/laff/technical-indicators/master/technical-indicators.src.js"></script>
 
 
 </body>

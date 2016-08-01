@@ -152,7 +152,7 @@
         function _init(){
             // put the default axis in the series array to
             // avoid null exception
-            series[Graph.DEFAULT_SERIE.sensor.id] = Graph.DEFAULT_SERIE;
+            series[Graph.DEFAULT_SERIE.object.id] = Graph.DEFAULT_SERIE;
 
             // get the sensors
             RestService.getHierarchy( function( result ){
