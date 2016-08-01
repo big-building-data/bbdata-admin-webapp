@@ -39,9 +39,9 @@
      * number bound to each page.
      * Useful to watch pages switch inside a controller
      */
-    webapp.constant( "DISPLAY_PAGE", 0 );
-    webapp.constant( "SENSORS_PAGE", 1 );
-    webapp.constant( "TLS_SLS_PAGE", 2 );
+    webapp.constant( "OBJECTS_PAGE", 0 );
+    webapp.constant( "OGROUPS_PAGE", 1 );
+    webapp.constant( "DISPLAY_PAGE", 2 );
 
 
     webapp.factory( 'errorParser', errorParser );

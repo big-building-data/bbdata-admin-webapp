@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/display.css">
     <link rel="stylesheet" href="/css/objects.css">
-    <link rel="stylesheet" href="/css/tls-sls.css">
+    <link rel="stylesheet" href="/css/ogroups.css">
 
 
 </head>
@@ -30,9 +30,9 @@
         <a href="#/" class="header item">
             <img class="logo" src="assets/logo.png">BBData
         </a>
-        <a class="item" href="#" ng-click="$root.page=0">home</a>
-        <a class="item" href="#1" ng-click="$root.page=1">objects</a>
-        <a class="item" href="#2" ng-click="$root.page=2">TLS/SLS</a>
+        <a class="item" href="#" ng-click="$root.page=0">objects</a>
+        <a class="item" href="#1" ng-click="$root.page=1">object groups</a>
+        <a class="item" href="#2" ng-click="$root.page=2">display</a>
     </div>
 </div>
 
@@ -57,9 +57,9 @@
          ng-controller="ObjectsController as ctrl"
          src="'/ajs/bbdata/objects/partials/_main.html'"></div>
     <!--tls / sls page-->
-    <div id="container" ng-if="$root.page_init[1]" ng-show="$root.page==1" class="ui main container tls-sls" ng-include
-         ng-controller="TlsSlsController as ctrl"
-         src="'/ajs/bbdata/tls-sls/partials/_main.html'"></div>
+    <div id="container" ng-if="$root.page_init[1]" ng-show="$root.page==1" class="ui main container ogroups" ng-include
+         ng-controller="OgroupsController as ctrl"
+         src="'/ajs/bbdata/ogroups/partials/_main.html'"></div>
     <!--display page-->
     <div id="container" ng-if="$root.page_init[2]" ng-show="$root.page==2" class="ui main container home" ng-include
          ng-controller="DisplayController as ctrl"
@@ -115,7 +115,7 @@
 <script type="text/javascript" src="/ajs/bbdata/display/serie.factory.js"></script>
 <script type="text/javascript" src="/ajs/bbdata/display/graph.factory.js"></script>
 <script type="text/javascript" src="/ajs/bbdata/objects/objects.controller.js"></script>
-<script type="text/javascript" src="/ajs/bbdata/tls-sls/tls-sls.controller.js"></script>
+<script type="text/javascript" src="/ajs/bbdata/ogroups/ogroups.controller.js"></script>
 
 
 <!--semantic helpers-->

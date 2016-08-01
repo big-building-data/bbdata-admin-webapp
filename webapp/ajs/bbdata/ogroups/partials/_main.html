@@ -1,0 +1,97 @@
+<div class="ui grid container">
+    <!--===============================-->
+
+    <div class="eleven wide column">
+
+
+        <!--type-->
+        <div class="field">
+            <label>User Group:</label>
+            <select class="ui search dropdown"
+                    ng-options="ug as ug.name for ug in ctrl.adminGroups track by ug.id"
+                    ng-model="ctrl.currentGroup">
+            </select>
+        </div>
+
+        <div>
+            <!--add ogroup button-->
+            <button class="ui labeled icon tiny button right floated" ng-click="ctrl.addObjectGroup()">
+                <i class="add icon"></i>
+                add object group
+            </button>
+        </div>
+
+        <div style="height: 10px; clear:both"></div>
+
+        <!--ogroup-->
+        <div class="ui segment raised ogroup" ng-repeat="ogroup in ctrl.ogroups"
+             ng-show="ctrl.currentGroup.id == ogroup.owner.id"
+             data-as-sortable="ctrl.dragObjectGroupConfig"
+             ng-model="ogroup.objects">
+
+            <!--ogroup title and buttons-->
+            <div class="ui top attached label">
+                <i class="icon edit link" hover-class=":teal" ng-click="ctrl.editObjectGroup(ogroup)"></i>
+                <i class="icon remove link" hover-class=":red" ng-click="ctrl.deleteObjectGroup(ogroup, $index)"></i>
+                <span class="title">{{ogroup.name}}</span>
+            </div>
+
+            <!--object list-->
+            <div class="ul list">
+
+                <div class="item" ng-repeat="object in ogroup.objects track by object.id" data-as-sortable-item>
+                    <!--help icon + popup-->
+                    <i class="help icon link pink"
+                       semantic-popup="click"
+                       data-html="<h4>{{object.name}}</h4><p><b>description</b><br />{{object.description}}</p>"
+                       data-variation="wide"></i>
+                    <!--move icon-->
+                    <i class="move icon" data-as-sortable-item-handle></i>
+                    <!--text-->
+                    <span>{{object.name}} ({{object.id}})</span>
+                    <!--remove icon-->
+                    <div style="float:right" ng-click="ctrl.removeObjectFromGroup(object, ogroup)">
+                        <i class="remove icon link red"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!--===============================-->
+
+    <div class="five wide column">
+        <div class="ui sticky">
+            <div class="box">
+                <!--search-->
+                <div class="ui fluid icon left corner labeled input">
+                    <input type="text" placeholder="filter..." ng-model="filterText">
+                    <i class="remove link icon" ng-click="filterText = ''" ng-show="filterText"></i>
+                    <div class="ui left corner label yellow">
+                        <i class="search icon"></i>
+                    </div>
+                </div>
+
+                <div class="ui divider"></div>
+
+                <!--list-->
+                <div class="ul list objects" data-as-sortable="ctrl.dragObjectsConfig" ng-model="ctrl.objects">
+                    <div class="item"
+                         ng-repeat="s in ctrl.objects | ownerFilter:ctrl.currentGroup | filter:filterText track by s.id"
+                         data-as-sortable-item>
+
+                        <!--help icon + popup-->
+                        <i class="help icon link pink"
+                           semantic-popup="click"
+                           data-html="<h4>{{s.name}}</h4><p><b>description</b><br />{{s.description || '??'}}</p>"
+                           data-variation="wide"></i>
+
+                        <span class="move" data-as-sortable-item-handle>{{s.name}} ({{s.id}})</span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
