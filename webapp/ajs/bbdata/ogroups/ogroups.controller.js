@@ -30,6 +30,7 @@
 
         self.ogroups = [];
         self.objects = [];
+        self.allUserGroups = [];
         self.adminGroups = [];
         self.currentGroup = null;
 
@@ -66,6 +67,8 @@
         self.editOgroup = editObjectGroup;
         self.deleteOgroup = deleteOgroup;
         self.removeObjectFromGroup = removeObjectFromGroup;
+        self.removePermission = removePermission;
+        self.addPermission = addPermission;
 
         _init();
 
@@ -74,21 +77,21 @@
         function _init(){
             console.log( "tls ogroup init" );
 
-            RestService.getObjects( {writable: true}, function( objects ){
-                console.log( "objects", objects );
-                self.objects = objects;
-            }, _handleError );
-
-            RestService.getUgroups( {admin: true}, function( groups ){
-                console.log( "admin groups", groups );
-                self.adminGroups = groups;
-                if( groups.length > 0 ) self.currentGroup = groups[0];
-            }, _handleError );
-
             RestService.getObjectGroups( {objects: true, writable: true}, function( ogroups ){
 
                 console.log( "object groups", ogroups );
                 self.ogroups = ogroups;
+                angular.forEach( ogroups, function( ogrp ){
+                    RestService.getObjectGroupPermissions( {id: ogrp.id}, function( perms ){
+                        ogrp.permissions = perms;
+                    }, _handleError );
+                } );
+
+            }, _handleError );
+
+            RestService.getObjects( {writable: true}, function( objects ){
+                console.log( "objects", objects );
+                self.objects = objects;
                 _sticky();
 
                 $rootScope.$on( 'bbdata.PageChanged', function( evt, args ){
@@ -97,14 +100,26 @@
                         _sticky();
                     }
                 } );
-
             }, _handleError );
+
+            RestService.getMyUserGroups( {admin: true}, function( groups ){
+                console.log( "admin groups", groups );
+                self.adminGroups = groups;
+                if( groups.length > 0 ) self.currentGroup = groups[0];
+            }, _handleError );
+
+            RestService.getAllUserGroups( function( groups ){
+                console.log( "user groups", groups );
+                self.allUserGroups = groups;
+            }, _handleError );
+
+
         }
 
 
         function addObjectGroup(){
             _addEditNameModal( "add object group", "" ).then( function( name ){
-                RestService.addObjectGroup( {owner: self.currentGroup.id }, { name: name},
+                RestService.addObjectGroup( {owner: self.currentGroup.id}, {name: name},
                     function( ogroup ){
                         if( !ogroup.hasOwnProperty( "objects" ) ) ogroup.objects = [];
                         self.ogroups.push( ogroup );
@@ -145,6 +160,23 @@
             }else{
                 deleteCallback();
             }
+        }
+
+
+        function addPermission( group, ogroup ){
+            if(ogroup.permissions.indexOf(group) >= 0){
+                console.log("already here");
+                return;
+            }
+            RestService.addPermission( {id: ogroup.id, groupId: group.id}, {}, function(){
+                ogroup.permissions.push( group );
+            }, _handleError );
+        }
+
+        function removePermission( perm, ogroup ){
+            RestService.removePermission( {id: ogroup.id, groupId: perm.id}, function(){
+                ogroup.permissions.splice( ogroup.permissions.indexOf( perm ), 1 );
+            }, _handleError );
         }
 
         //##------------utils

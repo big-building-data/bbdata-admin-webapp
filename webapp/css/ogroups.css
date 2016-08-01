@@ -12,6 +12,14 @@
     overflow-y: auto;
 }
 
+.ui.menu.perms {
+    border: none;
+    box-shadow: none;
+    font-size: .85714286rem;
+    line-height: 1;
+}
+
+
 .segments.tls, .segment.sls {
     min-height: 70px;
     padding: 10px !important;

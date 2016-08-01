@@ -108,9 +108,39 @@
                 isArray: false
             },
 
+            getObjectGroupPermissions: {
+                method : 'GET',
+                url    : baseUrl + 'ogroups/:id/permissions',
+                params : {id: '@id'},
+                isArray: true
+            },
+
+
+            addPermission: {
+                method : 'PUT',
+                url    : baseUrl + 'ogroups/:id/permissions',
+                params : {id: '@id'},
+                isArray: false
+            },
+
+            removePermission: {
+                method : 'DELETE',
+                url    : baseUrl + 'ogroups/:id/permissions',
+                params : {id: '@id'},
+                isArray: false
+            },
+
+
+
             // ----------------------------------------------------
 
-            getUgroups: {
+            getMyUserGroups: {
+                method: 'GET',
+                url: baseUrl + 'i/groups' ,
+                isArray: true
+            } ,
+
+            getAllUserGroups: {
                 method : 'GET',
                 url    : baseUrl + 'ugroups',
                 isArray: true

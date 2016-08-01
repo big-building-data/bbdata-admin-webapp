@@ -3,15 +3,12 @@
 
     <div class="eleven wide column">
 
+        <label>User Group:</label>
+        <select class="ui selection dropdown"  style="padding:4px 3px"
+                ng-options="ug as ug.name for ug in ctrl.adminGroups track by ug.id"
+                ng-model="ctrl.currentGroup">
+        </select>
 
-        <!--type-->
-        <div class="field">
-            <label>User Group:</label>
-            <select class="ui search dropdown"
-                    ng-options="ug as ug.name for ug in ctrl.adminGroups track by ug.id"
-                    ng-model="ctrl.currentGroup">
-            </select>
-        </div>
 
         <div>
             <!--add ogroup button-->
@@ -36,9 +33,29 @@
                 <span class="title">{{ogroup.name}}</span>
             </div>
 
+            <!--ogroup permissions-->
+            <div class="permissions">
+                <div class="ui compact menu perms floated right">
+                    <div class="ui simple dropdown item">
+                        add permission
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                            <div class="item" ng-repeat="g in ctrl.allUserGroups"
+                                 ng-click="ctrl.addPermission(g, ogroup)">{{g.name}}</div>
+                        </div>
+                    </div>
+                </div>
+                <strong>Permissions  </strong>
+                <div class="ui label basic" ng-repeat="p in ogroup.permissions">
+                    {{p.name}}
+                    <i class="delete icon" ng-click="ctrl.removePermission(p, ogroup)"></i>
+                </div>
+            </div>
+
+            <div class="ui section divider"></div>
+
             <!--object list-->
             <div class="ul list">
-
                 <div class="item" ng-repeat="object in ogroup.objects track by object.id" data-as-sortable-item>
                     <!--help icon + popup-->
                     <i class="help icon link pink"
