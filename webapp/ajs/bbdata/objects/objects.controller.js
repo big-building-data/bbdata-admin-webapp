@@ -31,7 +31,7 @@
         self.addInfosLoading = 2;  // decremented (units,types), so ok when 0 (false)
         self.units = [];    // all the available units (add modal)
         self.parsers = [];  // all the available parsers (add modal)
-        self.types = [];    // all the available value types (add modal)
+        self.adminGroups = [];   // all the groups where user is admin (add modal)
 
         // manage objects
         self.add = addObject;
@@ -71,8 +71,9 @@
                 self.addInfosLoading--;
             }, _handleError );
 
-            RestService.getTypes( function( response ){
-                self.types = response;
+            RestService.getMyUserGroups( {admin: true}, function( groups ){
+                console.log( "admin groups", groups );
+                self.adminGroups = groups;
                 self.addInfosLoading--;
             }, _handleError );
         }
@@ -130,7 +131,7 @@
                 cancelable     : false,
                 inputs         : {
                     object: {},
-                    types : self.types,
+                    adminGroups : self.adminGroups,
                     units : self.units,
                     init  : function(){
                         setTimeout( function(){
@@ -141,6 +142,9 @@
                 }
             } ).then( function( results ){
                 if( results.status ){
+                    RestService.addObject({owner: results.inputs.adminGroup}, results.inputs.object, function(object){
+                        self.objects.push(object);
+                    }, _handleError);
                     // TODO add object
                 }
             }, _handleError );

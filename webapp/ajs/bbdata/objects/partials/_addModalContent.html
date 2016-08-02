@@ -11,20 +11,19 @@
         <textarea ng-model="inputs.object.description" rows="2"></textarea>
     </div>
 
-    <!--type-->
+    <!--user group-->
     <div class="field">
-        <label>Value type:</label>
-        <select class="ui search dropdown" ng-model="inputs.object.type" required>
-            <option ng-repeat="t in inputs.types" value="{{t}}">{{t}}</option>
+        <label>Ownership:</label>
+        <select class="ui search dropdown" ng-model="inputs.adminGroup" required
+                ng-options="g.id as g.name for g in inputs.adminGroups">
         </select>
     </div>
 
     <!--unit-->
     <div class="field">
         <label>Unit:</label>
-        <select class="ui search dropdown" ng-model="inputs.object.unit" required>
-            <option value=""></option>
-            <option ng-repeat="u in inputs.units" value="{{u.name}}">{{u.name}} ({{u.symbol}})</option>
+        <select class="ui search dropdown" ng-model="inputs.object.unitSymbol" required
+                ng-options="u.symbol as u.name for u in inputs.units">
         </select>
     </div>
 

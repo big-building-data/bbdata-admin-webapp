@@ -164,8 +164,8 @@
 
 
         function addPermission( group, ogroup ){
-            if(ogroup.permissions.indexOf(group) >= 0){
-                console.log("already here");
+            if( ogroup.permissions.indexOf( group ) >= 0 ){
+                console.log( "already here" );
                 return;
             }
             RestService.addPermission( {id: ogroup.id, groupId: group.id}, {}, function(){
@@ -230,7 +230,7 @@
             RestService.addObjectToGroup( {
                 id      : ogroup.id,
                 objectId: object.id
-            }, resolve, reject );
+            }, {}, resolve, reject );
         }
 
         function removeObjectFromGroup( object, ogroup, resolve, reject ){
@@ -238,9 +238,9 @@
             RestService.removeObjectFromGroup( {
                 id      : ogroup.id,
                 objectId: object.id
-            }, function(){
+            }, {}, function(){
                 var idx = ogroup.objects.indexOf( object );
-                ogroup.objects.splice( idx, 1 );
+                if( idx > 0 ) ogroup.objects.splice( idx, 1 );
                 if( resolve ) resolve();
             }, reject );
         }

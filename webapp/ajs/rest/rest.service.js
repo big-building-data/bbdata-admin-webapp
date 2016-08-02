@@ -34,7 +34,6 @@
             addObject: {
                 method : 'PUT',
                 url    : baseUrl + 'objects',
-                params : {id: '@id'},
                 isArray: false
             },
 
