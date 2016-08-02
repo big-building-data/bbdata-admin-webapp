@@ -22,7 +22,7 @@
 
     // --------------------------
 
-    function ctrl( RestService, ModalService, toaster, errorParser ){
+    function ctrl( RestService, ModalService, toaster, errorParser, $filter ){
         var self = this;
 
         self.objects = []; // all the objects
@@ -37,6 +37,10 @@
         self.add = addObject;
         self.remove = removeObject;
         self.edit = editObject;
+
+        // manage tags
+        self.addTags  = addTags;
+        self.removeTag  = removeTag;
 
         // manage tokens
         self.loadTokens = loadTokens; // lazy loading
@@ -140,6 +144,24 @@
                     // TODO add object
                 }
             }, _handleError );
+        }
+
+
+
+        // ==================== tags
+
+        function addTags(object, tag){
+            console.log("tag = " + tag);
+            RestService.addTags({id: object.id, tags: tag}, {}, function(obj){
+                object.tags = obj.tags;
+            }, _handleError);
+        }
+
+        function removeTag(object, idx){
+            RestService.removeTags({id: object.id, tags: object.tags[idx].tag}, {}, function(obj){
+                console.log(obj);
+                object.tags.splice(idx, 1);
+            }, _handleError);
         }
 
         // ==================== tokens

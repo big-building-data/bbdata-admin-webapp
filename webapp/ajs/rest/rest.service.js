@@ -59,6 +59,21 @@
                 params : {id: '@id'},
                 isArray: true
             },
+
+            addTags: {
+                method : 'PUT',
+                url    : baseUrl + "objects/:id/tags",
+                params : {id: '@id'},
+                isArray: false
+            },
+
+            removeTags: {
+                method : 'DELETE',
+                url    : baseUrl + "objects/:id/tags",
+                params : {id: '@id'},
+                isArray: false
+            },
+
             // ----------------------------------------------------
 
             getUnits: {
