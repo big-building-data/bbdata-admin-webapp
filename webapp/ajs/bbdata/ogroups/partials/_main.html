@@ -1,17 +1,20 @@
+<!--"lazy" load-->
+<div ng-init="ctrl.init()"></div>
+
 <div class="ui grid container">
     <!--===============================-->
 
     <div class="eleven wide column">
 
+        <!--select user group-->
         <label>User Group:</label>
-        <select class="ui selection dropdown"  style="padding:4px 3px"
+        <select class="ui selection dropdown" style="padding:4px 3px"
                 ng-options="ug as ug.name for ug in ctrl.adminGroups track by ug.id"
                 ng-model="ctrl.currentGroup">
         </select>
 
-
+        <!--add object group button-->
         <div>
-            <!--add ogroup button-->
             <button class="ui labeled icon tiny button right floated" ng-click="ctrl.addObjectGroup()">
                 <i class="add icon"></i>
                 add object group
@@ -20,20 +23,20 @@
 
         <div style="height: 10px; clear:both"></div>
 
-        <!--ogroup-->
+        <!--object groups -->
         <div class="ui segment raised ogroup" ng-repeat="ogroup in ctrl.ogroups"
              ng-show="ctrl.currentGroup.id == ogroup.owner.id"
              data-as-sortable="ctrl.dragObjectGroupConfig"
              ng-model="ogroup.objects">
 
-            <!--ogroup title and buttons-->
+            <!--object group title and edit/remove buttons-->
             <div class="ui top attached label">
                 <i class="icon edit link" hover-class=":teal" ng-click="ctrl.editObjectGroup(ogroup)"></i>
                 <i class="icon remove link" hover-class=":red" ng-click="ctrl.deleteObjectGroup(ogroup, $index)"></i>
                 <span class="title">{{ogroup.name}}</span>
             </div>
 
-            <!--ogroup permissions-->
+            <!--manage object group permissions-->
             <div class="permissions">
                 <div class="ui compact menu perms floated right">
                     <div class="ui simple dropdown item">
@@ -41,11 +44,12 @@
                         <i class="dropdown icon"></i>
                         <div class="menu">
                             <div class="item" ng-repeat="g in ctrl.allUserGroups"
-                                 ng-click="ctrl.addPermission(g, ogroup)">{{g.name}}</div>
+                                 ng-click="ctrl.addPermission(g, ogroup)">{{g.name}}
+                            </div>
                         </div>
                     </div>
                 </div>
-                <strong>Permissions  </strong>
+                <strong>Permissions </strong>
                 <div class="ui label basic" ng-repeat="p in ogroup.permissions">
                     {{p.name}}
                     <i class="delete icon" ng-click="ctrl.removePermission(p, ogroup)"></i>
@@ -54,7 +58,7 @@
 
             <div class="ui section divider"></div>
 
-            <!--object list-->
+            <!--objects list-->
             <div class="ul list">
                 <div class="item" ng-repeat="object in ogroup.objects track by object.id" data-as-sortable-item>
                     <!--help icon + popup-->
@@ -78,6 +82,7 @@
 
     <!--===============================-->
 
+    <!--right sticky column with available objects-->
     <div class="five wide column">
         <div class="ui sticky">
             <div class="box">

@@ -1,15 +1,33 @@
-<h2>You objects</h2>
+<!--"lazy" load-->
 <div ng-init="ctrl.init()"></div>
 
-<div class="align-right">
-    <button class="ui labeled icon button small teal" ng-class="{disabled: ctrl.addInfosLoading}" ng-click="ctrl.add()">
-        <i class="add icon"></i>
-        add a object
-    </button>
+<h2>Your objects</h2>
+
+<div class="ui grid">
+    <div class="thirteen wide column align-right">
+        <!--search-->
+        <div class="ui fluid icon left corner labeled input align-center">
+            <input type="text" placeholder="filter..." ng-model="filterText">
+            <i class="remove link icon" ng-click="filterText = ''" ng-show="filterText"></i>
+            <div class="ui left corner label yellow">
+                <i class="search icon"></i>
+            </div>
+        </div>
+    </div>
+    <div class="three wide column">
+        <!--add object button-->
+        <button class="ui labeled icon button small teal" ng-click="ctrl.add()" style="margin: 10px 0">
+            <i class="add icon"></i>
+            add an object
+        </button>
+    </div>
+
 </div>
 
+<!--accordion of objects-->
 <div id="objects-accordion" class="ui styled accordion">
-    <div class="title" ng-repeat-start="object in ctrl.objects">
+    <div class="title" ng-repeat-start="object in ctrl.objects | filter:filterText">
+        <!--title and edit/delete buttons-->
         <div>
             <i class="dropdown icon"></i> {{object.name}} (id:{{object.id}})
         </div>
@@ -30,6 +48,7 @@
     </div>
 
     <div class="content" ng-repeat-end>
+
         <!--tag-->
         <div class="tags">
             <div class="ui compact menu perms floated right">
@@ -47,6 +66,7 @@
                 <i class="delete icon" ng-click="ctrl.removeTag(object, $index)"></i>
             </div>
         </div>
+
         <!--infos-->
         <table class="ui very basic table object-details">
             <tr>
@@ -68,7 +88,6 @@
         </table>
 
         <!--tokens-->
-
         <div class="token-accordion" class="ui accordion">
             <div class="title" ng-click="ctrl.loadTokens(object.id)">
                 <div>
@@ -96,7 +115,7 @@
                     <tr ng-repeat="t in ctrl.tokens[object.id]">
                         <td class="left aligned collapsing">{{t.id}}</td>
                         <td class="left aligned collapsing link" semantic-popup="click"
-                            data-html="<div class='tt'>{{t.secret}}</div>"><i>show</i></td>
+                            data-html="<div class='tt'>{{t.token}}</div>"><i>show</i></td>
                         <td>{{t.description}}</td>
                         <td class="right aligned collapsing">
                             <button class="circular ui icon small button" stop-event="click"

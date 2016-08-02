@@ -25,13 +25,12 @@
     function ctrl( RestService, ModalService, toaster, errorParser, $filter ){
         var self = this;
 
-        self.objects = []; // all the objects
+        self.objects = [];  // all the objects
         self.tokens = {};   // map object.id - tokens
 
-        self.addInfosLoading = 2;  // decremented (units,types), so ok when 0 (false)
-        self.units = [];    // all the available units (add modal)
-        self.parsers = [];  // all the available parsers (add modal)
-        self.adminGroups = [];   // all the groups where user is admin (add modal)
+        self.units = [];            // all the available units (add modal)
+        self.parsers = [];          // all the available parsers (add modal)
+        self.adminGroups = [];      // all the groups where user is admin (add modal)
 
         // manage objects
         self.add = addObject;
@@ -39,8 +38,8 @@
         self.edit = editObject;
 
         // manage tags
-        self.addTags  = addTags;
-        self.removeTag  = removeTag;
+        self.addTags = addTags;
+        self.removeTag = removeTag;
 
         // manage tokens
         self.loadTokens = loadTokens; // lazy loading
@@ -52,35 +51,31 @@
         self.init = _init;
 
 
-        // ==================== init
-
-
         //##--------------init
 
         function _init(){
-            // get the objects list
+
             RestService.getObjects( function( objects ){
-                console.log( "objects received" );
+                console.log( "objects", objects );
                 self.objects = objects;
                 $( '.ui.accordion' ).accordion();  // initialise semantic-ui accordion plugin
             }, _handleError );
 
-            // get units, parsers and types
-            RestService.getUnits( function( response ){
-                self.units = response;
-                self.addInfosLoading--;
+            RestService.getUnits( function( units ){
+                console.log( "units", units );
+                self.units = units;
             }, _handleError );
 
             RestService.getMyUserGroups( {admin: true}, function( groups ){
                 console.log( "admin groups", groups );
                 self.adminGroups = groups;
-                self.addInfosLoading--;
             }, _handleError );
         }
 
-        // ==================== objects
+        //##-------------- object management
 
         function removeObject( object ){
+            // always ask confirmation
             ModalService.showModal( {
                 title     : "confirm",
                 html      : "are you sure you want to delete object <strong>" + object.name + "</strong> (" + object.id + ") ?<br />The" +
@@ -92,13 +87,12 @@
             } ).then( function( results ){
                 if( results.status ){
                     RestService.deleteObject( {id: object.id}, function(){
-                        self.objects.splice(self.objects.indexOf(object),1);
+                        self.objects.splice( self.objects.indexOf( object ), 1 );
                     }, _handleError );
                 }
             }, _handleError );
         }
 
-        //TODO parser with value " " == no parser
         function editObject( object ){
             ModalService.showModal( {
                 title          : "edit " + object.name,
@@ -114,7 +108,7 @@
                 if( results.status ){
                     var obj = results.inputs.object;
                     RestService.editObject( {id: object.id}, {name: obj.name, description: obj.description},
-                        function(  ){
+                        function(){
                             object.name = obj.name;
                             object.description = obj.description;
                         }, _handleError );
@@ -130,10 +124,10 @@
                 negative       : "cancel",
                 cancelable     : false,
                 inputs         : {
-                    object: {},
-                    adminGroups : self.adminGroups,
-                    units : self.units,
-                    init  : function(){
+                    object     : {},
+                    adminGroups: self.adminGroups,
+                    units      : self.units,
+                    init       : function(){
                         setTimeout( function(){
                             $( 'select.dropdown' ).dropdown();
                         }, 500 );
@@ -142,33 +136,31 @@
                 }
             } ).then( function( results ){
                 if( results.status ){
-                    RestService.addObject({owner: results.inputs.adminGroup}, results.inputs.object, function(object){
-                        self.objects.push(object);
-                    }, _handleError);
-                    // TODO add object
+                    RestService.addObject( {owner: results.inputs.adminGroup}, results.inputs.object, function( object ){
+                        self.objects.push( object );
+                    }, _handleError );
                 }
             }, _handleError );
         }
 
 
+        //##-------------- tags management
 
-        // ==================== tags
-
-        function addTags(object, tag){
-            console.log("tag = " + tag);
-            RestService.addTags({id: object.id, tags: tag}, {}, function(obj){
+        function addTags( object, tag ){
+            console.log( "tag = " + tag );
+            RestService.addTags( {id: object.id, tags: tag}, {}, function( obj ){
                 object.tags = obj.tags;
-            }, _handleError);
+            }, _handleError );
         }
 
-        function removeTag(object, idx){
-            RestService.removeTags({id: object.id, tags: object.tags[idx].tag}, {}, function(obj){
-                console.log(obj);
-                object.tags.splice(idx, 1);
-            }, _handleError);
+        function removeTag( object, idx ){
+            RestService.removeTags( {id: object.id, tags: object.tags[idx].tag}, {}, function( obj ){
+                console.log( obj );
+                object.tags.splice( idx, 1 );
+            }, _handleError );
         }
 
-        // ==================== tokens
+        //##-------------- tokens management
 
 
         function loadTokens( sid ){
@@ -180,6 +172,7 @@
         }
 
         function removeToken( object, index ){
+            // always ask for confirmation
             ModalService.showModal( {
                 title     : "confirm",
                 icon      : "warning sign orange",
@@ -191,9 +184,10 @@
                 cancelable: true
             } ).then( function( results ){
                 if( results.status ){
-                    // TODO delete token
                     var tokens = self.tokens[object.id];
-                    tokens.splice( index, 1 );
+                    RestService.deleteToken({id: object.id, tokenId: tokens[index].id}, {}, function(){
+                        tokens.splice( index, 1 );
+                    }, _handleError);
                 }
             }, _handleError );
         }
@@ -218,12 +212,11 @@
             } ).then( function( result ){
                 if( result.status ){
                     if( token == null ){
-                        // TODO put token
-                        self.tokens[object.id].push( {
-                            id         : object.id,
-                            secret     : "saldkfjasédlkfja",
-                            description: result.inputs.description
-                        } );
+                        // TODO: name and description
+                        // create token
+                        RestService.createToken({id: object.id}, function(t){
+                            self.tokens[object.id].push(t);
+                        }, _handleError);
                     }else{
                         // TODO update +
                         token.description = result.inputs.description;
@@ -233,8 +226,6 @@
             }, _handleError );
         }
 
-
-        // ==================== other
 
         //##------------utils
 

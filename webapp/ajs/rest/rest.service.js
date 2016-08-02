@@ -25,6 +25,8 @@
 
         return $resource( '', {}, {
 
+            // ---------------------------------------------------- objects
+
             getObjects: {
                 method : 'GET',
                 url    : baseUrl + 'objects',
@@ -51,6 +53,7 @@
                 isArray: false
             },
 
+            // ---------------------------------------------------- tokens
 
             getTokens: {
                 method : 'GET',
@@ -58,6 +61,22 @@
                 params : {id: '@id'},
                 isArray: true
             },
+
+            createToken: {
+                method : 'PUT',
+                url    : baseUrl + "objects/:id/tokens",
+                params : {id: '@id'},
+                isArray: false
+            },
+
+            deleteToken: {
+                method : 'DELETE',
+                url    : baseUrl + "objects/:id/tokens",
+                params : {id: '@id'},
+                isArray: false
+            },
+
+            // ---------------------------------------------------- tags
 
             addTags: {
                 method : 'PUT',
@@ -73,7 +92,7 @@
                 isArray: false
             },
 
-            // ----------------------------------------------------
+            // ---------------------------------------------------- units and types
 
             getUnits: {
                 method : "GET",
@@ -87,7 +106,7 @@
                 isArray: true
             },
 
-            // ----------------------------------------------------
+            // ----------------------------------------------------  object groups
 
             getObjectGroups: {
                 method : 'GET',
@@ -129,6 +148,7 @@
                 isArray: true
             },
 
+            // ---------------------------------------------------- permissions
 
             addPermission: {
                 method : 'PUT',
@@ -145,8 +165,7 @@
             },
 
 
-
-            // ----------------------------------------------------
+            // ---------------------------------------------------- user groups
 
             getMyUserGroups: {
                 method: 'GET',
@@ -159,6 +178,7 @@
                 url    : baseUrl + 'ugroups',
                 isArray: true
             }
+
 
 
             ///**

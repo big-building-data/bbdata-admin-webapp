@@ -28,23 +28,35 @@
 
         var self = this;
 
-        self.ogroups = [];
-        self.objects = [];
-        self.allUserGroups = [];
-        self.adminGroups = [];
-        self.currentGroup = null;
+        self.ogroups = [];          // the object groups writable by the user, with objects
+        self.objects = [];          // all objects writable by the user
+        self.adminGroups = [];      // all user groups for which the user has administrative rights
+        self.allUserGroups = [];    // all user groups, useful to give new permissions
+        self.currentGroup = null;   // current group, i.e. selected one (whose ogroups and objects are visible)
+
+
+        // available methods
+        self.addObjectGroup = addObjectGroup;
+        self.editOgroup = editObjectGroup;
+        self.deleteOgroup = deleteObjectGroup;
+        self.removeObjectFromGroup = removeObjectFromGroup;
+        self.removePermission = removePermission;
+        self.addPermission = addPermission;
+
+        //##-------------- drag and drop configuration
 
         self.dragObjectsConfig = {
             clone    : true,
             itemMoved: function( evt ){
-                var ogroup = evt.dest.sortableScope.ogroup;
-                var item = evt.dest.sortableScope.modelValue[evt.dest.index];
-                addObjectToGroup( item, ogroup, null,
+                var objectGroup = evt.dest.sortableScope.ogroup;
+                var object = evt.dest.sortableScope.modelValue[evt.dest.index];
+                addObjectToGroup( object, objectGroup, null,
                     function(){
-                        // error, go back TODO
+                        // on error, remove the object
+
                         //ogroup.sensors.splice( evt.dest.index, 1 );
                     } );
-                console.log( item.id + " to Ogroup " + ogroup.name );
+                console.log( object.id + " to Ogroup " + objectGroup.name );
             }
         };
 
@@ -63,24 +75,20 @@
             }
         };
 
-        self.addObjectGroup = addObjectGroup;
-        self.editOgroup = editObjectGroup;
-        self.deleteOgroup = deleteOgroup;
-        self.removeObjectFromGroup = removeObjectFromGroup;
-        self.removePermission = removePermission;
-        self.addPermission = addPermission;
-
-        _init();
+        // called on first page load
+        self.init = _init;
 
         //##--------------init
 
         function _init(){
-            console.log( "tls ogroup init" );
+            console.log( "object group inititialisation" );
 
             RestService.getObjectGroups( {objects: true, writable: true}, function( ogroups ){
 
                 console.log( "object groups", ogroups );
                 self.ogroups = ogroups;
+
+                // also fetch permissions
                 angular.forEach( ogroups, function( ogrp ){
                     RestService.getObjectGroupPermissions( {id: ogrp.id}, function( perms ){
                         ogrp.permissions = perms;
@@ -92,9 +100,10 @@
             RestService.getObjects( {writable: true}, function( objects ){
                 console.log( "objects", objects );
                 self.objects = objects;
-                _sticky();
+                _sticky(); // initialise sticky module
 
                 $rootScope.$on( 'bbdata.PageChanged', function( evt, args ){
+                    // always initialise sticky module when user navigates back to the page
                     if( args.to == OGROUPS_PAGE ){
                         console.log( "page == Ogroup" );
                         _sticky();
@@ -116,27 +125,31 @@
 
         }
 
+        //##-------------- handle object groups
 
         function addObjectGroup(){
-            _addEditNameModal( "add object group", "" ).then( function( name ){
-                RestService.addObjectGroup( {owner: self.currentGroup.id}, {name: name},
-                    function( ogroup ){
-                        if( !ogroup.hasOwnProperty( "objects" ) ) ogroup.objects = [];
-                        self.ogroups.push( ogroup );
-                    }, _handleError );
-            } );
-        }
-
-        function editObjectGroup( ogroup ){
-            _addEditNameModal( "edit object group", ogroup.name ).then(
-                function( name ){
-                    RestService.editObjectGroup( {id: ogroup.id, name: name}, function( ogroup ){
-                        ogroup.name = name;
-                    }, _handleError );
+            _addEditNameModal( "add object group", "" )
+                .then( function( name ){
+                    RestService.addObjectGroup( {owner: self.currentGroup.id}, {name: name},
+                        function( ogroup ){
+                            if( !ogroup.hasOwnProperty( "objects" ) ) ogroup.objects = [];
+                            self.ogroups.push( ogroup ); // add new object group
+                        }, _handleError );
                 } );
         }
 
-        function deleteOgroup( ogroup, idx ){
+        function editObjectGroup( ogroup ){
+            _addEditNameModal( "edit object group", ogroup.name )
+                .then(
+                    function( name ){
+                        RestService.editObjectGroup( {id: ogroup.id, name: name}, function( ogroup ){
+                            // make changes visible
+                            ogroup.name = name;
+                        }, _handleError );
+                    } );
+        }
+
+        function deleteObjectGroup( ogroup, idx ){
 
             var deleteCallback = function(){
                 RestService.deleteObjectGroup( {id: ogroup.id}, function(){
@@ -145,26 +158,27 @@
             };
 
             if( ogroup.objects && ogroup.objects.length ){
-                // some sensors exist, ask for confirmation
+                // some objects exist, ask for confirmation
                 ModalService.showModal( {
                     title   : "confirm",
                     html    : "are you absolutely sure ?",
                     positive: "proceed",
                     negative: "cancel",
                     icon    : "trash",
-                    basic   : true,
+                    basic   : true
                 } ).then( function( result ){
                     if( result.status ) deleteCallback();
-
                 }, _handleError );
             }else{
                 deleteCallback();
             }
         }
 
+        //##------------ permissions management
 
         function addPermission( group, ogroup ){
             if( ogroup.permissions.indexOf( group ) >= 0 ){
+                // permissions already exists, do nothing
                 console.log( "already here" );
                 return;
             }
@@ -177,6 +191,29 @@
             RestService.removePermission( {id: ogroup.id, groupId: perm.id}, function(){
                 ogroup.permissions.splice( ogroup.permissions.indexOf( perm ), 1 );
             }, _handleError );
+        }
+
+        //##------------ objects management
+
+        function addObjectToGroup( object, ogroup, resolve, reject ){
+            if( !reject ) reject = _handleError;
+            RestService.addObjectToGroup( {
+                id      : ogroup.id,
+                objectId: object.id
+            }, {}, resolve, reject );
+        }
+
+        function removeObjectFromGroup( object, ogroup, resolve, reject ){
+            if( !reject ) reject = _handleError;
+            RestService.removeObjectFromGroup( {
+                id      : ogroup.id,
+                objectId: object.id
+            }, {}, function(){
+                // idx == -1 if object dragged from another group
+                var idx = ogroup.objects.indexOf( object );
+                if( idx >= 0 ) ogroup.objects.splice( idx, 1 );
+                if( resolve ) resolve();
+            }, reject );
         }
 
         //##------------utils
@@ -211,6 +248,7 @@
 
         }
 
+
         function _handleError( error ){
             console.log( error );
             toaster.error( {body: errorParser.parse( error )} );
@@ -225,25 +263,6 @@
             }, 100 );
         }
 
-        function addObjectToGroup( object, ogroup, resolve, reject ){
-            if( !reject ) reject = _handleError;
-            RestService.addObjectToGroup( {
-                id      : ogroup.id,
-                objectId: object.id
-            }, {}, resolve, reject );
-        }
-
-        function removeObjectFromGroup( object, ogroup, resolve, reject ){
-            if( !reject ) reject = _handleError;
-            RestService.removeObjectFromGroup( {
-                id      : ogroup.id,
-                objectId: object.id
-            }, {}, function(){
-                var idx = ogroup.objects.indexOf( object );
-                if( idx > 0 ) ogroup.objects.splice( idx, 1 );
-                if( resolve ) resolve();
-            }, reject );
-        }
     }
 
 
