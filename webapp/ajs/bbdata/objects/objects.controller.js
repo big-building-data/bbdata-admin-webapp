@@ -22,14 +22,13 @@
 
     // --------------------------
 
-    function ctrl( RestService, ModalService, toaster, errorParser, $filter ){
+    function ctrl( RestService, ModalService, toaster, errorParser, DataProvider ){
         var self = this;
 
         self.objects = [];  // all the objects
         self.tokens = {};   // map object.id - tokens
 
         self.units = [];            // all the available units (add modal)
-        self.parsers = [];          // all the available parsers (add modal)
         self.adminGroups = [];      // all the groups where user is admin (add modal)
 
         // manage objects
@@ -55,18 +54,18 @@
 
         function _init(){
 
-            RestService.getObjects( function( objects ){
+            DataProvider.getWritableObjects( function( objects ){
                 console.log( "objects", objects );
                 self.objects = objects;
                 $( '.ui.accordion' ).accordion();  // initialise semantic-ui accordion plugin
             }, _handleError );
 
-            RestService.getUnits( function( units ){
+            DataProvider.getUnits( function( units ){
                 console.log( "units", units );
                 self.units = units;
             }, _handleError );
 
-            RestService.getMyUserGroups( {admin: true}, function( groups ){
+            DataProvider.getAdminUserGroups( function( groups ){
                 console.log( "admin groups", groups );
                 self.adminGroups = groups;
             }, _handleError );

@@ -53,7 +53,7 @@
     -->
 
     <!--objects page-->
-    <div id="container" ng-show="$root.page==0" class="ui main container objects" ng-include
+    <div id="container" ng-if="$root.page_init[0]"  ng-show="$root.page==0" class="ui main container objects" ng-include
          ng-controller="ObjectsController as ctrl"
          src="'/ajs/bbdata/objects/partials/_main.html'"></div>
     <!--tls / sls page-->
@@ -110,6 +110,8 @@
 <script type="text/javascript" src="/ajs/bbdata/app.module.js"></script>
 <script type="text/javascript" src="/ajs/bbdata/app.filters.js"></script>
 <script type="text/javascript" src="/ajs/bbdata/app.directives.js"></script>
+
+<script type="text/javascript" src="/ajs/bbdata/data/provider.factory.js"></script>
 
 <script type="text/javascript" src="/ajs/bbdata/display/display.controller.js"></script>
 <script type="text/javascript" src="/ajs/bbdata/display/serie.factory.js"></script>

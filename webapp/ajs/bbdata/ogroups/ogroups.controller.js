@@ -24,7 +24,7 @@
     // --------------------------
 
 
-    function ctrl( RestService, $rootScope, ModalService, OGROUPS_PAGE, toaster, $q, errorParser ){
+    function ctrl( RestService, DataProvider, $rootScope, ModalService, OGROUPS_PAGE, toaster, $q, errorParser ){
 
         var self = this;
 
@@ -42,6 +42,10 @@
         self.removeObjectFromGroup = removeObjectFromGroup;
         self.removePermission = removePermission;
         self.addPermission = addPermission;
+
+
+        // called on first page load
+        self.init = _init;
 
         //##-------------- drag and drop configuration
 
@@ -75,15 +79,13 @@
             }
         };
 
-        // called on first page load
-        self.init = _init;
 
         //##--------------init
 
         function _init(){
             console.log( "object group inititialisation" );
 
-            RestService.getObjectGroups( {objects: true, writable: true}, function( ogroups ){
+            DataProvider.getWritableObjectGroups( function( ogroups ){
 
                 console.log( "object groups", ogroups );
                 self.ogroups = ogroups;
@@ -97,7 +99,7 @@
 
             }, _handleError );
 
-            RestService.getObjects( {writable: true}, function( objects ){
+            DataProvider.getWritableObjects( function( objects ){
                 console.log( "objects", objects );
                 self.objects = objects;
                 _sticky(); // initialise sticky module
@@ -111,13 +113,14 @@
                 } );
             }, _handleError );
 
-            RestService.getMyUserGroups( {admin: true}, function( groups ){
+            DataProvider.getAdminUserGroups( function( groups ){
                 console.log( "admin groups", groups );
                 self.adminGroups = groups;
                 if( groups.length > 0 ) self.currentGroup = groups[0];
             }, _handleError );
 
-            RestService.getAllUserGroups( function( groups ){
+
+            DataProvider.getAllUserGroups( function( groups ){
                 console.log( "user groups", groups );
                 self.allUserGroups = groups;
             }, _handleError );
