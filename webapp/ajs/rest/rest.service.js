@@ -171,14 +171,42 @@
                 method: 'GET',
                 url: baseUrl + 'i/groups' ,
                 isArray: true
-            } ,
+            },
 
             getAllUserGroups: {
                 method : 'GET',
                 url    : baseUrl + 'ugroups',
                 isArray: true
-            }
+            },
 
+            getUserGroup: {
+                method : 'GET',
+                url    : baseUrl + 'ugroups/:id',
+                params : {id: "@id"},
+                isArray: false
+            },
+
+            addUserGroup: {
+                method: 'PUT',
+                url    : baseUrl + 'ugroups/:id',
+                params : {id: "@id"},
+                isArray: false
+            },
+
+            deleteUserGroup: {
+                method: 'DELETE',
+                url    : baseUrl + 'ugroups/:id',
+                params : {id: "@id"},
+                isArray: false
+            },
+
+            // ---------------------------------------------------- users
+
+            getUsers: {
+                method : 'GET',
+                url    : baseUrl + 'users',
+                isArray: true
+            },
 
 
             ///**

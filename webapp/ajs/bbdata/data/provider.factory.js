@@ -70,6 +70,14 @@
             _get( "getUnits", "units", {}, resolve, reject );
         };
 
+        self.getUsers = function( resolve, reject ){
+            if( self.users ){
+                resolve( self.users );
+                return;
+            }
+            _get( "getUsers", "users", {}, resolve, reject );
+        };
+
         // ----------------------------------------------------
 
         function _get( funcName, propName, urlParams, resolve, reject ){

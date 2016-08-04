@@ -11,10 +11,10 @@
 
     /**
      * @ngdoc tls ogroup controller
-     * @name bbdata.app.TlsOgroupCtontroller
+     * @name bbdata.app.OgroupsController
      *
      * @description
-     * handles the TLS/Ogroup page.
+     * handles the Object groups page.
      */
     angular
         .module( 'bbdata.app' )

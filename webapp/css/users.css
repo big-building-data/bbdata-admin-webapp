@@ -1,0 +1,10 @@
+.cards.usergroups li {
+    list-style: none;
+    margin: 10px 3px;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+}
+.cards.usergroups li .icon {
+    cursor: pointer;
+}

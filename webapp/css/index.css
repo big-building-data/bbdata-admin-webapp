@@ -68,3 +68,15 @@ hr {
 .link {
     cursor: pointer;
 }
+
+.color-red {
+    color: red;
+}
+
+.link-fade {
+    opacity: .5;
+    cursor: pointer;
+}
+.link-fade:hover {
+    opacity: 1;
+}

@@ -1,0 +1,47 @@
+<!--"lazy" load-->
+<div ng-init="ctrl.init()"></div>
+
+<h1>Manage your user groups</h1>
+
+<!--add group button-->
+<p>
+    <button class="ui labeled icon tiny button" ng-click="ctrl.addUserGroup()">
+        <i class="add icon"></i>
+        add user group
+    </button>
+</p>
+
+<div class="ui cards usergroups">
+    <div class="card" ng-repeat="ugroup in ctrl.adminGroups">
+        <div class="content">
+            <div class="header">Group "{{ugroup.name}}"</div>
+            <div class="meta">Members</div>
+            <div class="description">
+
+                <div class="align-center link-fade">
+                    <i class="trash icon"></i>
+                    remove this group
+                </div>
+
+                <ul style="padding-left: 0">
+                    <li ng-repeat="u in ugroup.users">
+                        <div class="">
+                            <i class="right floated delete icon red" ng-click="ctrl.removeUser(ugroup, u)"></i>
+                            <i ng-show="!u.isAdmin" class="icon toggle off blue"
+                               ng-click="ctrl.changeUserStatus(ugroup, u, true)"></i>
+                            <i ng-show="u.isAdmin" class="icon toggle on blue"
+                               ng-click="ctrl.changeUserStatus(ugroup, u, false)"></i>
+                            {{u.name}} <br/>
+                            <span class="meta">{{u.email}}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="ui bottom attached button basic">
+            <i class="add icon"></i>
+            add user
+        </div>
+    </div>
+
+</div>

@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="/vendor/toaster/toaster.min.css">
     <!--my css-->
     <link rel="stylesheet" href="/css/index.css">
-    <link rel="stylesheet" href="/css/display.css">
+    <link rel="stylesheet" href="/css/users.css">
     <link rel="stylesheet" href="/css/objects.css">
     <link rel="stylesheet" href="/css/ogroups.css">
 
@@ -32,7 +32,7 @@
         </a>
         <a class="item" href="#" ng-click="$root.page=0">objects</a>
         <a class="item" href="#1" ng-click="$root.page=1">object groups</a>
-        <a class="item" href="#2" ng-click="$root.page=2">display</a>
+        <a class="item" href="#2" ng-click="$root.page=2">users</a>
     </div>
 </div>
 
@@ -61,9 +61,9 @@
          ng-controller="OgroupsController as ctrl"
          src="'/ajs/bbdata/ogroups/partials/_main.html'"></div>
     <!--display page-->
-    <div id="container" ng-if="$root.page_init[2]" ng-show="$root.page==2" class="ui main container home" ng-include
-         ng-controller="DisplayController as ctrl"
-         src="'/ajs/bbdata/display/partials/_main.html'"></div>
+    <div id="container" ng-if="$root.page_init[2]" ng-show="$root.page==2" class="ui main container users" ng-include
+         ng-controller="UsersController as ctrl"
+         src="'/ajs/bbdata/users/partials/_main.html'"></div>
 
     <!--footer-->
     <div class="ui inverted vertical footer segment">
@@ -113,9 +113,7 @@
 
 <script type="text/javascript" src="/ajs/bbdata/data/provider.factory.js"></script>
 
-<script type="text/javascript" src="/ajs/bbdata/display/display.controller.js"></script>
-<script type="text/javascript" src="/ajs/bbdata/display/serie.factory.js"></script>
-<script type="text/javascript" src="/ajs/bbdata/display/graph.factory.js"></script>
+<script type="text/javascript" src="/ajs/bbdata/users/users.controller.js"></script>
 <script type="text/javascript" src="/ajs/bbdata/objects/objects.controller.js"></script>
 <script type="text/javascript" src="/ajs/bbdata/ogroups/ogroups.controller.js"></script>
 
