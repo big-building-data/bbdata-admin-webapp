@@ -19,13 +19,15 @@
     angular
         .module( 'bbdata.app' )
         .controller( 'UsersController', ctrl )
-        .filter('lala', function(){ return filterArrayId; });
+        .filter( 'lala', function(){
+            return filterArrayId;
+        } );
 
 // --------------------------
 
-    function ctrl( DataProvider, RestService, ModalService, $q ){
+    function ctrl( DataProvider, RestService, ModalService, $scope ){
         var self = this;
-
+        $scope.lala = [];
         self.adminGroups = [];      // all user groups for which the user has administrative rights
         self.users = [];            // all users
 
@@ -58,6 +60,7 @@
 
             DataProvider.getUsers( function( users ){
                 self.users = users;
+                self.users2 = angular.copy( users );
             }, _handleError );
 
         }
@@ -103,11 +106,34 @@
         //##-------------- users
 
         function addUser( ugroup ){
-            ModalService.showModal();
+            ModalService.showModal( {
+                title          : "add users to '" + ugroup.name + "'",
+                htmlInclude    : "/ajs/bbdata/users/partials/_addUserModalContent.html",
+                positive       : "save",
+                positiveDisable: '!inputs.usersToAdd',
+                negative       : "cancel",
+                inputs         : {
+                    users     : filterArrayId( self.users, ugroup.users ),
+                    usersToAdd: []
+                },
+                cancelable     : false
+            } ).then( function( results ){
+                if( results.status ){
+                    var users = results.inputs.usersToAdd;
+                    angular.forEach( users, function( user ){
+                        RestService.addUserToGroup( {id: ugroup.id, userId: user.id, admin: user.isAdmin}, {}, function(){
+                            ugroup.users.push( user );
+                        }, _handleError );
+                    } );
+
+                }
+            }, _handleError );
         }
 
-        function removeUser( ugroup, user ){
-
+        function removeUser( ugroup, user, idx ){
+             RestService.removeUserFromGroup({id: ugroup.id, userId: user.id}, {}, function(){
+                  ugroup.users.splice(idx, 1);
+             }, _handleError);
         }
 
         function changeUserStatus( ugroup, user, admin ){
@@ -153,7 +179,7 @@
 
 
     function filterArrayId( whole, part ){
-        if(!part || part.length == 0) return whole;
+        if( !part || part.length == 0 ) return whole;
         return whole.filter( function( i ){
             return !containsId( part, i.id );
         } );

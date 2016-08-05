@@ -8,3 +8,7 @@
 .cards.usergroups li .icon {
     cursor: pointer;
 }
+
+.ui.header .group-name {
+    color: #F2711C;
+}

@@ -1,0 +1,30 @@
+Add users by selecting them from the dropdown menu. I can also make them admin by clicking on the
+icon at the left of their names once selected :
+<ul>
+    <li><i class="icon user blue"></i> : user,</li>
+    <li><i class="icon protect blue"></i> : administrator</li>
+</ul>
+Click on <em>finish</em> to save changes.
+
+<div class="ui compact menu">
+    <div class="ui simple dropdown item">
+        choose users
+        <i class="dropdown icon"></i>
+        <div class="menu">
+            <div class="item" ng-repeat="u in inputs.users"
+                 ng-click="inputs.usersToAdd.indexOf(u) == -1 && inputs.usersToAdd.push(u)">{{u.name}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<ul ng-repeat="u in inputs.usersToAdd as datasource">
+    <li class="ui">
+        <i class="right floated delete icon red" ng-click="datasource.splice($index, 1)"></i>
+        <i ng-show="!u.isAdmin" class="icon user blue"
+           ng-click="u.isAdmin = true"></i>
+        <i ng-show="u.isAdmin" class="icon protect blue"
+           ng-click="u.isAdmin = false"></i>
+        {{u.name}} - {{u.email}}
+    </li>
+</ul>

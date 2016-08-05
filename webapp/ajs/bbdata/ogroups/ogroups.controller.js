@@ -37,8 +37,8 @@
 
         // available methods
         self.addObjectGroup = addObjectGroup;
-        self.editOgroup = editObjectGroup;
-        self.deleteOgroup = deleteObjectGroup;
+        self.editObjectGroup = editObjectGroup;
+        self.deleteObjectGroup = deleteObjectGroup;
         self.removeObjectFromGroup = removeObjectFromGroup;
         self.removePermission = removePermission;
         self.addPermission = addPermission;
@@ -262,7 +262,9 @@
             // wait a bit to be sure everything is loaded
             setTimeout( function(){
                 console.log( "apply sticky" );
-                $( '.ui.sticky' ).sticky( {} );
+                $( '.ui.sticky' ).sticky( {
+                    offset: 150
+                } );
             }, 100 );
         }
 

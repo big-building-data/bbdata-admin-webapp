@@ -200,6 +200,20 @@
                 isArray: false
             },
 
+            addUserToGroup: {
+                method: 'PUT',
+                url: baseUrl + 'ugroups/:id/users',
+                params: {id: '@id'},
+                isArray: false
+            },
+
+            removeUserFromGroup: {
+                method: 'DELETE',
+                url: baseUrl + 'ugroups/:id/users',
+                params: {id: '@id'},
+                isArray: false
+            },
+
             // ---------------------------------------------------- users
 
             getUsers: {
