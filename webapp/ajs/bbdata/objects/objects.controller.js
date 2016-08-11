@@ -135,7 +135,7 @@
                 }
             } ).then( function( results ){
                 if( results.status ){
-                    RestService.addObject( {owner: results.inputs.adminGroup}, results.inputs.object, function( object ){
+                    RestService.addObject( results.inputs.object, function( object ){
                         self.objects.push( object );
                     }, _handleError );
                 }

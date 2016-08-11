@@ -133,7 +133,7 @@
         function addObjectGroup(){
             _addEditNameModal( "add object group", "" )
                 .then( function( name ){
-                    RestService.addObjectGroup( {owner: self.currentGroup.id}, {name: name},
+                    RestService.addObjectGroup( {owner: self.currentGroup.id, name: name},
                         function( ogroup ){
                             if( !ogroup.hasOwnProperty( "objects" ) ) ogroup.objects = [];
                             self.ogroups.push( ogroup ); // add new object group
@@ -180,6 +180,9 @@
         //##------------ permissions management
 
         function addPermission( group, ogroup ){
+            // initialize array
+            if(!ogroup.permissions) ogroup.permissions = [];
+
             if( ogroup.permissions.indexOf( group ) >= 0 ){
                 // permissions already exists, do nothing
                 console.log( "already here" );
