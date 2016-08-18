@@ -15,10 +15,10 @@
     <link rel="stylesheet" href="/vendor/sortable/ng-sortable.style.min.css">
     <link rel="stylesheet" href="/vendor/toaster/toaster.min.css">
     <!--my css-->
-    <link rel="stylesheet" href="/css/index.css">
-    <link rel="stylesheet" href="/css/users.css">
-    <link rel="stylesheet" href="/css/objects.css">
-    <link rel="stylesheet" href="/css/ogroups.css">
+    <link rel="stylesheet" href="/secured/css/index.css">
+    <link rel="stylesheet" href="/secured/css/users.css">
+    <link rel="stylesheet" href="/secured/css/objects.css">
+    <link rel="stylesheet" href="/secured/css/ogroups.css">
 
 
 </head>
@@ -28,11 +28,12 @@
 <div class="ui fixed inverted menu">
     <div class="ui container">
         <a href="#/" class="header item">
-            <img class="logo" src="assets/logo.png">BBData
+            <img class="logo" src="/assets/logo.png">BBData
         </a>
         <a class="item" href="#" ng-click="$root.page=0">objects</a>
         <a class="item" href="#1" ng-click="$root.page=1">object groups</a>
         <a class="item" href="#2" ng-click="$root.page=2">users</a>
+        <a class="right item" href="" ng-click="">logout</a>
     </div>
 </div>
 
@@ -55,15 +56,15 @@
     <!--objects page-->
     <div id="container" ng-if="$root.page_init[0]"  ng-show="$root.page==0" class="ui main container objects" ng-include
          ng-controller="ObjectsController as ctrl"
-         src="'/ajs/bbdata/objects/partials/_main.html'"></div>
+         src="'/secured/ajs/bbdata/objects/partials/_main.html'"></div>
     <!--tls / sls page-->
     <div id="container" ng-if="$root.page_init[1]" ng-show="$root.page==1" class="ui main container ogroups" ng-include
          ng-controller="OgroupsController as ctrl"
-         src="'/ajs/bbdata/ogroups/partials/_main.html'"></div>
+         src="'/secured/ajs/bbdata/ogroups/partials/_main.html'"></div>
     <!--display page-->
     <div id="container" ng-if="$root.page_init[2]" ng-show="$root.page==2" class="ui main container users" ng-include
          ng-controller="UsersController as ctrl"
-         src="'/ajs/bbdata/users/partials/_main.html'"></div>
+         src="'/secured/ajs/bbdata/users/partials/_main.html'"></div>
 
     <!--footer-->
     <div class="ui inverted vertical footer segment">
@@ -102,26 +103,26 @@
 <script type="text/javascript" src="/vendor/toaster/toaster.min.js"></script>
 
 <!--rest-->
-<script type="text/javascript" src="/ajs/rest/rest.module.js"></script>
-<script type="text/javascript" src="/ajs/rest/rest.constants.js"></script>
-<script type="text/javascript" src="/ajs/rest/rest.service.js"></script>
+<script type="text/javascript" src="/secured/ajs/rest/rest.module.js"></script>
+<script type="text/javascript" src="/secured/ajs/rest/rest.constants.js"></script>
+<script type="text/javascript" src="/secured/ajs/rest/rest.service.js"></script>
 
 <!--app-->
-<script type="text/javascript" src="/ajs/bbdata/app.module.js"></script>
-<script type="text/javascript" src="/ajs/bbdata/app.filters.js"></script>
-<script type="text/javascript" src="/ajs/bbdata/app.directives.js"></script>
+<script type="text/javascript" src="/secured/ajs/bbdata/app.module.js"></script>
+<script type="text/javascript" src="/secured/ajs/bbdata/app.filters.js"></script>
+<script type="text/javascript" src="/secured/ajs/bbdata/app.directives.js"></script>
 
-<script type="text/javascript" src="/ajs/bbdata/data/provider.factory.js"></script>
+<script type="text/javascript" src="/secured/ajs/bbdata/data/provider.factory.js"></script>
 
-<script type="text/javascript" src="/ajs/bbdata/users/users.controller.js"></script>
-<script type="text/javascript" src="/ajs/bbdata/objects/objects.controller.js"></script>
-<script type="text/javascript" src="/ajs/bbdata/ogroups/ogroups.controller.js"></script>
+<script type="text/javascript" src="/secured/ajs/bbdata/users/users.controller.js"></script>
+<script type="text/javascript" src="/secured/ajs/bbdata/objects/objects.controller.js"></script>
+<script type="text/javascript" src="/secured/ajs/bbdata/ogroups/ogroups.controller.js"></script>
 
 
 <!--semantic helpers-->
-<script type="text/javascript" src="/ajs/semantic/semantic.modals.js"></script>
-<script type="text/javascript" src="/ajs/semantic/semantic.sidebar.js"></script>
-<script type="text/javascript" src="/ajs/semantic/semantic.helpers.js"></script>
+<script type="text/javascript" src="/secured/ajs/semantic/semantic.modals.js"></script>
+<script type="text/javascript" src="/secured/ajs/semantic/semantic.sidebar.js"></script>
+<script type="text/javascript" src="/secured/ajs/semantic/semantic.helpers.js"></script>
 
 <!--datetime-->
 <script type="text/javascript" src="/vendor/moment/momentjs.min.js"></script>
@@ -131,11 +132,6 @@
 <!--<script src="http://code.highcharts.com/highcharts.js"></script>-->
 <script src="/vendor/highcharts/highstock.js"></script>
 <script src="/vendor/highcharts/exporting.js"></script>
-
-
-<script type="text/javascript"
-        src="https://rawgit.com/laff/technical-indicators/master/technical-indicators.src.js"></script>
-
 
 </body>
 

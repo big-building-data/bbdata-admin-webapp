@@ -25,7 +25,7 @@
 
 // --------------------------
 
-    function ctrl( DataProvider, RestService, ModalService, $scope, toaster, errorParser ){
+    function ctrl( DataProvider, RestService, ModalService, $scope, toaster, errorParser, ROOT_URL ){
         var self = this;
         $scope.lala = [];
         self.adminGroups = [];      // all user groups for which the user has administrative rights
@@ -109,7 +109,7 @@
         function addUser( ugroup ){
             ModalService.showModal( {
                 title          : "add users to '" + ugroup.name + "'",
-                htmlInclude    : "/ajs/bbdata/users/partials/_addUserModalContent.html",
+                htmlInclude    : ROOT_URL + "/ajs/bbdata/users/partials/_addUserModalContent.html",
                 positive       : "save",
                 positiveDisable: '!inputs.usersToAdd',
                 negative       : "cancel",

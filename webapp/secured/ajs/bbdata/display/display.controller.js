@@ -24,7 +24,7 @@
     // --------------------------
 
     function ctrl( RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, FileSaver, Blob,
-                   DISPLAY_PAGE, Graph, Serie, $window, ModalService, toaster, errorParser ){
+                   DISPLAY_PAGE, Graph, Serie, $window, ModalService, toaster, errorParser, ROOT_URL ){
 
         var self = this;
 
@@ -80,7 +80,7 @@
         function createNewWindow(){
             ModalService.showModal( {
                 title          : "edit",
-                htmlInclude    : "/ajs/bbdata/display/partials/_newWindowContent.html",
+                htmlInclude    : ROOT_URL + "/ajs/bbdata/display/partials/_newWindowContent.html",
                 positive       : "generate",
                 positiveDisable: "form.nwForm.$invalid",
                 negative       : "cancel",

@@ -22,7 +22,7 @@
 
     // --------------------------
 
-    function ctrl( RestService, ModalService, toaster, errorParser, DataProvider ){
+    function ctrl( RestService, ModalService, toaster, errorParser, DataProvider, ROOT_URL ){
         var self = this;
 
         self.objects = [];  // all the objects
@@ -95,7 +95,7 @@
         function editObject( object ){
             ModalService.showModal( {
                 title          : "edit " + object.name,
-                htmlInclude    : "/ajs/bbdata/objects/partials/_editModalContent.html",
+                htmlInclude    : ROOT_URL + "/ajs/bbdata/objects/partials/_editModalContent.html",
                 positive       : "save",
                 positiveDisable: 'form.editform.$invalid',
                 negative       : "cancel",
@@ -117,7 +117,7 @@
 
         function addObject(){
             ModalService.showModal( {
-                htmlInclude    : '/ajs/bbdata/objects/partials/_addModalContent.html',
+                htmlInclude    : ROOT_URL + '/ajs/bbdata/objects/partials/_addModalContent.html',
                 positive       : "add",
                 positiveDisable: "form.addform.$invalid",
                 negative       : "cancel",

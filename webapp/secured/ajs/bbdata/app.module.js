@@ -34,6 +34,7 @@
         ] ).run( run );
 
     webapp.constant( "RFC3339_FORMAT", "YYYY-MM-DDTHH:mm:ssZ" );
+    webapp.constant( "ROOT_URL", "/secured" );
 
     /*
      * number bound to each page.
