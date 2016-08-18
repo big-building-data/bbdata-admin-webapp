@@ -7,7 +7,7 @@ var API_SERVER_HOST = "http://10.10.0.82:8888/bbdata/api";
 var express = require( 'express' );
 var proxy = require( 'http-proxy' ).createProxyServer( {host: API_SERVER_HOST} );
 var session = require( 'express-session' );
-
+var request = require( 'request' );
 
 var port = process.env.PORT || 8088;  // set our port
 var app = express();                  // define our app using express
@@ -22,7 +22,7 @@ app.all( '/secured/*', function( req, res, next ){          // secured resource 
     if( isLoggedIn( req.session ) ){
         next();
     }else{
-        res.redirect( '/login' );
+        res.redirect( '/auth' );
     }
 } );
 app.use( '/secured', express.static( 'webapp/secured' ) );  // secured resources (auth required)
@@ -31,7 +31,7 @@ app.use( '/secured', express.static( 'webapp/secured' ) );  // secured resources
 // ======================== redirects
 
 app.get( '/', function( req, res, next ){                   // redirect when asking for root
-    console.log("/ asked. Redirect.");
+    console.log( "/ asked. Redirect." );
     if( isLoggedIn( req.session ) ){
         res.redirect( '/secured' );
     }else{
@@ -39,7 +39,24 @@ app.get( '/', function( req, res, next ){                   // redirect when ask
     }
 } );
 
+// TODO: find a way to redirect after an http-proxy pipe instead of creating a whole new request
+app.get( '/logout', function( req, res, next ){             // logout utility
+    var sess = req.session;
 
+    request( {
+        url    : API_SERVER_HOST + '/logout',
+        method: "POST",
+        headers: {
+            "content-type": "application/json",
+            "bbuser" : sess.bbuser,
+            "bbtoken": sess.bbtoken
+        }
+    }, function( error, response, body ){
+        console.log( "logout done", body, error );
+    } );
+    clearSession( sess );
+    res.redirect( "/" );
+} );
 // ======================== proxy management
 
 app.use( '/api', function( req, res, next ){                // setup redirect to api calls
