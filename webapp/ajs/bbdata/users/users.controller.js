@@ -25,7 +25,7 @@
 
 // --------------------------
 
-    function ctrl( DataProvider, RestService, ModalService, $scope ){
+    function ctrl( DataProvider, RestService, ModalService, $scope, toaster, errorParser ){
         var self = this;
         $scope.lala = [];
         self.adminGroups = [];      // all user groups for which the user has administrative rights
@@ -72,6 +72,7 @@
             _addEditNameModal( "Add user group", "", function( name ){
                 console.log( "adding usergroup " + name );
                 RestService.addUserGroup( {name: name}, function( ugroup ){
+                    console.log("new group", ugroup);
                     self.adminGroups.push( ugroup );
                 }, _handleError );
             } );
@@ -121,8 +122,16 @@
                 if( results.status ){
                     var users = results.inputs.usersToAdd;
                     angular.forEach( users, function( user ){
-                        RestService.addUserToGroup( {id: ugroup.id, userId: user.id, admin: user.isAdmin}, {}, function(){
-                            ugroup.users.push( user );
+                        RestService.addUserToGroup( {
+                            id    : ugroup.id,
+                            userId: user.id,
+                            admin : user.isAdmin
+                        }, {}, function(){
+                            if( !ugroup.users ){
+                                ugroup.users = [user];
+                            }else{
+                                ugroup.users.push( user );
+                            }
                         }, _handleError );
                     } );
 
@@ -131,9 +140,9 @@
         }
 
         function removeUser( ugroup, user, idx ){
-             RestService.removeUserFromGroup({id: ugroup.id, userId: user.id}, {}, function(){
-                  ugroup.users.splice(idx, 1);
-             }, _handleError);
+            RestService.removeUserFromGroup( {id: ugroup.id, userId: user.id}, {}, function(){
+                ugroup.users.splice( idx, 1 );
+            }, _handleError );
         }
 
         function changeUserStatus( ugroup, user, admin ){

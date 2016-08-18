@@ -83,7 +83,7 @@
         //##--------------init
 
         function _init(){
-            console.log( "object group inititialisation" );
+            console.log( "object group initialisation" );
 
             DataProvider.getWritableObjectGroups( function( ogroups ){
 

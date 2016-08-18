@@ -110,40 +110,40 @@
 
             getObjectGroups: {
                 method : 'GET',
-                url    : baseUrl + 'ogroups',
+                url    : baseUrl + 'objectGroups',
                 isArray: true
             },
 
             addObjectGroup: {
                 method : 'PUT',
-                url    : baseUrl + 'ogroups',
+                url    : baseUrl + 'objectGroups',
                 isArray: false
             },
 
             deleteObjectGroup: {
                 method : 'DELETE',
-                url    : baseUrl + 'ogroups/:id',
+                url    : baseUrl + 'objectGroups/:id',
                 params : {id: '@id'},
                 isArray: false
             },
 
             addObjectToGroup: {
                 method : 'PUT',
-                url    : baseUrl + 'ogroups/:id/objects',
+                url    : baseUrl + 'objectGroups/:id/objects',
                 params : {id: '@id'},
                 isArray: false
             },
 
             removeObjectFromGroup: {
                 method : 'DELETE',
-                url    : baseUrl + 'ogroups/:id/objects',
+                url    : baseUrl + 'objectGroups/:id/objects',
                 params : {id: '@id'},
                 isArray: false
             },
 
             getObjectGroupPermissions: {
                 method : 'GET',
-                url    : baseUrl + 'ogroups/:id/permissions',
+                url    : baseUrl + 'objectGroups/:id/permissions',
                 params : {id: '@id'},
                 isArray: true
             },
@@ -152,14 +152,14 @@
 
             addPermission: {
                 method : 'PUT',
-                url    : baseUrl + 'ogroups/:id/permissions',
+                url    : baseUrl + 'objectGroups/:id/permissions',
                 params : {id: '@id'},
                 isArray: false
             },
 
             removePermission: {
                 method : 'DELETE',
-                url    : baseUrl + 'ogroups/:id/permissions',
+                url    : baseUrl + 'objectGroups/:id/permissions',
                 params : {id: '@id'},
                 isArray: false
             },
@@ -169,47 +169,47 @@
 
             getMyUserGroups: {
                 method: 'GET',
-                url: baseUrl + 'i/groups' ,
+                url: baseUrl + 'me/groups' ,
                 isArray: true
             },
 
             getAllUserGroups: {
                 method : 'GET',
-                url    : baseUrl + 'ugroups',
+                url    : baseUrl + 'userGroups',
                 isArray: true
             },
 
             getUserGroup: {
                 method : 'GET',
-                url    : baseUrl + 'ugroups/:id',
+                url    : baseUrl + 'userGroups/:id',
                 params : {id: "@id"},
                 isArray: false
             },
 
             addUserGroup: {
                 method: 'PUT',
-                url    : baseUrl + 'ugroups/:id',
+                url    : baseUrl + 'userGroups/:id',
                 params : {id: "@id"},
                 isArray: false
             },
 
             deleteUserGroup: {
                 method: 'DELETE',
-                url    : baseUrl + 'ugroups/:id',
+                url    : baseUrl + 'userGroups/:id',
                 params : {id: "@id"},
                 isArray: false
             },
 
             addUserToGroup: {
                 method: 'PUT',
-                url: baseUrl + 'ugroups/:id/users',
+                url: baseUrl + 'userGroups/:id/users',
                 params: {id: '@id'},
                 isArray: false
             },
 
             removeUserFromGroup: {
                 method: 'DELETE',
-                url: baseUrl + 'ugroups/:id/users',
+                url: baseUrl + 'userGroups/:id/users',
                 params: {id: '@id'},
                 isArray: false
             },

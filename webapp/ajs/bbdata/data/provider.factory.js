@@ -40,7 +40,7 @@
                 return;
             }
 
-            _get( "getObjectGroups", "writableObjectGroups", {objects: true, writable: true}, resolve, reject );
+            _get( "getObjectGroups", "writableObjectGroups", {withObjects: true, writable: true}, resolve, reject );
         };
 
         self.getAllUserGroups = function( resolve, reject ){

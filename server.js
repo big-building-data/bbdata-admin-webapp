@@ -1,10 +1,10 @@
 // server.js
 
-var API_SERVER_HOST = "http://localhost:8080/bbdata2/api";
+var API_SERVER_HOST = "http://localhost:8080/bbdata/api";
+//var API_SERVER_HOST = "http://10.10.0.82:8888/bbdata/api";
 
 // call the packages we need
 var express = require( 'express' );
-var request = require( 'request' );
 var proxy = require('http-proxy').createProxyServer({ host: API_SERVER_HOST });
 
 var port = process.env.PORT || 8088;  // set our port
