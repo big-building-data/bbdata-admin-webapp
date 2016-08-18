@@ -17,12 +17,15 @@
         body {
             background-color: #EEE;
         }
+
         body > .grid {
             height: 100%;
         }
+
         .image {
             margin-top: -100px;
         }
+
         .column {
             max-width: 450px;
         }
@@ -32,12 +35,14 @@
 
 <div class="ui middle aligned center aligned grid">
     <div class="column">
-        <h2 class="ui blue image header">
-            <img src="/assets/logo.png" class="image">
-            <div class="content">
-                Login
+        <h3 class="ui orange image header">
+            <div>
+                <img src="/assets/logo.png" class="image" style="margin:auto">
             </div>
-        </h2>
+            <div class="content">
+                Big Building Data<br />Please, login to continue
+            </div>
+        </h3>
         <form class="ui large form">
             <div class="ui stacked segment">
                 <div class="field">
@@ -58,11 +63,12 @@
                 </div>
                 <div class="ui fluid large blue submit button"
                      ng-class="{'disabled': auth.username.length <= 2 || auth.password <= 3 }"
-                     ng-click="ctrl.login(auth)">Login</div>
+                     ng-click="ctrl.login(auth)">Login
+                </div>
             </div>
 
             <div class="ui error message"
-                ng-class="{'visible': ctrl.errors }">
+                 ng-class="{'visible': ctrl.errors }">
                 {{ ctrl.errors }}
             </div>
         </form>
