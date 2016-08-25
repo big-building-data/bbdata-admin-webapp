@@ -4,6 +4,7 @@
   "dependencies": {
     "express": "^4.8.7",
     "express-session": "^1.7.6",
-    "http-proxy":""
+    "http-proxy":"^1.14.0",
+    "request": "^2.7.4"
   }
 }
