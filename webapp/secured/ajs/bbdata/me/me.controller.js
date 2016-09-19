@@ -29,27 +29,39 @@
 
         self.deleteApikey = deleteApikey;
         self.createApikey = createApikey;
+        self.isObsolete = isApikeyObsolete;
+        self.isCurrentApikey = isCurrentApikey;
 
         //##--------------init
 
         function _init(){
             RestService.getMyProfile( function( me ){
-
                 console.log( "my profile", me );
                 self.profile = me;
-
             }, _handleError );
 
             RestService.getApikeys( function( apikeys ){
-
                 console.log( "my apikeys", apikeys );
                 self.apikeys = apikeys;
+            }, _handleError );
 
+            RestService.currentApikey( function( ak ){
+                console.log( "current apikey", ak );
+                self.currentApikey = ak.id;
             }, _handleError );
 
         }
 
         //##-------------- apikeys
+
+        function isCurrentApikey(ak){
+            return ak.id == self.currentApikey;
+        }
+
+        function isApikeyObsolete(ak) {
+            return ak.expirationdate &&
+                new Date(ak.expirationdate) <= new Date();
+        }
 
         function createApikey(  ){
             ModalService.showModal( {

@@ -1,7 +1,7 @@
 // server.js
 
-//var API_SERVER_HOST = "http://localhost:8080/bbdata/api";
-var API_SERVER_HOST = "http://10.10.0.82:8888/bbdata/api";
+//var API_SERVER_HOST = "http://localhost:8080/api";
+var API_SERVER_HOST = "http://10.10.10.102:8456/api";
 
 // call the packages we need
 var express = require( 'express' );
@@ -35,7 +35,13 @@ app.get( '/', function( req, res, next ){                   // redirect when ask
     if( isLoggedIn( req.session ) ){
         res.redirect( '/secured' );
     }else{
-        res.redirect( '/auth' );
+        // TODO for DEBUG only
+        // var sess = req.session;
+        // sess.bbuser = 1;
+        // sess.bbtoken = "lala";
+        // sess.loggedIn = true;
+        // res.redirect( '/secured' );
+         res.redirect( '/auth' );
     }
 } );
 
@@ -57,7 +63,13 @@ app.get( '/logout', function( req, res, next ){             // logout utility
     clearSession( sess );
     res.redirect( "/" );
 } );
+
+app.post('/logid', function(req, res, next){
+    // allow angular to know which apikey is currently used
+    res.send({id: req.session.apikeyId});
+});
 // ======================== proxy management
+
 
 app.use( '/api', function( req, res, next ){                // setup redirect to api calls
     proxy.web( req, res, {
@@ -94,6 +106,7 @@ proxy.on( 'proxyRes', function( proxyRes, req, res ){       // update session af
     console.log( "response: status=", res.statusCode );
 } );
 
+
 // ======================== launch the server
 
 app.listen( port, function(){
@@ -115,6 +128,7 @@ function setupSession( sess, jsonResponse ){
         // get got a new apikey, save it to the session
         sess.bbuser = jsonResponse.userId;
         sess.bbtoken = jsonResponse.secret;
+        sess.apikeyId = jsonResponse.id;
         sess.loggedIn = true;
     }
 }

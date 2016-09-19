@@ -45,13 +45,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="ak in ctrl.apikeys track by ak.id">
+            <tr ng-repeat="ak in ctrl.apikeys track by ak.id" ng-class="{old: ctrl.isObsolete(ak) }">
                 <td>{{ak.id}}</td>
                 <td>{{ak.readOnly}}</td>
                 <td><span semantic-popup="click" data-content="{{ak.secret}}">show</span></td>
                 <td>{{ak.expirationdate | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
                 <td class="right aligned collapsing">
                     <button class="circular ui icon small button basic" hover-class="mouseout:mousein"
+                            ng-class="{disabled: ctrl.isCurrentApikey(ak)}"
                             stop-event="click" ng-click="ctrl.deleteApikey(ak, $index)">
                         <i class="icon remove circle red"></i>
                     </button>

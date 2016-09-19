@@ -14,3 +14,8 @@ table.apikeys {
     margin: auto !important;
     min-width: 400px;
 }
+
+table.apikeys tr.old {
+    font-style: italic;
+    color: darkred;
+}

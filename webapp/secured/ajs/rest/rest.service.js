@@ -254,6 +254,11 @@
                 isArray: false
             },
 
+            currentApikey: {
+                method: 'POST',
+                url: '/logid',
+                isArray: false
+            }
 
             ///**
             // * @ngdoc
