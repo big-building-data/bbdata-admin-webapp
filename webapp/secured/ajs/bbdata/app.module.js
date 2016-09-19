@@ -41,9 +41,11 @@
      * number bound to each page.
      * Useful to watch pages switch inside a controller
      */
+    webapp.constant("NUM_PAGES", 4);
     webapp.constant( "OBJECTS_PAGE", 0 );
     webapp.constant( "OGROUPS_PAGE", 1 );
     webapp.constant( "DISPLAY_PAGE", 2 );
+    webapp.constant( "PROFILE_PAGE", 3 );
 
 
     webapp.factory( 'errorParser', errorParser );
@@ -60,14 +62,14 @@
      * first time the page is shown. Useful for lazy loading (see
      * index.html and the ng-if directive)
      */
-    function run( $rootScope, $location ){
+    function run( $rootScope, $location, NUM_PAGES ){
 
-        $rootScope.page_init = [false, false, false];
+        $rootScope.page_init = new Array(NUM_PAGES);
         $rootScope.page = 0;
 
         // try to get the current page from url (#X)
         var n = parseInt( $location.path().substr( 1 ) );
-        if( !isNaN( n ) && n > 0 && n < 3 ){
+        if( !isNaN( n ) && n > 0 && n < NUM_PAGES ){
             $rootScope.page = n;
         }
 

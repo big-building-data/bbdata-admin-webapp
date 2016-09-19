@@ -80,3 +80,11 @@ hr {
 .link-fade:hover {
     opacity: 1;
 }
+
+.ui.popup .content {
+    word-wrap: break-word;
+}
+
+.center {
+    text-align: center;
+}

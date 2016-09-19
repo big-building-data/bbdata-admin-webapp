@@ -1,0 +1,63 @@
+<!--"lazy" load-->
+<div ng-init="ctrl.init()" style="text-align: center">
+
+    <h2 class="ui center aligned icon header">
+        <i class="circular user icon"></i>
+        Profile
+    </h2>
+
+    <!--my info-->
+    <table class="profile">
+        <tr>
+            <td>Email</td>
+            <td>{{ctrl.profile.email}}</td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>{{ctrl.profile.name}}</td>
+        </tr>
+        <tr>
+            <td>Creation date</td>
+            <td>{{ctrl.profile.creationdate | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+        </tr>
+    </table>
+
+    <div class="ui divider"></div>
+    <h2 class="center">Apikeys</h2>
+
+    <!--add token button-->
+    <div style="margin: 20px; text-align: right; margin-right: 20%">
+        <button class="ui labeled icon button small teal" ng-click="ctrl.createApikey()">
+            <i class="add icon"></i>
+            create new
+        </button>
+    </div>
+
+    <!--<table class="ui celled table collapsing apikeys">-->
+    <table class="ui unstackable table collapsing very basic apikeys">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>ReadOnly</th>
+                <th>Secret</th>
+                <th>Expire?</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="ak in ctrl.apikeys track by ak.id">
+                <td>{{ak.id}}</td>
+                <td>{{ak.readOnly}}</td>
+                <td><span semantic-popup="click" data-content="{{ak.secret}}">show</span></td>
+                <td>{{ak.expirationdate | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                <td class="right aligned collapsing">
+                    <button class="circular ui icon small button basic" hover-class="mouseout:mousein"
+                            stop-event="click" ng-click="ctrl.deleteApikey(ak, $index)">
+                        <i class="icon remove circle red"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

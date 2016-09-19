@@ -1,0 +1,16 @@
+table.profile  td:first-child {
+    font-weight: bold;
+    padding-right:50px;
+    text-align: right;
+}
+
+table.profile {
+    width:auto;
+    margin: auto;
+    text-align: left;
+}
+
+table.apikeys {
+    margin: auto !important;
+    min-width: 400px;
+}

@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="/secured/css/users.css">
     <link rel="stylesheet" href="/secured/css/objects.css">
     <link rel="stylesheet" href="/secured/css/ogroups.css">
+    <link rel="stylesheet" href="/secured/css/me.css">
 
 
 </head>
@@ -33,6 +34,7 @@
         <a class="item" href="#" ng-click="$root.page=0">objects</a>
         <a class="item" href="#1" ng-click="$root.page=1">object groups</a>
         <a class="item" href="#2" ng-click="$root.page=2">users</a>
+        <a class="item" href="#3" ng-click="$root.page=3">me</a>
         <a class="right item" href="/logout">logout</a>
     </div>
 </div>
@@ -65,6 +67,10 @@
     <div id="container" ng-if="$root.page_init[2]" ng-show="$root.page==2" class="ui main container users" ng-include
          ng-controller="UsersController as ctrl"
          src="'/secured/ajs/bbdata/users/partials/_main.html'"></div>
+    <!--profile page-->
+    <div id="container" ng-if="$root.page_init[3]" ng-show="$root.page==3" class="ui main container users" ng-include
+         ng-controller="MeController as ctrl"
+         src="'/secured/ajs/bbdata/me/partials/_main.html'"></div>
 
     <!--footer-->
     <div class="ui inverted vertical footer segment">
@@ -117,6 +123,7 @@
 <script type="text/javascript" src="/secured/ajs/bbdata/users/users.controller.js"></script>
 <script type="text/javascript" src="/secured/ajs/bbdata/objects/objects.controller.js"></script>
 <script type="text/javascript" src="/secured/ajs/bbdata/ogroups/ogroups.controller.js"></script>
+<script type="text/javascript" src="/secured/ajs/bbdata/me/me.controller.js"></script>
 
 
 <!--semantic helpers-->

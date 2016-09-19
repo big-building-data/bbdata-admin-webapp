@@ -229,6 +229,31 @@
                 isArray: true
             },
 
+            getMyProfile: {
+                method: 'GET',
+                url: baseUrl + 'me',
+                isArray: false
+            },
+
+            getApikeys: {
+                method: 'GET',
+                url: baseUrl + 'me/apikeys',
+                isArray: true
+            },
+
+            createApikey: {
+                method: 'PUT',
+                url: baseUrl + 'me/apikeys',
+                isArray: false
+            },
+
+            deleteApikey: {
+                method: 'DELETE',
+                url: baseUrl + 'me/apikeys',
+                params: {apikeyId: '@apikeyId'},
+                isArray: false
+            },
+
 
             ///**
             // * @ngdoc

@@ -18,16 +18,13 @@
      */
     angular
         .module( 'bbdata.app' )
-        .controller( 'UsersController', ctrl )
-        .filter( 'lala', function(){
-            return filterArrayId;
-        } );
+        .controller( 'UsersController', ctrl );
 
 // --------------------------
 
     function ctrl( DataProvider, RestService, ModalService, $scope, toaster, errorParser, ROOT_URL ){
         var self = this;
-        $scope.lala = [];
+
         self.adminGroups = [];      // all user groups for which the user has administrative rights
         self.users = [];            // all users
 
