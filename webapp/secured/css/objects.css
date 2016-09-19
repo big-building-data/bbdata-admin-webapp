@@ -3,7 +3,7 @@
  * ****************************************************************/
 
 #objects-accordion {
-    margin: 10px auto;
+    margin: 20px auto;
     min-width: 80%;
 }
 
@@ -57,4 +57,30 @@
 
 /*#objects-accordion .title button:hover .remove{*/
 /*color: #db2828!important;*/
+/*}*/
+
+/* *****************************************************************
+ * pagination
+ * ****************************************************************/
+
+dir-pagination-controls {
+    text-align: center;
+}
+
+ul.pagination li {
+    text-align: center;
+    display: inline-block;
+    border: 1px solid #eee;
+}
+ul.pagination li a{
+    display: inline-block;
+    padding: 5px;
+    min-width: 45px;
+}
+
+ul.pagination li.active {
+    border:1px solid rgb(65, 131, 196);
+}
+/*ul.pagination li.active a {*/
+    /*color:white;*/
 /*}*/

@@ -30,7 +30,8 @@
             'semantic.sidebar',
             'semantic.helpers',
             'toaster',
-            'ngFileSaver'
+            'ngFileSaver',
+            'dirPagination'
         ] ).run( run );
 
     webapp.constant( "RFC3339_FORMAT", "YYYY-MM-DDTHH:mm:ssZ" );

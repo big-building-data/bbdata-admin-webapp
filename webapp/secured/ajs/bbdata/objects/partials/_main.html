@@ -24,115 +24,119 @@
 
 </div>
 
+<dir-pagination-controls></dir-pagination-controls>
+
 <!--accordion of objects-->
 <div id="objects-accordion" class="ui styled accordion">
-    <div class="title" ng-repeat-start="object in ctrl.objects | filter:filterText">
-        <!--title and edit/delete buttons-->
-        <div>
-            <i class="dropdown icon"></i> {{object.name}} (id:{{object.id}})
+    <div dir-paginate="object in ctrl.objects | filter:filterText | itemsPerPage:15 track by object.id">
+    <!--<div ng-repeat="object in ctrl.objects.slice(0, 10) | filter:filterText track by object.id">-->
+        <div class="title">
+            <!--title and edit/delete buttons-->
+            <div>
+                <i class="dropdown icon"></i> {{object.name}} (id:{{object.id}})
+            </div>
+            <div>
+                <button class="circular ui icon small button"
+                        stop-event="click"
+                        hover-class="mouseout:mousein"
+                        ng-click="ctrl.edit(object)">
+                    <i class="icon edit green"></i>
+                </button>
+                <button class="circular ui icon small button"
+                        hover-class="mouseout:mousein"
+                        stop-event="click"
+                        ng-click="ctrl.remove(object)">
+                    <i class="icon remove circle red"></i>
+                </button>
+            </div>
         </div>
-        <div>
-            <button class="circular ui icon small button"
-                    stop-event="click"
-                    hover-class="mouseout:mousein"
-                    ng-click="ctrl.edit(object)">
-                <i class="icon edit green"></i>
-            </button>
-            <button class="circular ui icon small button"
-                    hover-class="mouseout:mousein"
-                    stop-event="click"
-                    ng-click="ctrl.remove(object)">
-                <i class="icon remove circle red"></i>
-            </button>
-        </div>
-    </div>
 
-    <div class="content" ng-repeat-end>
+        <div class="content">
 
-        <!--tag-->
-        <div class="tags">
-            <div class="ui compact menu perms floated right">
-                <div class="ui right labeled left icon input floated right">
-                    <i class="tags icon"></i>
-                    <input type="text" ng-model="currentTags" placeholder="Enter tags">
-                    <a class="ui tag label" ng-click="ctrl.addTags(object, currentTags)">
-                        Add Tags
-                    </a>
+            <!--tag-->
+            <div class="tags">
+                <div class="ui compact menu perms floated right">
+                    <div class="ui right labeled left icon input floated right">
+                        <i class="tags icon"></i>
+                        <input type="text" ng-model="currentTags" placeholder="Enter tags">
+                        <a class="ui tag label" ng-click="ctrl.addTags(object, currentTags)">
+                            Add Tags
+                        </a>
+                    </div>
+                </div>
+                <a class="ui blue tag label">object tags</a>
+                <div class="ui label basic" ng-repeat="t in object.tags track by t.tag">
+                    {{t.tag}}
+                    <i class="delete icon" ng-click="ctrl.removeTag(object, $index)"></i>
                 </div>
             </div>
-            <a class="ui blue tag label">object tags</a>
-            <div class="ui label basic" ng-repeat="t in object.tags track by t.tag">
-                {{t.tag}}
-                <i class="delete icon" ng-click="ctrl.removeTag(object, $index)"></i>
-            </div>
-        </div>
 
-        <!--infos-->
-        <table class="ui very basic table object-details">
-            <tr>
-                <td>id / owned by</td>
-                <td class="tt">{{object.id}} / {{object.owner.name}}</td>
-            </tr>
-            <tr>
-                <td>unit</td>
-                <td>{{object.unit.name}} ({{object.unit.symbol}})</td>
-            </tr>
-            <tr>
-                <td>creation date</td>
-                <td>{{object.creationdate | date:"MM/dd/yyyy 'at' h:mma"}}</td>
-            </tr>
-            <tr>
-                <td>description</td>
-                <td>{{object.description || '-'}}</td>
-            </tr>
-        </table>
+            <!--infos-->
+            <table class="ui very basic table object-details">
+                <tr>
+                    <td>id / owned by</td>
+                    <td class="tt">{{object.id}} / {{object.owner.name}}</td>
+                </tr>
+                <tr>
+                    <td>unit</td>
+                    <td>{{object.unit.name}} ({{object.unit.symbol}})</td>
+                </tr>
+                <tr>
+                    <td>creation date</td>
+                    <td>{{object.creationdate | date:"MM/dd/yyyy 'at' h:mma"}}</td>
+                </tr>
+                <tr>
+                    <td>description</td>
+                    <td>{{object.description || '-'}}</td>
+                </tr>
+            </table>
 
-        <!--tokens-->
-        <div class="token-accordion" class="ui accordion">
-            <div class="title" ng-click="ctrl.loadTokens(object.id)">
-                <div>
-                    <i class="dropdown icon"></i> tokens
+            <!--tokens-->
+            <div class="token-accordion" class="ui accordion">
+                <div class="title" ng-click="ctrl.loadTokens(object.id)">
+                    <div>
+                        <i class="dropdown icon"></i> tokens
+                    </div>
+                </div>
+                <div class="content">
+                    <!--add button-->
+                    <div class="align-right">
+                        <button class="ui icon button small circular" ng-click="ctrl.addToken(object)">
+                            <i class="add icon"></i>
+                        </button>
+                    </div>
+                    <!--table-->
+                    <table class="ui unstackable table very basic">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Secret</th>
+                                <th>Description</th>
+                                <th class="right aligned"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="t in ctrl.tokens[object.id]">
+                                <td class="left aligned collapsing">{{t.id}}</td>
+                                <td class="left aligned collapsing link" semantic-popup="click"
+                                    data-html="<div class='tt'>{{t.token}}</div>"><i>show</i></td>
+                                <td>{{t.description}}</td>
+                                <td class="right aligned collapsing">
+                                    <button class="circular ui icon small button" stop-event="click"
+                                            hover-class="mouseout:mousein" ng-click="ctrl.editToken(object, t)">
+                                        <i class="icon edit green"></i>
+                                    </button>
+                                    <button class="circular ui icon small button" hover-class="mouseout:mousein"
+                                            stop-event="click" ng-click="ctrl.removeToken(object, $index)">
+                                        <i class="icon remove circle red"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="content">
-                <!--add button-->
-                <div class="align-right">
-                    <button class="ui icon button small circular" ng-click="ctrl.addToken(object)">
-                        <i class="add icon"></i>
-                    </button>
-                </div>
-                <!--table-->
-                <table class="ui unstackable table very basic">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Secret</th>
-                        <th>Description</th>
-                        <th class="right aligned"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="t in ctrl.tokens[object.id]">
-                        <td class="left aligned collapsing">{{t.id}}</td>
-                        <td class="left aligned collapsing link" semantic-popup="click"
-                            data-html="<div class='tt'>{{t.token}}</div>"><i>show</i></td>
-                        <td>{{t.description}}</td>
-                        <td class="right aligned collapsing">
-                            <button class="circular ui icon small button" stop-event="click"
-                                    hover-class="mouseout:mousein" ng-click="ctrl.editToken(object, t)">
-                                <i class="icon edit green"></i>
-                            </button>
-                            <button class="circular ui icon small button" hover-class="mouseout:mousein"
-                                    stop-event="click" ng-click="ctrl.removeToken(object, $index)">
-                                <i class="icon remove circle red"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
-
     </div>
 </div>
 
