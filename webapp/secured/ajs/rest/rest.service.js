@@ -214,6 +214,13 @@
                 isArray: false
             },
 
+            createUser: {
+                method: 'PUT',
+                url: baseUrl + 'userGroups/:id/users/new',
+                params: {id: '@id'},
+                isArray: false
+            },
+
             // ---------------------------------------------------- users
 
             getUsers: {

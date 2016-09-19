@@ -41,10 +41,16 @@
                 </ul>
             </div>
         </div>
-        <div class="ui bottom attached button basic" ng-click="ctrl.addUser(ugroup)">
-            <i class="add user icon"></i>
-            add user
+
+        <div class="ui buttons bottom attached basic">
+            <div class="ui button" ng-click="ctrl.createUser(ugroup)">
+                <i class="add user icon"></i>create user
+            </div>
+            <div class="ui button" ng-click="ctrl.addUser(ugroup)">
+                <i class="plus square outline icon"></i>add existing
+            </div>
         </div>
+
     </div>
 
 </div>

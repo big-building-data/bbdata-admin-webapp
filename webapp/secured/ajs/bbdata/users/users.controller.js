@@ -32,6 +32,7 @@
         self.users = [];            // all users
 
         self.addUser = addUser;
+        self.createUser = createUser;
         self.removeUser = removeUser;
         self.changeUserStatus = changeUserStatus;
 
@@ -134,6 +135,39 @@
                             }
                         }, _handleError );
                     } );
+
+                }
+            }, _handleError );
+        }
+
+
+        function createUser( ugroup ){
+            ModalService.showModal( {
+                title          : "Create a user",
+                htmlInclude    : ROOT_URL + "/ajs/bbdata/users/partials/_createUserModalContent.html",
+                positive       : "save",
+                positiveDisable: 'form.addUserForm.$invalid',
+                negative       : "cancel",
+                inputs         : {
+                    user       : {}
+                },
+                cancelable     : false
+            } ).then( function( results ){
+                if( results.status ){
+                    var user = results.inputs.user;
+
+                    RestService.createUser( {
+                            id    : ugroup.id,
+                            admin : user.isAdmin
+                        }, user, function(user){
+                            console.log("new user created");
+                            self.users.push(user);
+                            if( !ugroup.users ){
+                                ugroup.users = [user];
+                            }else{
+                                ugroup.users.push( user );
+                            }
+                        }, _handleError );
 
                 }
             }, _handleError );

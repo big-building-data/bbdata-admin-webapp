@@ -1,0 +1,22 @@
+<form name="form.addUserForm" novalidate>
+    <div class="ui form">
+        <div class="required field">
+            <label>Name (at least 3 char.)</label>
+            <input type="text" placeholder="Full Name" required ng-model="inputs.user.name" ng-minlength="3">
+        </div>
+        <div class="required field">
+            <label>Email</label>
+            <input type="email" placeholder="Email" ng-model="inputs.user.email">
+        </div>
+        <div class="required field">
+            <label>Password (at least 4 char.)</label>
+            <input type="password" required ng-model="inputs.user.password" ng-minlength="4">
+        </div>
+        <div class="inline field">
+            <div class="ui">
+                <input type="checkbox" tabindex="0" ng-model="inputs.user.isAdmin">
+                <label> Administrator</label>
+            </div>
+        </div>
+    </div>
+</form>
