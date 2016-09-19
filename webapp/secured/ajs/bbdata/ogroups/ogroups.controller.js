@@ -102,15 +102,6 @@
             DataProvider.getWritableObjects( function( objects ){
                 console.log( "objects", objects );
                 self.objects = objects;
-                _sticky(); // initialise sticky module
-
-                $rootScope.$on( 'bbdata.PageChanged', function( evt, args ){
-                    // always initialise sticky module when user navigates back to the page
-                    if( args.to == OGROUPS_PAGE ){
-                        console.log( "page == Ogroup" );
-                        _sticky();
-                    }
-                } );
             }, _handleError );
 
             DataProvider.getAdminUserGroups( function( groups ){
@@ -258,17 +249,6 @@
         function _handleError( error ){
             console.log( error );
             toaster.error( {body: errorParser.parse( error )} );
-        }
-
-
-        function _sticky(){
-            // wait a bit to be sure everything is loaded
-            setTimeout( function(){
-                console.log( "apply sticky" );
-                $( '.ui.sticky' ).sticky( {
-                    offset: 150
-                } );
-            }, 100 );
         }
 
     }

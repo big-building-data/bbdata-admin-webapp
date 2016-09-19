@@ -84,7 +84,7 @@
 
     <!--right sticky column with available objects-->
     <div class="five wide column">
-        <div class="ui sticky">
+        <div id="sidelist">
             <div class="box">
                 <!--search-->
                 <div class="ui fluid icon left corner labeled input">
@@ -95,12 +95,16 @@
                     </div>
                 </div>
 
+                <!--pagination controls-->
+                <dir-pagination-controls class="ogroupsPage" max-size="6"></dir-pagination-controls>
+
                 <div class="ui divider"></div>
 
                 <!--list-->
                 <div class="ul list objects" data-as-sortable="ctrl.dragObjectsConfig" ng-model="ctrl.objects">
                     <div class="item"
-                         ng-repeat="s in ctrl.objects | ownerFilter:ctrl.currentGroup | filter:filterText track by s.id"
+                         dir-paginate="s in ctrl.objects | ownerFilter:ctrl.currentGroup
+                                        | filter:filterText | itemsPerPage:10 track by s.id"
                          data-as-sortable-item>
 
                         <!--help icon + popup-->
