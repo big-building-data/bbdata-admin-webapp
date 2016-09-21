@@ -48,7 +48,7 @@
     webapp.constant( "PROFILE_PAGE", 3 );
 
 
-    webapp.factory( 'errorParser', errorParser );
+    webapp.factory( 'ErrorHandler', ErrorHandler );
     /*
      * page switch management.
      * the variable $root.page contains the number associated
@@ -81,45 +81,14 @@
         } );
     }
 
-    function errorParser(){
-        // TODO put it somewhere else
-        reRootCause = /root cause<\/b> <pre>(.*)/g;
+    function ErrorHandler(ErrorParser, toaster){
         return {
-            parse: function( error ){
-                console.log(error);
-                if( error.data ){
-                    if(error.data instanceof Object && error.data.hasOwnProperty("exception")){
-
-                        var title = error.data.exception;
-                        var method = error.config.method + " " + error.config.url;
-                        var details = error.data.details;
-
-                        if( !details)
-                            return method + ": " + title;
-
-                        if(details instanceof Array){
-                            var keys = [];
-                            angular.forEach(details, function(d){
-                                keys = keys.concat(Object.keys(d));
-                            });
-                            details = "validation errors on fields " + keys.join(", ");
-                        }
-
-                            return method +
-                                " <br/><span style='font-size:.8em;'>" + details + "</span>";
-                    }else{
-                        // not a json, try to find a root cause (often present if default glassfish message)
-                        var match = reRootCause.exec( error );
-                        if( match ) return match[1];
-                        return error.statusText;
-                    }
-
-                }else{
-                    // TODO
-                    return error.status + ": unknown error (" + error.statusText + ")";
-                }
+            handle: function( error ){
+                console.log( error );
+                toaster.error( {body: ErrorParser.parse( error )} );
             }
-        }
+        };
     }
+
 
 }());

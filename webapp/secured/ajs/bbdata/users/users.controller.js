@@ -22,7 +22,7 @@
 
 // --------------------------
 
-    function ctrl( DataProvider, RestService, ModalService, $scope, toaster, errorParser, ROOT_URL ){
+    function ctrl( DataProvider, RestService, ModalService, $scope, ErrorHandler, ROOT_URL ){
         var self = this;
 
         self.adminGroups = [];      // all user groups for which the user has administrative rights
@@ -51,15 +51,15 @@
                 angular.forEach( groups, function( grp ){
                     RestService.getUserGroup( {id: grp.id}, function( response ){
                         grp.users = response.users;
-                    }, _handleError );
+                    }, ErrorHandler.handle );
                 } );
 
-            }, _handleError );
+            }, ErrorHandler.handle );
 
             DataProvider.getUsers( function( users ){
                 self.users = users;
                 self.users2 = angular.copy( users );
-            }, _handleError );
+            }, ErrorHandler.handle );
 
         }
 
@@ -72,7 +72,7 @@
                 RestService.addUserGroup( {name: name}, function( ugroup ){
                     console.log("new group", ugroup);
                     self.adminGroups.push( ugroup );
-                }, _handleError );
+                }, ErrorHandler.handle );
             } );
         }
 
@@ -80,7 +80,7 @@
             _addEditNameModal( "Add user group", ugroup.name, function( name ){
                 RestService.editUserGroup( {name: name}, function(){
                     ugroup.name = name;
-                }, _handleError );
+                }, ErrorHandler.handle );
             } );
         }
 
@@ -97,9 +97,9 @@
                 if( result.status ){
                     RestService.deleteUserGroup( {id: ugroup.id}, function(){
                         self.adminGroups.splice( idx, 1 );
-                    }, _handleError );
+                    }, ErrorHandler.handle );
                 }
-            }, _handleError );
+            }, ErrorHandler.handle );
         }
 
         //##-------------- users
@@ -130,11 +130,11 @@
                             }else{
                                 ugroup.users.push( user );
                             }
-                        }, _handleError );
+                        }, ErrorHandler.handle );
                     } );
 
                 }
-            }, _handleError );
+            }, ErrorHandler.handle );
         }
 
 
@@ -164,16 +164,16 @@
                             }else{
                                 ugroup.users.push( user );
                             }
-                        }, _handleError );
+                        }, ErrorHandler.handle );
 
                 }
-            }, _handleError );
+            }, ErrorHandler.handle );
         }
 
         function removeUser( ugroup, user, idx ){
             RestService.removeUserFromGroup( {id: ugroup.id, userId: user.id}, {}, function(){
                 ugroup.users.splice( idx, 1 );
-            }, _handleError );
+            }, ErrorHandler.handle );
         }
 
         function changeUserStatus( ugroup, user, admin ){
@@ -205,14 +205,8 @@
                     if( reject ) reject();
                 }
 
-            }, _handleError );
+            }, ErrorHandler.handle );
 
-        }
-
-
-        function _handleError( error ){
-            console.log( error );
-            toaster.error( {body: errorParser.parse( error )} );
         }
 
     }
