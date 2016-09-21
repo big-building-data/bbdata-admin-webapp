@@ -86,10 +86,34 @@
         reRootCause = /root cause<\/b> <pre>(.*)/g;
         return {
             parse: function( error ){
+                console.log(error);
                 if( error.data ){
-                    var match = reRootCause.exec( error );
-                    if( match ) return match[1];
-                    return error.statusText;
+                    if(error.data instanceof Object && error.data.hasOwnProperty("exception")){
+
+                        var title = error.data.exception;
+                        var method = error.config.method + " " + error.config.url;
+                        var details = error.data.details;
+
+                        if( !details)
+                            return method + ": " + title;
+
+                        if(details instanceof Array){
+                            var keys = [];
+                            angular.forEach(details, function(d){
+                                keys = keys.concat(Object.keys(d));
+                            });
+                            details = "validation errors on fields " + keys.join(", ");
+                        }
+
+                            return method +
+                                " <br/><span style='font-size:.8em;'>" + details + "</span>";
+                    }else{
+                        // not a json, try to find a root cause (often present if default glassfish message)
+                        var match = reRootCause.exec( error );
+                        if( match ) return match[1];
+                        return error.statusText;
+                    }
+
                 }else{
                     // TODO
                     return error.status + ": unknown error (" + error.statusText + ")";
