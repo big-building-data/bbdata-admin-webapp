@@ -104,7 +104,8 @@
                 <div class="ul list objects" data-as-sortable="ctrl.dragObjectsConfig" ng-model="ctrl.objects">
                     <div class="item"
                          dir-paginate="s in ctrl.objects | ownerFilter:ctrl.currentGroup
-                                        | filter:filterText | itemsPerPage:10 track by s.id"
+                                        | filter:filterText | itemsPerPage: ctrl.pagination.perPage track by s.id"
+                         current-page="ctrl.pagination.currentPage"
                          data-as-sortable-item>
 
                         <!--help icon + popup-->

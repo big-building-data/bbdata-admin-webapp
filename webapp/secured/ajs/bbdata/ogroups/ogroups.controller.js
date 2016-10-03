@@ -24,7 +24,7 @@
     // --------------------------
 
 
-    function ctrl( RestService, DataProvider, $rootScope, ModalService, OGROUPS_PAGE, toaster, $q, errorParser ){
+    function ctrl( RestService, DataProvider, ModalService, toaster, $q, errorParser ){
 
         var self = this;
 
@@ -34,6 +34,7 @@
         self.allUserGroups = [];    // all user groups, useful to give new permissions
         self.currentGroup = null;   // current group, i.e. selected one (whose ogroups and objects are visible)
 
+        self.pagination = {perPage: 10, currentPage: 1};
 
         // available methods
         self.addObjectGroup = addObjectGroup;
@@ -53,7 +54,19 @@
             clone    : true,
             itemMoved: function( evt ){
                 var objectGroup = evt.dest.sortableScope.ogroup;
-                var object = evt.dest.sortableScope.modelValue[evt.dest.index];
+                var idx = evt.dest.index;
+                console.log( "drag objects", idx, evt.dest.sortableScope.modelValue.length );
+                var object = evt.source.itemScope.s;
+
+                for( var i = 0; i < objectGroup.objects.length; i++ ){
+                    if( i != evt.dest.index && objectGroup.objects[i].id == object.id ){
+                        // duplicate: undo the insert
+                        evt.dest.sortableScope.removeItem( evt.dest.index );
+                        return;
+                    }
+                }
+
+                evt.dest.sortableScope.modelValue[evt.dest.index] = object;
                 addObjectToGroup( object, objectGroup, null,
                     function(){
                         // on error, remove the object
@@ -65,17 +78,28 @@
         };
 
         self.dragObjectGroupConfig = {
-            allowDuplicates: false,
+            allowDuplicates: true,
             itemMoved      : function( evt ){
                 console.log( "drag Ogroup config" );
                 var ogroupFrom = evt.source.sortableScope.ogroup;
                 var ogroupTo = evt.dest.sortableScope.ogroup;
-                var item = evt.dest.sortableScope.modelValue[evt.dest.index];
+                var object = evt.dest.sortableScope.modelValue[evt.dest.index];
+
+                for( var i = 0; i < ogroupTo.objects.length; i++ ){
+                    if( i != evt.dest.index && ogroupTo.objects[i].id == object.id ){
+                        // duplicate: undo the move
+                        evt.dest.sortableScope.removeItem( evt.dest.index );
+                        evt.source.itemScope.sortableScope.insertItem( evt.source.index, object );
+                        return;
+                    }
+                }
+
                 // add and then delete
-                addObjectToGroup( item, ogroupTo, function(){
-                    removeObjectFromGroup( item, ogroupFrom );
+                addObjectToGroup( object, ogroupTo, function(){
+                    removeObjectFromGroup( object, ogroupFrom );
                 } );
-                console.log( item.id + " : " + ogroupFrom.name + " -> " + ogroupTo.name );
+                console.log( object.id + " : " + ogroupFrom.name + " -> " + ogroupTo.name );
+
             }
         };
 
@@ -172,7 +196,7 @@
 
         function addPermission( group, ogroup ){
             // initialize array
-            if(!ogroup.permissions) ogroup.permissions = [];
+            if( !ogroup.permissions ) ogroup.permissions = [];
 
             if( ogroup.permissions.indexOf( group ) >= 0 ){
                 // permissions already exists, do nothing
