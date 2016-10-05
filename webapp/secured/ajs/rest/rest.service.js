@@ -120,6 +120,13 @@
                 isArray: false
             },
 
+            editObjectGroup: {
+               method: 'POST',
+                url    : baseUrl + 'objectGroups/:id',
+                params : {id: '@id'},
+                isArray: false
+            },
+
             deleteObjectGroup: {
                 method : 'DELETE',
                 url    : baseUrl + 'objectGroups/:id',
