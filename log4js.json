@@ -1,0 +1,26 @@
+{
+  "appenders": [
+    {
+      "type": "logLevelFilter",
+      "level": "INFO",
+      "appender": {
+        "type": "console",
+        "layout": {
+          "type": "pattern",
+          "pattern": "[%[%r%]] [%[%p%]] - %m"
+        }
+      }
+    },
+    {
+      "type": "file",
+      "filename": "logs/server.log",
+      "maxLogSize": 10240,
+      "backups": 3,
+      "layout": {
+        "type": "pattern",
+        "pattern": "%r [%p] - %m"
+      }
+    }
+  ],
+  "replaceConsole": true
+}

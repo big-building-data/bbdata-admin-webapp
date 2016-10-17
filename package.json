@@ -5,6 +5,7 @@
     "express": "^4.8.7",
     "express-session": "^1.7.6",
     "http-proxy":"^1.14.0",
-    "request": "^2.7.4"
+    "request": "^2.7.4",
+    "log4js": "^0.6.38"
   }
 }

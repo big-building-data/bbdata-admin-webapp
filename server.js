@@ -9,6 +9,13 @@ var proxy = require( 'http-proxy' ).createProxyServer( {host: API_SERVER_HOST} )
 var session = require( 'express-session' );
 var request = require( 'request' );
 
+// logging
+var fs = require("fs");
+if(!fs.existsSync("./logs")) fs.mkdirSync("./logs");  // create dir if not exist to avoid errors
+var log4js = require('log4js');
+log4js.configure('log4js.json');
+var logger = log4js.getLogger();
+
 var port = process.env.PORT || 8088;  // set our port
 var app = express();                  // define our app using express
 
@@ -27,21 +34,13 @@ app.all( '/secured/*', function( req, res, next ){          // secured resource 
 } );
 app.use( '/secured', express.static( 'webapp/secured' ) );  // secured resources (auth required)
 
-
 // ======================== redirects
 
 app.get( '/', function( req, res, next ){                   // redirect when asking for root
-    console.log( "/ asked. Redirect." );
     if( isLoggedIn( req.session ) ){
         res.redirect( '/secured' );
     }else{
-        // TODO for DEBUG only
-        // var sess = req.session;
-        // sess.bbuser = 1;
-        // sess.bbtoken = "lala";
-        // sess.loggedIn = true;
-        // res.redirect( '/secured' );
-         res.redirect( '/auth' );
+        res.redirect( '/auth' );
     }
 } );
 
@@ -58,7 +57,7 @@ app.get( '/logout', function( req, res, next ){             // logout utility
             "bbtoken": sess.bbtoken
         }
     }, function( error, response, body ){
-        console.log( "logout done", body, error );
+        logger.info( "logout userId=", sess.bbuser );
     } );
     clearSession( sess );
     res.redirect( "/" );
@@ -92,8 +91,9 @@ proxy.on( 'proxyRes', function( proxyRes, req, res ){       // update session af
             var data = dataBuffer.toString( 'utf8' );
             if( data ){
                 var body = JSON.parse( data );
-                console.log( body );
-                setupSession( req.session, body );
+                var sess = req.session;
+                setupSession( sess, body );
+                logger.trace("Login userId", sess.bbuser, sess.loggedIn);
             }
         } );
 
@@ -102,15 +102,19 @@ proxy.on( 'proxyRes', function( proxyRes, req, res ){       // update session af
     }
 
     // logging
-    console.log( "request : url=", req.url, req.body ? "body=" + req.body : "" );
-    console.log( "response: status=", res.statusCode );
+    logger.trace( "request (userId=" + req.session.bbuser + ") : url=", req.url, (req.body ? "body=" + req.body : ""), "response:" +
+    " status=", res.statusCode );
 } );
 
+
+proxy.on('error', function(e) {
+    logger.error("api error", e);
+});
 
 // ======================== launch the server
 
 app.listen( port, function(){
-    console.log( 'Magic happens on port ' + port );
+    logger.info( 'server started on port ', port );
 } );
 
 
