@@ -24,7 +24,7 @@
     // --------------------------
 
 
-    function ctrl( RestService, DataProvider, ModalService, toaster, $q, errorParser ){
+    function ctrl( RestService, DataProvider, ModalService, $q, ErrorHandler ){
 
         var self = this;
 
@@ -118,27 +118,27 @@
                 angular.forEach( ogroups, function( ogrp ){
                     RestService.getObjectGroupPermissions( {id: ogrp.id}, function( perms ){
                         ogrp.permissions = perms;
-                    }, _handleError );
+                    }, ErrorHandler.handle );
                 } );
 
-            }, _handleError );
+            }, ErrorHandler.handle );
 
             DataProvider.getWritableObjects( function( objects ){
                 console.log( "objects", objects );
                 self.objects = objects;
-            }, _handleError );
+            }, ErrorHandler.handle );
 
             DataProvider.getAdminUserGroups( function( groups ){
                 console.log( "admin groups", groups );
                 self.adminGroups = groups;
                 if( groups.length > 0 ) self.currentGroup = groups[0];
-            }, _handleError );
+            }, ErrorHandler.handle );
 
 
             DataProvider.getAllUserGroups( function( groups ){
                 console.log( "user groups", groups );
                 self.allUserGroups = groups;
-            }, _handleError );
+            }, ErrorHandler.handle );
 
 
         }
@@ -152,7 +152,7 @@
                         function( ogroup ){
                             if( !ogroup.hasOwnProperty( "objects" ) ) ogroup.objects = [];
                             self.ogroups.push( ogroup ); // add new object group
-                        }, _handleError );
+                        }, ErrorHandler.handle );
                 } );
         }
 
@@ -160,10 +160,10 @@
             _addEditNameModal( "edit object group", ogroup.name )
                 .then(
                     function( name ){
-                        RestService.editObjectGroup( {id: ogroup.id, name: name}, function( ogroup ){
+                        RestService.editObjectGroup( {id: ogroup.id, name: name}, function( data ){
                             // make changes visible
-                            ogroup.name = name;
-                        }, _handleError );
+                            ogroup.name = data.name;
+                        }, ErrorHandler.handle );
                     } );
         }
 
@@ -172,7 +172,7 @@
             var deleteCallback = function(){
                 RestService.deleteObjectGroup( {id: ogroup.id}, function(){
                     self.ogroups.splice( idx, 1 );
-                }, _handleError );
+                }, ErrorHandler.handle );
             };
 
             if( ogroup.objects && ogroup.objects.length ){
@@ -186,7 +186,7 @@
                     basic   : true
                 } ).then( function( result ){
                     if( result.status ) deleteCallback();
-                }, _handleError );
+                }, ErrorHandler.handle );
             }else{
                 deleteCallback();
             }
@@ -205,19 +205,19 @@
             }
             RestService.addPermission( {id: ogroup.id, groupId: group.id}, {}, function(){
                 ogroup.permissions.push( group );
-            }, _handleError );
+            }, ErrorHandler.handle );
         }
 
         function removePermission( perm, ogroup ){
             RestService.removePermission( {id: ogroup.id, groupId: perm.id}, function(){
                 ogroup.permissions.splice( ogroup.permissions.indexOf( perm ), 1 );
-            }, _handleError );
+            }, ErrorHandler.handle );
         }
 
         //##------------ objects management
 
         function addObjectToGroup( object, ogroup, resolve, reject ){
-            if( !reject ) reject = _handleError;
+            if( !reject ) reject = ErrorHandler.handle;
             RestService.addObjectToGroup( {
                 id      : ogroup.id,
                 objectId: object.id
@@ -225,7 +225,7 @@
         }
 
         function removeObjectFromGroup( object, ogroup, resolve, reject ){
-            if( !reject ) reject = _handleError;
+            if( !reject ) reject = ErrorHandler.handle;
             RestService.removeObjectFromGroup( {
                 id      : ogroup.id,
                 objectId: object.id
@@ -263,20 +263,13 @@
                     deferred.reject();
                 }
 
-            }, _handleError );
+            }, ErrorHandler.handle );
 
             return deferred.promise;
 
         }
 
-
-        function _handleError( error ){
-            console.log( error );
-            toaster.error( {body: errorParser.parse( error )} );
-        }
-
     }
-
 
     function ownerFilter(){
 

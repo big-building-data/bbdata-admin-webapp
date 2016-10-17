@@ -22,7 +22,7 @@
 
 // --------------------------
 
-    function ctrl( RestService, toaster, errorParser, ModalService, ROOT_URL ){
+    function ctrl( RestService, ErrorHandler, ModalService, ROOT_URL ){
         var self = this;
 
         self.init = _init;
@@ -38,17 +38,17 @@
             RestService.getMyProfile( function( me ){
                 console.log( "my profile", me );
                 self.profile = me;
-            }, _handleError );
+            }, ErrorHandler.handle );
 
             RestService.getApikeys( function( apikeys ){
                 console.log( "my apikeys", apikeys );
                 self.apikeys = apikeys;
-            }, _handleError );
+            }, ErrorHandler.handle );
 
             RestService.currentApikey( function( ak ){
                 console.log( "current apikey", ak );
                 self.currentApikey = ak.id;
-            }, _handleError );
+            }, ErrorHandler.handle );
 
         }
 
@@ -83,10 +83,10 @@
                     }, function( apikey ){
                         console.log( "new apikey", apikey );
                         self.apikeys.push( apikey );
-                    }, _handleError );
+                    }, ErrorHandler.handle );
 
                 }
-            }, _handleError );
+            }, ErrorHandler.handle );
         }
 
         function deleteApikey( apikey, idx ){
@@ -103,17 +103,9 @@
                 if( results.status ){
                     RestService.deleteApikey( {apikeyId: apikey.id}, function(){
                         self.apikeys.splice(idx, 1);
-                    }, _handleError );
+                    }, ErrorHandler.handle );
                 }
-            }, _handleError );
-        }
-
-        //##-------------- utils
-
-
-        function _handleError( error ){
-            console.log( error );
-            toaster.error( {body: errorParser.parse( error )} );
+            }, ErrorHandler.handle );
         }
 
     }

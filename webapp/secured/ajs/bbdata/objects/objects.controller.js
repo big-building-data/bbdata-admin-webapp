@@ -22,7 +22,7 @@
 
     // --------------------------
 
-    function ctrl( RestService, ModalService, toaster, errorParser, DataProvider, ROOT_URL ){
+    function ctrl( RestService, ModalService, ErrorHandler, DataProvider, ROOT_URL ){
         var self = this;
 
         self.objects = [];  // all the objects
@@ -58,17 +58,17 @@
                 console.log( "objects", objects );
                 self.objects = objects;
                 $( '.ui.accordion' ).accordion();  // initialise semantic-ui accordion plugin
-            }, _handleError );
+            }, ErrorHandler.handle );
 
             DataProvider.getUnits( function( units ){
                 console.log( "units", units );
                 self.units = units;
-            }, _handleError );
+            }, ErrorHandler.handle );
 
             DataProvider.getAdminUserGroups( function( groups ){
                 console.log( "admin groups", groups );
                 self.adminGroups = groups;
-            }, _handleError );
+            }, ErrorHandler.handle );
         }
 
         //##-------------- object management
@@ -87,9 +87,9 @@
                 if( results.status ){
                     RestService.deleteObject( {id: object.id}, function(){
                         self.objects.splice( self.objects.indexOf( object ), 1 );
-                    }, _handleError );
+                    }, ErrorHandler.handle );
                 }
-            }, _handleError );
+            }, ErrorHandler.handle );
         }
 
         function editObject( object ){
@@ -110,9 +110,9 @@
                         function(){
                             object.name = obj.name;
                             object.description = obj.description;
-                        }, _handleError );
+                        }, ErrorHandler.handle );
                 }
-            }, _handleError );
+            }, ErrorHandler.handle );
         }
 
         function addObject(){
@@ -137,9 +137,9 @@
                 if( results.status ){
                     RestService.addObject( results.inputs.object, function( object ){
                         self.objects.push( object );
-                    }, _handleError );
+                    }, ErrorHandler.handle );
                 }
-            }, _handleError );
+            }, ErrorHandler.handle );
         }
 
 
@@ -149,14 +149,14 @@
             console.log( "tag = " + tag );
             RestService.addTags( {id: object.id, tags: tag}, {}, function( obj ){
                 object.tags = obj.tags;
-            }, _handleError );
+            }, ErrorHandler.handle );
         }
 
         function removeTag( object, idx ){
             RestService.removeTags( {id: object.id, tags: object.tags[idx].tag}, {}, function( obj ){
                 console.log( obj );
                 object.tags.splice( idx, 1 );
-            }, _handleError );
+            }, ErrorHandler.handle );
         }
 
         //##-------------- tokens management
@@ -186,9 +186,9 @@
                     var tokens = self.tokens[object.id];
                     RestService.deleteToken({id: object.id, tokenId: tokens[index].id}, {}, function(){
                         tokens.splice( index, 1 );
-                    }, _handleError);
+                    }, ErrorHandler.handle);
                 }
-            }, _handleError );
+            }, ErrorHandler.handle );
         }
 
         function editToken( object, token ){
@@ -215,23 +215,17 @@
                         // create token
                         RestService.createToken({id: object.id}, function(t){
                             self.tokens[object.id].push(t);
-                        }, _handleError);
+                        }, ErrorHandler.handle);
                     }else{
                         // TODO update +
                         token.description = result.inputs.description;
                     }
                 }
 
-            }, _handleError );
+            }, ErrorHandler.handle );
         }
 
 
-        //##------------utils
-
-        function _handleError( error ){
-            console.log( error );
-            toaster.error( {body: errorParser.parse( error )} );
-        }
     }
 
 })();

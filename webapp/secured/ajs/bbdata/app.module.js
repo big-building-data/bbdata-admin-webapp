@@ -48,7 +48,7 @@
     webapp.constant( "PROFILE_PAGE", 3 );
 
 
-    webapp.factory( 'errorParser', errorParser );
+    webapp.factory( 'ErrorHandler', ErrorHandler );
     /*
      * page switch management.
      * the variable $root.page contains the number associated
@@ -81,21 +81,14 @@
         } );
     }
 
-    function errorParser(){
-        // TODO put it somewhere else
-        reRootCause = /root cause<\/b> <pre>(.*)/g;
+    function ErrorHandler(ErrorParser, toaster){
         return {
-            parse: function( error ){
-                if( error.data ){
-                    var match = reRootCause.exec( error );
-                    if( match ) return match[1];
-                    return error.statusText;
-                }else{
-                    // TODO
-                    return error.status + ": unknown error (" + error.statusText + ")";
-                }
+            handle: function( error ){
+                console.log( error );
+                toaster.error( {body: ErrorParser.parse( error )} );
             }
-        }
+        };
     }
+
 
 }());
