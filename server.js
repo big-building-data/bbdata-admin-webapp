@@ -90,10 +90,11 @@ proxy.on( 'proxyRes', function( proxyRes, req, res ){       // update session af
             // decode body
             var data = dataBuffer.toString( 'utf8' );
             if( data ){
+                // TODO: log login failure
                 var body = JSON.parse( data );
                 var sess = req.session;
                 setupSession( sess, body );
-                logger.trace("Login userId", sess.bbuser, sess.loggedIn);
+                logger.info("Login userId", sess.bbuser, sess.loggedIn);
             }
         } );
 
