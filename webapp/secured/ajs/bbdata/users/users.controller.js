@@ -123,7 +123,7 @@
                         RestService.addUserToGroup( {
                             id    : ugroup.id,
                             userId: user.id,
-                            admin : user.isAdmin
+                            isAdmin : user.isAdmin
                         }, {}, function(){
                             if( !ugroup.users ){
                                 ugroup.users = [user];
@@ -155,7 +155,7 @@
 
                     RestService.createUser( {
                             id    : ugroup.id,
-                            admin : user.isAdmin
+                            isAdmin : user.isAdmin
                         }, user, function(user){
                             console.log("new user created");
                             self.users.push(user);
