@@ -8,10 +8,20 @@ var express = require('express');
 var proxy = require('http-proxy').createProxyServer({host: API_SERVER_HOST});
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
+var bouncer = require("express-bouncer")(10000, 900000);
 var request = require('request');
 
 var port = process.env.PORT || 8088;  // set our port
 var app = express();                  // define our app using express
+
+
+bouncer.blocked = function (req, res, next, remaining) {
+    res.status(429).send(JSON.stringify({
+        exception: "TooManyAttempts",
+        details: "Too many requests have been made, " +
+        "please wait " + remaining / 1000 + " seconds."
+    }));
+};
 
 // ======================== setup resources
 
@@ -79,6 +89,12 @@ app.post('/logid', function (req, res, next) {
 // ======================== proxy management
 
 
+// avoid brute force login attempts using express-bouncer
+app.post("/api/login", bouncer.block, function (req, res, next) {
+    next(); // this calls '/api', see proxyRes for bouncer.reset
+});
+
+
 app.use('/api', function (req, res, next) {                // setup redirect to api calls
     proxy.web(req, res, {
         target: API_SERVER_HOST
@@ -95,6 +111,7 @@ proxy.on('proxyReq', function (proxyReq, req, res) {       // add authentication
 proxy.on('proxyRes', function (proxyRes, req, res) {       // update session after api calls on login/logout
     // handle login and logout response
     if (req.url == '/login') {
+
         // get response body
         proxyRes.on('data', function (dataBuffer) {
             // decode body
@@ -102,9 +119,12 @@ proxy.on('proxyRes', function (proxyRes, req, res) {       // update session aft
             if (data) {
                 var body = JSON.parse(data);
                 console.log(body);
-                setupSession(req.session, body);
+                if (setupSession(req.session, body)) {
+                    bouncer.reset(req);
+                }
             }
         });
+
 
     } else if (req.url == '/logout') {
         clearSession(req.session);
@@ -151,7 +171,9 @@ function setupSession(sess, jsonResponse) {
         sess.bbtoken = jsonResponse.secret;
         sess.apikeyId = jsonResponse.id;
         sess.loggedIn = true;
+        return true;
     }
+    return false;
 }
 
 function clearSession(sess) {
