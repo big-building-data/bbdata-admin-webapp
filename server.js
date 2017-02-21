@@ -38,6 +38,7 @@ app.use(express.static('webapp/common'));               // vendors and assets di
 app.use('/auth', express.static('webapp/login'));      // login resources
 app.all('/secured/*', function (req, res, next) {          // secured resource reachable only when logged in
     if (isLoggedIn(req.session)) {
+        res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
         next();
     } else {
         res.redirect('/auth');
