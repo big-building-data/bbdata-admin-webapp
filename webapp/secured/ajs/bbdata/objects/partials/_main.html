@@ -24,11 +24,12 @@
 
 </div>
 
-<dir-pagination-controls class="objectsPage"></dir-pagination-controls>
+<dir-pagination-controls class="objectsPage" pagination-id="objects"></dir-pagination-controls>
 
 <!--accordion of objects-->
 <div id="objects-accordion" class="ui styled accordion">
-    <div dir-paginate="object in ctrl.objects | filter:filterText | itemsPerPage:15 track by object.id">
+    <div dir-paginate="object in ctrl.objects | filter:filterText | itemsPerPage:15 track by object.id"
+         pagination-id="objects">
     <!--<div ng-repeat="object in ctrl.objects.slice(0, 10) | filter:filterText track by object.id">-->
         <div class="title">
             <!--title and edit/delete buttons-->

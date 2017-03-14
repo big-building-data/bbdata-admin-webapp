@@ -11,6 +11,13 @@ var FileStore = require('session-file-store')(session);
 var bouncer = require("express-bouncer")(10000, 900000);
 var request = require('request');
 
+// logging
+var fs = require("fs");
+if(!fs.existsSync("./logs")) fs.mkdirSync("./logs");  // create dir if not exist to avoid errors
+var log4js = require('log4js');
+log4js.configure('log4js.json');
+var logger = log4js.getLogger();
+
 var port = process.env.PORT || 8088;  // set our port
 var app = express();                  // define our app using express
 
@@ -46,21 +53,19 @@ app.all('/secured/*', function (req, res, next) {          // secured resource r
 });
 app.use('/secured', express.static('webapp/secured'));  // secured resources (auth required)
 
-
 // ======================== redirects
 
-app.get('/', function (req, res, next) {                   // redirect when asking for root
-    console.log("/ asked. Redirect.");
-    if (isLoggedIn(req.session)) {
-        res.redirect('/secured');
-    } else {
+app.get( '/', function( req, res, next ){                   // redirect when asking for root
+    if( isLoggedIn( req.session ) ){
+        res.redirect( '/secured' );
+    }else{
         // TODO for DEBUG only
-        var sess = req.session;
+        // var sess = req.session;
         // sess.bbuser = 1;
         // sess.bbtoken = "lala";
         // sess.loggedIn = true;
         // res.redirect( '/secured' );
-        res.redirect('/auth');
+        res.redirect( '/auth' );
     }
 });
 
@@ -76,14 +81,14 @@ app.get('/logout', function (req, res, next) {             // logout utility
             "bbuser": sess.bbuser,
             "bbtoken": sess.bbtoken
         }
-    }, function (error, response, body) {
-        console.log("logout done", body, error);
-    });
-    clearSession(sess);
-    res.redirect("/");
-});
+    }, function( error, response, body ){
+        logger.info( "logout userId=", sess.bbuser );
+    } );
+    clearSession( sess );
+    res.redirect( "/" );
+} );
 
-app.post('/logid', function (req, res, next) {
+app.post('/logid', function(req, res, next){
     // allow angular to know which apikey is currently used
     res.send({id: req.session.apikeyId});
 });
@@ -132,8 +137,8 @@ proxy.on('proxyRes', function (proxyRes, req, res) {       // update session aft
     }
 
     // logging
-    console.log("request : url=", req.url, req.body ? "body=" + req.body : "");
-    console.log("response: status=", res.statusCode);
+    logger.trace( "request (userId=" + req.session.bbuser + ") : url=", req.url, (req.body ? "body=" + req.body : ""), "response:" +
+        " status=", res.statusCode );
 });
 
 // Listen for the `error` event on `proxy`.
@@ -150,9 +155,10 @@ proxy.on('error', function (err, req, res) {
 
 // ======================== launch the server
 
-app.listen(port, function () {
-    console.log('Magic happens on port ' + port);
-});
+app.listen( port, function(){
+    logger.info( 'server started on port ', port );
+} );
+
 
 
 // ========================  session management utilities

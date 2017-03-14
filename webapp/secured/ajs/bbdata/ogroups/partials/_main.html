@@ -96,7 +96,8 @@
                 </div>
 
                 <!--pagination controls-->
-                <dir-pagination-controls class="ogroupsPage" max-size="6"></dir-pagination-controls>
+                <dir-pagination-controls class="ogroupsPage" max-size="6"
+                                         pagination-id="ogroups"></dir-pagination-controls>
 
                 <div class="ui divider"></div>
 
@@ -106,6 +107,7 @@
                          dir-paginate="s in ctrl.objects | ownerFilter:ctrl.currentGroup
                                         | filter:filterText | itemsPerPage: ctrl.pagination.perPage track by s.id"
                          current-page="ctrl.pagination.currentPage"
+                         pagination-id="ogroups"
                          data-as-sortable-item>
 
                         <!--help icon + popup-->
