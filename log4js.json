@@ -2,7 +2,7 @@
   "appenders": [
     {
       "type": "logLevelFilter",
-      "level": "INFO",
+      "level": "TRACE",
       "appender": {
         "type": "console",
         "layout": {
@@ -12,13 +12,18 @@
       }
     },
     {
-      "type": "file",
-      "filename": "logs/server.log",
-      "maxLogSize": 10240,
-      "backups": 3,
-      "layout": {
-        "type": "pattern",
-        "pattern": "%r [%p] - %m"
+      "type": "logLevelFilter",
+      "level": "INFO",
+      "appender": {
+        "type": "file",
+        "level": "INFO",
+        "filename": "logs/server.log",
+        "maxLogSize": 10240,
+        "backups": 3,
+        "layout": {
+          "type": "pattern",
+          "pattern": "%r [%p] - %m"
+        }
       }
     }
   ],
