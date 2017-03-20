@@ -88,3 +88,7 @@ hr {
 .center {
     text-align: center;
 }
+
+#container {
+    margin-bottom: 30px;
+}

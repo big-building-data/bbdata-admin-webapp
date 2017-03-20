@@ -35,7 +35,7 @@ bouncer.blocked = function (req, res, next, remaining) {
 app.use(session({                        // use express sessions
     name: 'bbwebapp-session-cookie',
     secret: 'lkjDDALJE&&%ç"',
-    cookie: {maxAge: 60 * 1000},
+    cookie: {maxAge: 60 * (60 * 1000)},
     saveUninitialized: true,
     resave: true,
     store: new FileStore()
