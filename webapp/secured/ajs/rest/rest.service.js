@@ -69,6 +69,13 @@
                 isArray: false
             },
 
+            editToken: {
+                method : 'POST',
+                url    : baseUrl + "objects/:id/tokens",
+                params : {id: '@id'},
+                isArray: false
+            },
+
             deleteToken: {
                 method : 'DELETE',
                 url    : baseUrl + "objects/:id/tokens",
@@ -250,6 +257,12 @@
 
             createApikey: {
                 method: 'PUT',
+                url: baseUrl + 'me/apikeys',
+                isArray: false
+            },
+
+            editApikey: {
+                method: 'POST',
                 url: baseUrl + 'me/apikeys',
                 isArray: false
             },

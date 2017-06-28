@@ -7,7 +7,7 @@
     </h2>
 
     <!--my info-->
-    <table class="profile">
+    <table class="profile ui unstackable collapsing very basic table">
         <tr>
             <td>ID (bbuser)</td>
             <td>{{ctrl.profile.id}}</td>
@@ -27,6 +27,16 @@
     </table>
 
     <div class="ui divider"></div>
+    <h2 class="center">User Groups</h2>
+
+    <div class="ui labels">
+        <div class="ui label" ng-repeat="ugrp in ctrl.myUserGroups">
+            {{ugrp.name}}
+            <div class="detail">{{ugrp.id}}</div>
+        </div>
+    </div>
+
+    <div class="ui divider"></div>
     <h2 class="center">Apikeys</h2>
 
     <!--add token button-->
@@ -40,28 +50,35 @@
     <!--<table class="ui celled table collapsing apikeys">-->
     <table class="ui unstackable table collapsing very basic apikeys">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>ReadOnly</th>
-                <th>Secret</th>
-                <th>Expire?</th>
-                <th></th>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <th>ReadOnly</th>
+            <th>Secret</th>
+            <th>Expire?</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="ak in ctrl.apikeys track by ak.id" ng-class="{old: ctrl.isObsolete(ak) }">
-                <td>{{ak.id}}</td>
-                <td>{{ak.readOnly}}</td>
-                <td><span semantic-popup="click" data-content="{{ak.secret}}">show</span></td>
-                <td>{{ak.expirationdate | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
-                <td class="right aligned collapsing">
-                    <button class="circular ui icon small button basic" hover-class="mouseout:mousein"
-                            ng-class="{disabled: ctrl.isCurrentApikey(ak)}"
-                            stop-event="click" ng-click="ctrl.deleteApikey(ak, $index)">
-                        <i class="icon remove circle red"></i>
-                    </button>
-                </td>
-            </tr>
+        <tr ng-repeat="ak in ctrl.apikeys track by ak.id" ng-class="{old: ctrl.isObsolete(ak) }">
+            <td>{{ak.id}}</td>
+            <td>{{ak.readOnly}}</td>
+            <td><span semantic-popup="click" data-content="{{ak.secret}}">show</span></td>
+            <td>{{ak.expirationdate ? ak.expirationdate + 'Z' : '-' | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+            <td>{{ak.description}}</td>
+            <td class="right aligned collapsing">
+                <button class="circular ui icon small button basic" hover-class="mouseout:mousein"
+                        ng-class="{disabled: ctrl.isCurrentApikey(ak)}"
+                        stop-event="click" ng-click="ctrl.editApikey(ak, $index)">
+                    <i class="icon edit green"></i>
+                </button>
+                <button class="circular ui icon small button basic" hover-class="mouseout:mousein"
+                        ng-class="{disabled: ctrl.isCurrentApikey(ak)}"
+                        stop-event="click" ng-click="ctrl.deleteApikey(ak, $index)">
+                    <i class="icon remove circle red"></i>
+                </button>
+            </td>
+        </tr>
         </tbody>
     </table>
 

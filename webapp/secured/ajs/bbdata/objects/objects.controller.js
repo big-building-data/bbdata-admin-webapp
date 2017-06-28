@@ -148,7 +148,7 @@
         function addTags( object, tag ){
             console.log( "tag = " + tag );
             RestService.addTags( {id: object.id, tags: tag}, {}, function( obj ){
-                object.tags = obj.tags;
+                object.tags.push( {tag: tag }); // add the tag manually
             }, ErrorHandler.handle );
         }
 
@@ -213,12 +213,14 @@
                     if( token == null ){
                         // TODO: name and description
                         // create token
-                        RestService.createToken({id: object.id}, function(t){
+                        RestService.createToken({id: object.id}, {description: result.inputs.description}, function(t){
                             self.tokens[object.id].push(t);
                         }, ErrorHandler.handle);
                     }else{
                         // TODO update +
-                        token.description = result.inputs.description;
+                        RestService.editToken({id: object.id, tokenId: token.id}, {description: result.inputs.description}, function(t){
+                            token.description = t.description;
+                        }, ErrorHandler.handle);
                     }
                 }
 

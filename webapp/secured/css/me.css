@@ -1,21 +1,21 @@
-table.profile  td:first-child {
+table.ui.profile {
+    margin: auto;
+    width:auto;
+    text-align: left;
+}
+
+table.ui.profile  td:first-child {
     font-weight: bold;
     padding-right:50px;
     text-align: right;
 }
 
-table.profile {
-    width:auto;
-    margin: auto;
-    text-align: left;
-}
-
-table.apikeys {
+table.ui.apikeys {
     margin: auto !important;
     min-width: 400px;
 }
 
-table.apikeys tr.old {
+table.ui.apikeys tr.old {
     font-style: italic;
     color: darkred;
 }

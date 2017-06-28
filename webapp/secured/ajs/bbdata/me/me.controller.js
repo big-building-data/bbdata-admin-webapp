@@ -7,7 +7,7 @@
  * Use of this source code is governed by an Apache 2 license
  * that can be found in the LICENSE file.
  */
-(function(){
+(function () {
 
     /**
      * @ngdoc tls ogroup controller
@@ -17,16 +17,22 @@
      * handles the Object groups page.
      */
     angular
-        .module( 'bbdata.app' )
-        .controller( 'MeController', ctrl );
+        .module('bbdata.app')
+        .controller('MeController', ctrl);
 
 // --------------------------
 
-    function ctrl( RestService, ErrorHandler, ModalService, ROOT_URL ){
+    function ctrl(RestService, ErrorHandler, ModalService, ROOT_URL, $filter) {
         var self = this;
+
+        self.profile = {};
+        self.apikeys = [];
+        self.currentApikey = {};
+        self.myUserGroups = {};
 
         self.init = _init;
 
+        self.editApikey = editApikey;
         self.deleteApikey = deleteApikey;
         self.createApikey = createApikey;
         self.isObsolete = isApikeyObsolete;
@@ -34,78 +40,108 @@
 
         //##--------------init
 
-        function _init(){
-            RestService.getMyProfile( function( me ){
-                console.log( "my profile", me );
+        function _init() {
+            RestService.getMyProfile(function (me) {
+                console.log("my profile", me);
                 self.profile = me;
-            }, ErrorHandler.handle );
+            }, ErrorHandler.handle);
 
-            RestService.getApikeys( function( apikeys ){
-                console.log( "my apikeys", apikeys );
+            RestService.getApikeys(function (apikeys) {
+                console.log("my apikeys", apikeys);
                 self.apikeys = apikeys;
-            }, ErrorHandler.handle );
+            }, ErrorHandler.handle);
 
-            RestService.currentApikey( function( ak ){
-                console.log( "current apikey", ak );
+            RestService.currentApikey(function (ak) {
+                console.log("current apikey", ak);
                 self.currentApikey = ak.id;
-            }, ErrorHandler.handle );
+            }, ErrorHandler.handle);
+
+            RestService.getMyUserGroups(function (ugrps) {
+                console.log("usergroups", ugrps);
+                self.myUserGroups = ugrps;
+            }, ErrorHandler.handle);
 
         }
 
         //##-------------- apikeys
 
-        function isCurrentApikey(ak){
+
+        function isCurrentApikey(ak) {
             return ak.id == self.currentApikey;
         }
 
         function isApikeyObsolete(ak) {
             return ak.expirationdate &&
-                new Date(ak.expirationdate) <= new Date();
+                new Date(ak.expirationdate + 'Z') <= new Date();
         }
 
-        function createApikey(  ){
-            ModalService.showModal( {
-                title      : "Create a user",
+        function createApikey() {
+            _addEditApikey({
+                readOnly: true
+            }, false);
+        }
+
+        function editApikey(apikey) {
+            _addEditApikey(apikey, true);
+        }
+
+        function _addEditApikey(apikey, editMode) {
+            ModalService.showModal({
+                title: editMode ? "Edit apikey " + apikey.id : "Create apikey",
                 htmlInclude: ROOT_URL + "/ajs/bbdata/me/partials/_createApikeyModalContent.html",
-                positive   : "create",
-                negative   : "cancel",
-                inputs     : {
-                    readOnly: true,
-                    expire  : ""
+                positive: "save",
+                negative: "cancel",
+                inputs: {
+                    apikey: apikey,
+                    editMode: editMode,
+                    checkDate: function (dt) {
+                        if (!dt) return "";
+                        var dateStr = $filter('date')(dt + 'Z', 'dd/MM/yyyy HH:mm:ss');
+                        if (dateStr.indexOf('Z') >= 0) return "ERROR";
+                        return dateStr;
+                    }
                 },
-                cancelable : false
-            } ).then( function( results ){
-                if( results.status ){
-
-                    RestService.createApikey( {
-                        writable: !results.inputs.readOnly,
-                        expire  : results.inputs.expire
-                    }, function( apikey ){
-                        console.log( "new apikey", apikey );
-                        self.apikeys.push( apikey );
-                    }, ErrorHandler.handle );
+                positiveDisable: "inputs.checkDate(inputs.apikey.expirationdate) == 'ERROR'",
+                cancelable: false
+            }).then(function (results) {
+                if (results.status) {
+                    if (editMode) {
+                        RestService.editApikey({}, apikey, function (ak) {
+                            apikey.expirationdate = ak.expirationdate;
+                            //console.log("edited apikey", apikey, ak);
+                        }, ErrorHandler.handle);
+                    } else {
+                        // create mode
+                        RestService.createApikey({
+                            writable: !results.inputs.apikey.readOnly,
+                            expire: results.inputs.apikey.expire
+                        }, {description: results.inputs.apikey.description}, function (apikey) {
+                            console.log("new apikey", apikey);
+                            self.apikeys.push(apikey);
+                        }, ErrorHandler.handle);
+                    }
 
                 }
-            }, ErrorHandler.handle );
+            }, ErrorHandler.handle);
         }
 
-        function deleteApikey( apikey, idx ){
+        function deleteApikey(apikey, idx) {
 
 
-            ModalService.showModal( {
-                title      : "Confirm",
-                text       : "Are you sure you want to delete apikey '" + apikey.id + "' ?",
-                positive   : "yes",
-                negative   : "cancel",
-                basic     : true,
-                cancelable : true
-            } ).then( function( results ){
-                if( results.status ){
-                    RestService.deleteApikey( {apikeyId: apikey.id}, function(){
+            ModalService.showModal({
+                title: "Confirm",
+                text: "Are you sure you want to delete apikey '" + apikey.id + "' ?",
+                positive: "yes",
+                negative: "cancel",
+                basic: true,
+                cancelable: true
+            }).then(function (results) {
+                if (results.status) {
+                    RestService.deleteApikey({apikeyId: apikey.id}, function () {
                         self.apikeys.splice(idx, 1);
-                    }, ErrorHandler.handle );
+                    }, ErrorHandler.handle);
                 }
-            }, ErrorHandler.handle );
+            }, ErrorHandler.handle);
         }
 
     }
