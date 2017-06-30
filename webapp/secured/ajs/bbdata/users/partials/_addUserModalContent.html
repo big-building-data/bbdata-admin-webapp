@@ -1,12 +1,9 @@
-Add users by selecting them from the dropdown menu. I can also make them admin by clicking on the
-icon at the left of their names once selected :
-<ul>
-    <li><i class="icon user blue"></i> : user,</li>
-    <li><i class="icon protect blue"></i> : administrator</li>
-</ul>
-Click on <em>finish</em> to save changes.
-
-<div class="ui compact menu">
+<div>Add users by selecting them from the dropdown menu. To make one user an administrator,
+    click on the <i class="icon user blue"></i> icon so it becomes <i class="icon protect blue"></i>.
+    When you are done, click on <em>finish</em> to save changes.
+</div>
+<br/>
+<div class="ui compact menu right floated">
     <div class="ui simple dropdown item">
         choose users
         <i class="dropdown icon"></i>
@@ -18,6 +15,7 @@ Click on <em>finish</em> to save changes.
     </div>
 </div>
 
+<div style="clear: both"></div>
 <ul ng-repeat="u in inputs.usersToAdd as datasource">
     <li class="ui">
         <i class="right floated delete icon red" ng-click="datasource.splice($index, 1)"></i>
