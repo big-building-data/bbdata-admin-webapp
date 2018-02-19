@@ -100,13 +100,12 @@
             restrict  : 'E',
             replace   : true,
             transclude: true,
-            template  : '<select class="ui dropdown" ' +
-            'ng-transclude></select>',
+            template  : '<div class="ui dropdown" ' +
+            'ng-transclude></div>',
             //require   : '?ngModel',
-
             link: function( scope, element, attrs, ngModel ){
                 setTimeout( function(){
-                    element.dropdown( {on: 'click'} );
+                    element.dropdown( {on: 'click'});
                 }, 200 );
             }
         };

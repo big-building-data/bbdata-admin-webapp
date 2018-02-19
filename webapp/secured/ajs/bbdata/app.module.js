@@ -81,10 +81,13 @@
         } );
     }
 
-    function ErrorHandler(ErrorParser, toaster){
+    function ErrorHandler(ErrorParser, toaster, $window){
         return {
             handle: function( error ){
                 console.log( error );
+                if(error.data && error.data.exception && error.data.exception == "BadApikey"){
+                    $window.location.href = '/logout';
+                }
                 toaster.error( {body: ErrorParser.parse( error )} );
             }
         };

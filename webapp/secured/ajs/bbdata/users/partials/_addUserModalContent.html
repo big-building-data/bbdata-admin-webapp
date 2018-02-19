@@ -3,17 +3,21 @@
     When you are done, click on <em>finish</em> to save changes.
 </div>
 <br/>
-<div class="ui compact menu right floated">
-    <div class="ui simple dropdown item">
-        choose users
-        <i class="dropdown icon"></i>
-        <div class="menu">
+<semantic-dropdown class="ui floating dropdown labeled icon button">
+    <i class="add user icon"></i>
+    <span>Add Users</span>
+    <div class="menu">
+        <div class="ui icon search input">
+            <i class="search icon"></i>
+            <input type="text" placeholder="Filter users...">
+        </div>
+        <div class="divider"></div>
+        <div class="scrolling menu">
             <div class="item" ng-repeat="u in inputs.users"
-                 ng-click="inputs.usersToAdd.indexOf(u) == -1 && inputs.usersToAdd.push(u)">{{u.name}}
-            </div>
+                ng-click="inputs.usersToAdd.indexOf(u) === -1 && inputs.usersToAdd.push(u)">{{u.name}}</div>
         </div>
     </div>
-</div>
+</semantic-dropdown> (click on a name to add)
 
 <div style="clear: both"></div>
 <ul ng-repeat="u in inputs.usersToAdd as datasource">
