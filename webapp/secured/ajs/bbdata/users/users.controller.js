@@ -177,7 +177,9 @@
         }
 
         function changeUserStatus( ugroup, user, admin ){
-
+            RestService.changeUserStatus( {id: ugroup.id, userId: user.id, isAdmin: admin}, {}, function(){
+                user.isAdmin = admin;
+            }, ErrorHandler.handle );
         }
 
         //##-------------- utils

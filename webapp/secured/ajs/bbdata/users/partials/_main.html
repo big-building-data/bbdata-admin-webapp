@@ -27,7 +27,7 @@
                 </div>
 
                 <ul style="padding-left: 0">
-                    <li ng-repeat="u in ugroup.users">
+                    <li ng-repeat="u in ugroup.users" ng-if="u.id != 1">
                         <div class="">
                             <i class="right floated delete icon red" ng-click="ctrl.removeUser(ugroup, u, $index)"></i>
                             <i ng-show="!u.isAdmin" class="icon user blue"

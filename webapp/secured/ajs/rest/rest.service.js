@@ -235,7 +235,13 @@
                 isArray: false
             },
 
-            // ---------------------------------------------------- users
+            changeUserStatus: { // quey params: user=<userid>&isAdmin=<true|false>
+                method: 'PUT',
+                url: baseUrl + 'userGroups/:id/users',
+                params: {id: '@id'}
+            },
+
+            // ---------------------------------------------------- ids
 
             getUsers: {
                 method : 'GET',
