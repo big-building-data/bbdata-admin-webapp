@@ -24,55 +24,68 @@
         <div style="height: 10px; clear:both"></div>
 
         <!--object groups -->
-        <div class="ui segment raised ogroup" ng-repeat="ogroup in ctrl.ogroups"
+        <div class="ui segment raised ogroup accordion ogroup-{{ogroup.id}}"
+             ng-repeat="ogroup in ctrl.ogroups"
              ng-show="ctrl.currentGroup.id == ogroup.owner.id"
              data-as-sortable="ctrl.dragObjectGroupConfig"
              ng-model="ogroup.objects">
 
             <!--object group title and edit/remove buttons-->
-            <div class="ui top attached label">
+            <div class="ui title top attached label">
                 <i class="icon edit link" hover-class=":teal" ng-click="ctrl.editObjectGroup(ogroup)"></i>
                 <i class="icon remove link" hover-class=":red" ng-click="ctrl.deleteObjectGroup(ogroup, $index)"></i>
-                <span class="title">{{ogroup.name}}</span>
+                <span class="title">{{ogroup.name}} ({{ogroup.id}})</span>
             </div>
 
-            <!--manage object group permissions-->
-            <div class="permissions">
-                <div class="ui compact menu perms floated right">
-                    <div class="ui simple dropdown item">
-                        add permission
-                        <i class="dropdown icon"></i>
-                        <div class="menu">
-                            <div class="item" ng-repeat="g in ctrl.allUserGroups"
-                                 ng-click="ctrl.addPermission(g, ogroup)">{{g.name}}
+            <div class="content">
+                <!--manage object group permissions-->
+                <div class="permissions">
+                    <div class="ui compact menu perms floated right">
+
+                        <semantic-dropdown class="ui dropdown ">
+                            <div class="ui basic button tiny">
+                                <i class="add group icon"></i>
+                                <span>+</span>
                             </div>
-                        </div>
+                            <div class="menu">
+                                <div class="ui icon search input">
+                                    <i class="search icon"></i>
+                                    <input type="text" placeholder="Filter user groups...">
+                                </div>
+                                <div class="divider"></div>
+                                <div class="scrolling menu">
+                                    <div class="item" ng-repeat="g in ctrl.allUserGroups"
+                                         ng-click="ctrl.addPermission(g, ogroup)">{{g.name}}
+                                    </div>
+                                </div>
+                            </div>
+                        </semantic-dropdown>
+                    </div>
+                    <strong>Permissions </strong>
+                    <div class="ui label basic" ng-repeat="p in ogroup.permissions">
+                        {{p.name}}
+                        <i class="delete icon" ng-click="ctrl.removePermission(p, ogroup)"></i>
                     </div>
                 </div>
-                <strong>Permissions </strong>
-                <div class="ui label basic" ng-repeat="p in ogroup.permissions">
-                    {{p.name}}
-                    <i class="delete icon" ng-click="ctrl.removePermission(p, ogroup)"></i>
-                </div>
-            </div>
 
-            <div class="ui section divider"></div>
+                <div class="ui section divider"></div>
 
-            <!--objects list-->
-            <div class="ul list">
-                <div class="item" ng-repeat="object in ogroup.objects track by object.id" data-as-sortable-item>
-                    <!--help icon + popup-->
-                    <i class="help icon link pink"
-                       semantic-popup="click"
-                       data-html="<h4>{{object.name}}</h4><p><b>description</b><br />{{object.description}}</p>"
-                       data-variation="wide"></i>
-                    <!--move icon-->
-                    <i class="move icon" data-as-sortable-item-handle></i>
-                    <!--text-->
-                    <span>{{object.name}} ({{object.id}})</span>
-                    <!--remove icon-->
-                    <div style="float:right" ng-click="ctrl.removeObjectFromGroup(object, ogroup)">
-                        <i class="remove icon link red"></i>
+                <!--objects list-->
+                <div class="ul list">
+                    <div class="item" ng-repeat="object in ogroup.objects track by object.id" data-as-sortable-item>
+                        <!--help icon + popup-->
+                        <i class="help icon link pink"
+                           semantic-popup="click"
+                           data-html="<h4>{{object.name}}</h4><p><b>description</b><br />{{object.description}}</p>"
+                           data-variation="wide"></i>
+                        <!--move icon-->
+                        <i class="move icon" data-as-sortable-item-handle></i>
+                        <!--text-->
+                        <span>{{object.name}} ({{object.id}})</span>
+                        <!--remove icon-->
+                        <div style="float:right" ng-click="ctrl.removeObjectFromGroup(object, ogroup)">
+                            <i class="remove icon link red"></i>
+                        </div>
                     </div>
                 </div>
             </div>

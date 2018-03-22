@@ -126,6 +126,7 @@
             DataProvider.getWritableObjects( function( objects ){
                 console.log( "objects", objects );
                 self.objects = objects;
+                $( '.ui.accordion' ).accordion();  // initialise semantic-ui accordion plugin
             }, ErrorHandler.handle );
 
             DataProvider.getAdminUserGroups( function( groups ){
@@ -139,7 +140,6 @@
                 console.log( "user groups", groups );
                 self.allUserGroups = groups;
             }, ErrorHandler.handle );
-
 
         }
 
@@ -197,8 +197,7 @@
         function addPermission( group, ogroup ){
             // initialize array
             if( !ogroup.permissions ) ogroup.permissions = [];
-
-            if( ogroup.permissions.indexOf( group ) >= 0 ){
+            if( ogroup.permissions.find(function( u ){ return u.id === group.id; }) ){
                 // permissions already exists, do nothing
                 console.log( "already here" );
                 return;
@@ -218,6 +217,8 @@
 
         function addObjectToGroup( object, ogroup, resolve, reject ){
             if( !reject ) reject = ErrorHandler.handle;
+            // open accordion TODO find a better, more angular way
+            $('.ui.accordion.ogroup-' + ogroup.id).accordion('open', 0);
             RestService.addObjectToGroup( {
                 id      : ogroup.id,
                 objectId: object.id
