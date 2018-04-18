@@ -5,10 +5,29 @@
     border: 1px solid #eee;
     border-radius: 10px;
 }
+
 .cards.usergroups li .icon {
     cursor: pointer;
 }
 
 .ui.header .group-name {
     color: #F2711C;
+}
+
+.users-list {
+    padding-left: 0;
+    padding-right: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.users-list::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+
+.users-list::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(100, 100, 100, .5);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }

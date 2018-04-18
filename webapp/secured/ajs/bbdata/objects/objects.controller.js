@@ -57,7 +57,6 @@
             DataProvider.getWritableObjects( function( objects ){
                 console.log( "objects", objects );
                 self.objects = objects;
-                $( '.ui.accordion' ).accordion();  // initialise semantic-ui accordion plugin
             }, ErrorHandler.handle );
 
             DataProvider.getUnits( function( units ){

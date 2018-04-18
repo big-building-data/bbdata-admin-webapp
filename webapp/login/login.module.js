@@ -31,7 +31,7 @@
         var self = this;
 
         self.login = function( auth ){
-            console.log( "LOGIN", auth );
+            // console.log( "LOGIN", auth );
             $http.post( '/api/login', auth, {headers: {'Content-Type': 'application/json'}} ).then( function(){
                 $window.location.href = "/";
             }, function( error ){

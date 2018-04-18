@@ -21,6 +21,14 @@
         .directive( 'semanticSticky', semanticSticky )
         /**
          * @ngdoc directive
+         * @name accordion
+         * @restrict C
+         * @description initialise a semantic accordion element. Just use the class 'accordion' as
+         * explained in semantic, the directive will take care of the initialisation for you.
+         */
+        .directive( 'accordion', semanticAccordion )
+        /**
+         * @ngdoc directive
          * @name semanticToggleButton
          * @restrict E
          * @scope
@@ -56,6 +64,15 @@
                 element.sticky( {
                     //context: '#stickyContext'
                 } );
+            }
+        }
+    }
+
+    function semanticAccordion(){
+        return {
+            restrict: 'C',
+            link    : function( scope, element, attr ){
+                element.accordion();
             }
         }
     }
