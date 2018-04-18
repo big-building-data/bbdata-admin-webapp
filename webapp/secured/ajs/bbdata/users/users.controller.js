@@ -50,6 +50,11 @@
                 // also fetch users
                 angular.forEach( groups, function( grp ){
                     RestService.getUserGroup( {id: grp.id}, function( response ){
+                        response.users.sort(function(u,v){ // sort by admin
+                            var a = v.isAdmin - u.isAdmin;
+                            if(a === 0) return u.name.toLowerCase().localeCompare(v.name.toLowerCase());
+                            return a;
+                        });
                         grp.users = response.users;
                     }, ErrorHandler.handle );
                 } );

@@ -7,14 +7,14 @@
 </h2>
 
 <!--add group button-->
-<p>
+<p class="align center">
     <button class="ui labeled icon tiny button" ng-click="ctrl.addUserGroup()">
         <i class="add icon"></i>
         add user group
     </button>
 </p>
 
-<div class="ui cards usergroups">
+<div class="ui cards usergroups centered">
     <div class="card" ng-repeat="ugroup in ctrl.adminGroups">
         <div class="content">
             <div class="ui header">Group <span class="group-name">{{ugroup.name}}</span></div>
