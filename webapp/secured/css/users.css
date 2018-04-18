@@ -14,6 +14,10 @@
     color: #F2711C;
 }
 
+.ui.card, .ui.cards>.card {
+    width: 30%;
+}
+
 .users-list {
     padding-left: 0;
     padding-right: 10px;
