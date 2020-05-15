@@ -3,6 +3,11 @@
 
 <h2>Your objects</h2>
 
+<p>
+    This page lists all the objects that you own, meaning they were created by a usergroup you are admin of.
+    Currently, you own <b>{{ctrl.objects.length}}</b> objects.
+</p>
+
 <div class="ui grid">
     <div class="thirteen wide column align-right">
         <!--search-->
@@ -43,12 +48,12 @@
                         ng-click="ctrl.edit(object)">
                     <i class="icon edit green"></i>
                 </button>
-                <button class="circular ui icon small button"
+                <!--button class="circular ui icon small button"
                         hover-class="mouseout:mousein"
                         stop-event="click"
                         ng-click="ctrl.remove(object)">
                     <i class="icon remove circle red"></i>
-                </button>
+                </button-->
             </div>
         </div>
 
@@ -59,15 +64,15 @@
                 <div class="ui compact menu perms floated right">
                     <div class="ui right labeled left icon input floated right">
                         <i class="tags icon"></i>
-                        <input type="text" ng-model="currentTags" placeholder="Enter tags">
+                        <input type="text" ng-model="currentTags" placeholder="tag1(,tag2)">
                         <a class="ui tag label" ng-click="ctrl.addTags(object, currentTags)">
                             Add Tags
                         </a>
                     </div>
                 </div>
                 <a class="ui blue tag label">object tags</a>
-                <div class="ui label basic" ng-repeat="t in object.tags track by t.tag">
-                    {{t.tag}}
+                <div class="ui label basic" ng-repeat="t in object.tags">
+                    {{t}}
                     <i class="delete icon" ng-click="ctrl.removeTag(object, $index)"></i>
                 </div>
             </div>
@@ -120,7 +125,9 @@
                             <tr ng-repeat="t in ctrl.tokens[object.id]">
                                 <td class="left aligned collapsing">{{t.id}}</td>
                                 <td class="left aligned collapsing link" semantic-popup="click"
-                                    data-html="<div class='tt'>{{t.token}}</div>"><i>show</i></td>
+                                    data-html="<div class='tt'>{{t.token}}</div>">
+                                    <span class="ui button tiny compact">show</span>
+                                </td>
                                 <td>{{t.description}}</td>
                                 <td class="right aligned collapsing">
                                     <button class="circular ui icon small button" stop-event="click"

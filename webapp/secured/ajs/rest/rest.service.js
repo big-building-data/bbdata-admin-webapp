@@ -46,7 +46,7 @@
                 isArray: false
             },
 
-            deleteObject: {
+            deleteObject: { // TODO: not implemented in the API
                 method : 'DELETE',
                 url    : baseUrl + 'objects/:id',
                 params : {id: '@id'},
@@ -71,15 +71,15 @@
 
             editToken: {
                 method : 'POST',
-                url    : baseUrl + "objects/:id/tokens",
-                params : {id: '@id'},
+                url    : baseUrl + "objects/:id/tokens/:tokenId",
+                params : {id: '@id', tokenId: '@tokenId'},
                 isArray: false
             },
 
             deleteToken: {
                 method : 'DELETE',
-                url    : baseUrl + "objects/:id/tokens",
-                params : {id: '@id'},
+                url    : baseUrl + "objects/:id/tokens/:tokenId",
+                params : {id: '@id', tokenId: '@tokenId'},
                 isArray: false
             },
 
@@ -143,21 +143,21 @@
 
             addObjectToGroup: {
                 method : 'PUT',
-                url    : baseUrl + 'objectGroups/:id/objects',
-                params : {id: '@id'},
+                url    : baseUrl + 'objectGroups/:id/objects/:objectId',
+                params : {id: '@id', objectId: '@objectId'},
                 isArray: false
             },
 
             removeObjectFromGroup: {
                 method : 'DELETE',
-                url    : baseUrl + 'objectGroups/:id/objects',
-                params : {id: '@id'},
+                url    : baseUrl + 'objectGroups/:id/objects/:objectId',
+                params : {id: '@id', objectId: '@objectId'},
                 isArray: false
             },
 
             getObjectGroupPermissions: {
                 method : 'GET',
-                url    : baseUrl + 'objectGroups/:id/permissions',
+                url    : baseUrl + 'objectGroups/:id/userGroups',
                 params : {id: '@id'},
                 isArray: true
             },
@@ -166,15 +166,15 @@
 
             addPermission: {
                 method : 'PUT',
-                url    : baseUrl + 'objectGroups/:id/permissions',
-                params : {id: '@id'},
+                url    : baseUrl + 'objectGroups/:id/userGroups/:groupId',
+                params : {id: '@id', groupId: '@groupId'},
                 isArray: false
             },
 
             removePermission: {
                 method : 'DELETE',
-                url    : baseUrl + 'objectGroups/:id/permissions',
-                params : {id: '@id'},
+                url    : baseUrl + 'objectGroups/:id/userGroups/:groupId',
+                params : {id: '@id', groupId: '@groupId'},
                 isArray: false
             },
 
@@ -183,7 +183,7 @@
 
             getMyUserGroups: {
                 method: 'GET',
-                url: baseUrl + 'me/groups' ,
+                url: baseUrl + 'me/userGroups' ,
                 isArray: true
             },
 
@@ -200,6 +200,13 @@
                 isArray: false
             },
 
+            getUsersInGroup: { // TODO
+                method : 'GET',
+                url    : baseUrl + 'userGroups/:id/users',
+                params : {id: "@id"},
+                isArray: true
+            },
+
             addUserGroup: {
                 method: 'PUT',
                 url    : baseUrl + 'userGroups/:id',
@@ -214,31 +221,31 @@
                 isArray: false
             },
 
-            addUserToGroup: {
+            addUserToGroup: { // query params: user=<userid>&admin=<true|false>
                 method: 'PUT',
-                url: baseUrl + 'userGroups/:id/users',
-                params: {id: '@id'},
+                url: baseUrl + 'userGroups/:id/users/:userId',
+                params: {id: '@id', userId: '@userId'},
                 isArray: false
             },
 
             removeUserFromGroup: {
                 method: 'DELETE',
-                url: baseUrl + 'userGroups/:id/users',
-                params: {id: '@id'},
+                url: baseUrl + 'userGroups/:id/users/:userId',
+                params: {id: '@id', userId: '@userId'},
                 isArray: false
             },
 
             createUser: {
                 method: 'PUT',
-                url: baseUrl + 'userGroups/:id/users/new',
+                url: baseUrl + 'users',
                 params: {id: '@id'},
                 isArray: false
             },
 
-            changeUserStatus: { // quey params: user=<userid>&isAdmin=<true|false>
+            changeUserStatus: {
                 method: 'PUT',
-                url: baseUrl + 'userGroups/:id/users',
-                params: {id: '@id'}
+                url: baseUrl + 'userGroups/:id/users/:userId',
+                params: {id: '@id', userId: '@userId'}
             },
 
             // ---------------------------------------------------- ids
@@ -257,26 +264,27 @@
 
             getApikeys: {
                 method: 'GET',
-                url: baseUrl + 'me/apikeys',
+                url: baseUrl + 'apikeys',
                 isArray: true
             },
 
             createApikey: {
                 method: 'PUT',
-                url: baseUrl + 'me/apikeys',
+                url: baseUrl + 'apikeys',
                 isArray: false
             },
 
             editApikey: {
                 method: 'POST',
-                url: baseUrl + 'me/apikeys',
+                url: baseUrl + 'apikeys/:id',
+                params: {id: '@id'},
                 isArray: false
             },
 
             deleteApikey: {
                 method: 'DELETE',
-                url: baseUrl + 'me/apikeys',
-                params: {apikeyId: '@apikeyId'},
+                url: baseUrl + 'apikeys/:id',
+                params: {id: '@id'},
                 isArray: false
             },
 

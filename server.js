@@ -1,5 +1,5 @@
 // address of the output-api
-var API_SERVER_HOST = "http://10.10.10.102:8456/api";
+var API_SERVER_HOST =  "http://localhost:8080"; //"http://10.10.10.102:8456/api";
 // application port
 var port = process.env.PORT || 8088;
 
@@ -69,7 +69,7 @@ app.all('/secured/*', function (req, res, next) {
     }
 });
 // /secured serves content in the webapp/secured directory
-// this line must be set in the end (in express,
+// this line must be set in the end (selein express,
 // the route priority depends on the order they are defined)
 app.use('/secured', express.static('webapp/secured'));
 

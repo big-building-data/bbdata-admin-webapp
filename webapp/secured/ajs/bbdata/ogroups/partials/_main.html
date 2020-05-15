@@ -1,6 +1,12 @@
 <!--"lazy" load-->
 <div ng-init="ctrl.init()"></div>
 
+<p>
+    This page displays the object groups owned by a user group you are <b>admin</b> of.
+    Use the dropdown to select a user group, the different object groups and objects owned by it will appear.
+    You can then edit the object groups (add/remove objects, add/remove permissions, etc.), delete or create new ones.<br>
+
+</p>
 <div class="ui grid container">
     <!--===============================-->
 
@@ -34,7 +40,8 @@
             <div class="ui title top attached label">
                 <i class="icon edit link" hover-class=":teal" ng-click="ctrl.editObjectGroup(ogroup)"></i>
                 <i class="icon remove link" hover-class=":red" ng-click="ctrl.deleteObjectGroup(ogroup, $index)"></i>
-                <span class="title">{{ogroup.name}} ({{ogroup.id}})</span>
+                <span style="float: right">{{ogroup.objects.length}} object(s)</span>
+                <span class="title">#{{ogroup.id}} {{ogroup.name}}</span>
             </div>
 
             <div class="content">

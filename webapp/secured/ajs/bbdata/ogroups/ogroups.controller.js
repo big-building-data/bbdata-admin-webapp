@@ -280,7 +280,7 @@
 
             var output = [];
             angular.forEach( inputs, function( input ){
-                if( input.owner && group && input.owner.id == group.id ){
+                if( input.owner && group && input.owner.id === group.id ){
                     output.push( input );
                 }
             } );

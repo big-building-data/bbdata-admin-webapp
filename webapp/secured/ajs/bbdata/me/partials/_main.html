@@ -17,10 +17,6 @@
             <td>{{ctrl.profile.name}}</td>
         </tr>
         <tr>
-            <td>Email</td>
-            <td>{{ctrl.profile.email}}</td>
-        </tr>
-        <tr>
             <td>Creation date</td>
             <td>{{ctrl.profile.creationdate | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
         </tr>
@@ -62,9 +58,9 @@
         <tbody>
         <tr ng-repeat="ak in ctrl.apikeys track by ak.id" ng-class="{old: ctrl.isObsolete(ak) }">
             <td>{{ak.id}}</td>
-            <td>{{ak.readOnly}}</td>
-            <td><span semantic-popup="click" data-content="{{ak.secret}}">show</span></td>
-            <td>{{ak.expirationdate ? ak.expirationdate + 'Z' : '-' | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+            <td class="readOnly-{{ak.readOnly}}">{{ak.readOnly}}</td>
+            <td><span semantic-popup="click" data-content="{{ak.secret}}" class="ui button tiny compact">show</span></td>
+            <td>{{ak.expirationDate ? ak.expirationDate : '-' | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
             <td>{{ak.description}}</td>
             <td class="right aligned collapsing">
                 <button class="circular ui icon small button basic" hover-class="mouseout:mousein"

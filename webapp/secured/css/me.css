@@ -19,3 +19,11 @@ table.ui.apikeys tr.old {
     font-style: italic;
     color: darkred;
 }
+
+table.ui.apikeys td.readOnly-true {
+    color: #ff0000;
+}
+
+table.ui.apikeys td.readOnly-false {
+    color: #008000;
+}

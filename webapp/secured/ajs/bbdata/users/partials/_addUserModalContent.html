@@ -23,10 +23,10 @@
 <ul ng-repeat="u in inputs.usersToAdd as datasource">
     <li class="ui">
         <i class="right floated delete icon red" ng-click="datasource.splice($index, 1)"></i>
-        <i ng-show="!u.isAdmin" class="icon user blue"
-           ng-click="u.isAdmin = true"></i>
-        <i ng-show="u.isAdmin" class="icon protect blue"
-           ng-click="u.isAdmin = false"></i>
+        <i ng-show="!u.admin" class="icon user blue"
+           ng-click="u.admin = true"></i>
+        <i ng-show="u.admin" class="icon protect blue"
+           ng-click="u.admin = false"></i>
         {{u.name}} - {{u.email}}
     </li>
 </ul>

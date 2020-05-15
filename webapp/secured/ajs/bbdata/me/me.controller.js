@@ -67,12 +67,12 @@
 
 
         function isCurrentApikey(ak) {
-            return ak.id == self.currentApikey;
+            return ak.id === self.currentApikey;
         }
 
         function isApikeyObsolete(ak) {
             return ak.expirationdate &&
-                new Date(ak.expirationdate + 'Z') <= new Date();
+                new Date(ak.expirationDate) <= new Date();
         }
 
         function createApikey() {
@@ -96,25 +96,32 @@
                     editMode: editMode,
                     checkDate: function (dt) {
                         if (!dt) return "";
-                        var dateStr = $filter('date')(dt + 'Z', 'dd/MM/yyyy HH:mm:ss');
+                        var dateStr = $filter('date')(dt + (dt.endsWith('Z') ? '' : 'Z'), 'dd/MM/yyyy HH:mm:ss');
                         if (dateStr.indexOf('Z') >= 0) return "ERROR";
                         return dateStr;
                     }
                 },
-                positiveDisable: "inputs.checkDate(inputs.apikey.expirationdate) == 'ERROR'",
+                positiveDisable: "inputs.checkDate(inputs.apikey.expirationDate) == 'ERROR'",
                 cancelable: false
             }).then(function (results) {
                 if (results.status) {
                     if (editMode) {
-                        RestService.editApikey({}, apikey, function (ak) {
-                            apikey.expirationdate = ak.expirationdate;
-                            //console.log("edited apikey", apikey, ak);
-                        }, ErrorHandler.handle);
+                        RestService.editApikey(
+                            {id: apikey.id }, {
+                                readOnly: apikey.readOnly,
+                                description: apikey.description,
+                                expirationDate: apikey.expirationDate || "null"
+                            }, function (newApikey) {
+                                apikey.description = newApikey.description;
+                                apikey.readOnly = newApikey.readOnly;
+                                apikey.expirationDate = newApikey.expirationDate;
+                                console.log("edited apikey", apikey, '=>', newApikey);
+                            }, ErrorHandler.handle);
                     } else {
                         // create mode
                         RestService.createApikey({
                             writable: !results.inputs.apikey.readOnly,
-                            expire: results.inputs.apikey.expire
+                            expirationDate: results.inputs.apikey.expirationDate
                         }, {description: results.inputs.apikey.description}, function (apikey) {
                             console.log("new apikey", apikey);
                             self.apikeys.push(apikey);
@@ -137,7 +144,7 @@
                 cancelable: true
             }).then(function (results) {
                 if (results.status) {
-                    RestService.deleteApikey({apikeyId: apikey.id}, function () {
+                    RestService.deleteApikey({id: apikey.id}, function () {
                         self.apikeys.splice(idx, 1);
                     }, ErrorHandler.handle);
                 }

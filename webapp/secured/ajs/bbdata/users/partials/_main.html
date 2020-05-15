@@ -3,7 +3,7 @@
 
 <h2 class="ui center aligned icon header">
     <i class="circular users icon"></i>
-    User Groups
+    User Groups you are admin of
 </h2>
 
 <!--add group button-->
@@ -17,7 +17,7 @@
 <div class="ui cards usergroups">
     <div class="card" ng-repeat="ugroup in ctrl.adminGroups">
         <div class="content">
-            <div class="ui header">Group <span class="group-name">{{ugroup.name}}</span></div>
+            <div class="ui header">#{{ugroup.id}} <span class="group-name">{{ugroup.name}}</span></div>
             <div class="meta">Members</div>
             <div class="description">
 
@@ -30,9 +30,9 @@
                     <li ng-repeat="u in ugroup.users" ng-if="u.id != 1">
                         <div class="">
                             <i class="right floated delete icon red" ng-click="ctrl.removeUser(ugroup, u, $index)"></i>
-                            <i ng-show="!u.isAdmin" class="icon user blue"
+                            <i ng-show="!u.admin" class="icon user blue"
                                ng-click="ctrl.changeUserStatus(ugroup, u, true)"></i>
-                            <i ng-show="u.isAdmin" class="icon protect blue"
+                            <i ng-show="u.admin" class="icon protect blue"
                                ng-click="ctrl.changeUserStatus(ugroup, u, false)"></i>
                             {{u.name}} <br/>
                             <span class="meta">{{u.email}}</span>

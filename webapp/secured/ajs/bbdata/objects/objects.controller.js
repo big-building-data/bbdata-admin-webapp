@@ -144,15 +144,17 @@
 
         //##-------------- tags management
 
-        function addTags( object, tag ){
-            console.log( "tag = " + tag );
-            RestService.addTags( {id: object.id, tags: tag}, {}, function( obj ){
-                object.tags.push( {tag: tag }); // add the tag manually
+        function addTags( object, tags ){
+            tags = tags.replace(/ /g, '');
+            console.log( "tags = ", tags );
+            RestService.addTags( {id: object.id, tags: tags}, {}, function( obj ){
+                // add the tags manually
+                tags.split(',').forEach( function(tag){object.tags.push( tag );} );
             }, ErrorHandler.handle );
         }
 
         function removeTag( object, idx ){
-            RestService.removeTags( {id: object.id, tags: object.tags[idx].tag}, {}, function( obj ){
+            RestService.removeTags( {id: object.id, tags: object.tags[idx]}, {}, function( obj ){
                 console.log( obj );
                 object.tags.splice( idx, 1 );
             }, ErrorHandler.handle );

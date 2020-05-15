@@ -49,13 +49,13 @@
 
                 // also fetch users
                 angular.forEach( groups, function( grp ){
-                    RestService.getUserGroup( {id: grp.id}, function( response ){
-                        response.users.sort(function(u,v){ // sort by admin
-                            var a = v.isAdmin - u.isAdmin;
+                    RestService.getUsersInGroup( {id: grp.id}, function( users ){
+                        users.sort(function(u,v){ // sort by admin
+                            var a = v.admin - u.admin;
                             if(a === 0) return u.name.toLowerCase().localeCompare(v.name.toLowerCase());
                             return a;
                         });
-                        grp.users = response.users;
+                        grp.users = users;
                     }, ErrorHandler.handle );
                 } );
 
@@ -128,7 +128,7 @@
                         RestService.addUserToGroup( {
                             id    : ugroup.id,
                             userId: user.id,
-                            isAdmin : user.isAdmin
+                            admin : user.admin
                         }, {}, function(){
                             if( !ugroup.users ){
                                 ugroup.users = [user];
@@ -159,8 +159,8 @@
                     var user = results.inputs.user;
 
                     RestService.createUser( {
-                            id    : ugroup.id,
-                            isAdmin : user.isAdmin
+                            userGroupId: ugroup.id,
+                            admin : user.admin
                         }, user, function(user){
                             console.log("new user created");
                             self.users.push(user);
@@ -182,8 +182,8 @@
         }
 
         function changeUserStatus( ugroup, user, admin ){
-            RestService.changeUserStatus( {id: ugroup.id, userId: user.id, isAdmin: admin}, {}, function(){
-                user.isAdmin = admin;
+            RestService.addUserToGroup( {id: ugroup.id, userId: user.id, admin: admin}, {}, function(){
+                user.admin = admin;
             }, ErrorHandler.handle );
         }
 
