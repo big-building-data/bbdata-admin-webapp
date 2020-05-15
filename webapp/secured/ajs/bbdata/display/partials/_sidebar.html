@@ -81,6 +81,19 @@
     <sidebar-item>
         <div class="wrapper">
             <div class="ck-nested">
+                <div ng-class="{opened: item.opened}" class="ck-item opened"
+                     ng-repeat="item in ctrl.sensorsHierarchy" style="padding-bottom: 4px">
+                    <input id="sensor-{{item.id}}" ng-change="ctrl.chkChanged(item)" ng-model="item.selected" type="checkbox"/>
+                    <label for="sensor-{{item.id}}">{{item.name}}</label>
+                </div>
+            </div>
+        </div>
+    </sidebar-item>
+
+    <!--sidebar-title icon="magnet" title="available sensors"></sidebar-title>
+    <sidebar-item>
+        <div class="wrapper">
+            <div class="ck-nested">
                 <div ng-class="{opened: item.opened}" class="ck-item opened" ng-include="'table_tree.html'"
                      ng-repeat="item in ctrl.sensorsHierarchy"></div>
             </div>
@@ -104,5 +117,5 @@
                 </div>
             </script>
         </div>
-    </sidebar-item>
+    </sidebar-item-->
 </sidebar>

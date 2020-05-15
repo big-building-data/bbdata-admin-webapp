@@ -292,20 +292,19 @@
                 method: 'POST',
                 url: '/logid',
                 isArray: false
-            }
+            },
 
-            ///**
-            // * @ngdoc
-            // * @name infos
-            // * @methodOf thymioCaptain.rest.RestService
-            // *
-            // * @description
-            // * Returns information based on the cookie.
-            // *
-            // * @returns {httpPromise} resolves with the object {cardId: "", isadmin: bool}, or fails with error
-            // * description.
-            // */
-            //infos: {method: 'GET', url: baseUrl + 'info'},
+            // ---------------------------------------------------- values
+
+            getValues: {
+                method: 'GET',
+                url: baseUrl + 'objects/:id/values',
+                params: {id: '@id'},
+                headers: {
+                    'Accept': 'application/json'
+                },
+                isArray: true
+            }
 
         } )
     }
