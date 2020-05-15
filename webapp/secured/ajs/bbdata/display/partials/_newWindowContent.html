@@ -6,9 +6,8 @@
                 <input type="number" ng-model="inputs.durationInt" min="1" max="500" required/>
             </div>
             <div class="field" ng-init="durationTypes = ['seconds', 'minutes', 'hours']">
-                <semantic-dropdown class="ui fluid dropdown" ng-model="inputs.durationType"
-                                   ng-options="item for item in durationTypes" required>
-                </semantic-dropdown>
+                <select class="ui dropdown" ng-model="inputs.durationType"
+                        ng-options="item for item in durationTypes" required></select>
             </div>
         </div>
     </div>
@@ -20,8 +19,14 @@
         </div>
         <div class="six wide field">
             <label>sensor:</label>
-            <semantic-dropdown ng-model="inputs.selectedSensor" class="ui select dropdown fluid"
-                               ng-options="s as s.name for s in inputs.sensors" required>
+            <semantic-dropdown class="ui fluid search selection dropdown">
+                <input type="hidden" name="sensor" required>
+                <div class="default text">Select Sensor</div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div class="item" ng-repeat="s in inputs.sensors" data-value="s.name"
+                        ng-click="inputs.selectedSensor = s">{{s.name}}</div>
+                </div>
             </semantic-dropdown>
         </div>
     </div>

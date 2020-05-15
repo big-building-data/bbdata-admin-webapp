@@ -2,24 +2,24 @@
 
     /**
      * @ngdoc controller
-     * @name bbdata.app.DisplayController
+     * @name bbdata.app.MainCtrl
      *
      * @description
-     * Controller in charge of the first page, which draws
-     * the graph and displays the values of the sensors.
+     * Controller in charge of the first page, loads the other components
      */
     angular
         .module( 'bbdata.window.app' )
         .controller( 'MainCtrl', ctrl );
 
     function ctrl( RestService, RFC3339_FORMAT, $window ){
+        const LAG = moment.duration(10, "seconds"); // to let the input be processed by the API
+
         var self = this;
         self.setData = setData;
         $window.setData = setData;
-        // setData([{ "id": 45, "name": "Température au sol 1", "address": "noaddress" }], moment.duration(1, 'hours'), 6000);
 
         function _now(){
-            return moment(new Date()).subtract(moment.duration(20, "seconds"));
+            return moment(new Date()).subtract(LAG);
         }
 
         function setData( sensors, interval, refreshRate ){
@@ -37,18 +37,17 @@
             self.sensors.forEach(function(sensor, idx){
                 RestService.getValues({
                     id: sensor.id,
-                    address: sensor.address,
                     to: to.format(RFC3339_FORMAT),
                     from: to.subtract(self.interval).format(RFC3339_FORMAT),
-                }, function(data){
-                    sensor.serieId = sensor.id + "|" + sensor.address;
+                }, function(values){
+                     sensor.serieId = sensor.id + "|" + sensor.name;
                      series.push({
                          id: sensor.serieId,
                          name: sensor.name,
-                         data:  toTrace(data.values)
+                         data:  toTrace(values)
                      });
 
-                    if(idx == self.sensors.length-1){
+                    if(idx === self.sensors.length-1){
                         createChart(series);
                     }
                 });
@@ -67,13 +66,10 @@
                     console.log("refresh ", moment());
                     RestService.getValues({
                         id: sensor.id,
-                        address: sensor.address,
                         from: from.format(RFC3339_FORMAT),
                         to: to.format(RFC3339_FORMAT)
-
-                    }, function(data){
-                        console.log(data);
-                        var trace = toTrace(data.values);
+                    }, function(values){
+                        var trace = toTrace(values);
                         console.log(trace);
                         var serie = self.chart.get(sensor.serieId);
                         trace.forEach(function(point){

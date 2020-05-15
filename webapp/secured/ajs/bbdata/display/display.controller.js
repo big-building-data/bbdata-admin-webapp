@@ -24,7 +24,7 @@
     // --------------------------
 
     function ctrl( RestService, $rootScope, $scope, $filter, RFC3339_FORMAT, FileSaver, Blob,
-                   DISPLAY_PAGE, Graph, Serie, $window, ModalService, toaster, errorParser, ROOT_URL ){
+                   DISPLAY_PAGE, Graph, Serie, $window, ModalService, toaster, ErrorParser, ROOT_URL ){
 
         var self = this;
 
@@ -87,7 +87,7 @@
                 basic          : false,
                 cancelable     : false,
                 inputs         : {
-                    sensors     : self.all_sensors,
+                    sensors     : self.sensorsHierarchy,
                     durationInt : 10,
                     durationType: 'minutes',
                     refreshRate : 1000
@@ -152,20 +152,20 @@
         function _init(){
             // put the default axis in the series array to
             // avoid null exception
-            series[Graph.DEFAULT_SERIE.object.id] = Graph.DEFAULT_SERIE;
+            //series[Graph.DEFAULT_SERIE.object.id] = Graph.DEFAULT_SERIE;
 
             // get the sensors
-            RestService.getHierarchy( function( result ){
-                self.sensorsHierarchy = _hierarchise( result );
-                if( $rootScope.page == DISPLAY_PAGE ) setTimeout(function(){_showSidebar(); }, 100);
+            RestService.getObjects( function( result ){
+                self.sensorsHierarchy = result; //_hierarchise( result );
+                if( $rootScope.page === DISPLAY_PAGE ) setTimeout(function(){_showSidebar(); }, 100);
             }, _log );
 
             // register listener: close the sidebar on page change +
             // reflow the graph on page show
             $rootScope.$on( 'bbdata.PageChanged', function( evt, args ){
-                if( args.from == DISPLAY_PAGE ){
-                    if( args.to != DISPLAY_PAGE ) _closeSidebar();
-                }else if( args.to == DISPLAY_PAGE ){
+                if( args.from === DISPLAY_PAGE ){
+                    if( args.to !== DISPLAY_PAGE ) _closeSidebar();
+                }else if( args.to === DISPLAY_PAGE ){
                     if( !self.graph.chart ) _showSidebar();
                     setTimeout( _reflowChart, 100 );
                 }
@@ -220,7 +220,7 @@
                 from: moment( self.date.from ).format( RFC3339_FORMAT ),
                 to  : moment( self.date.to ).format( RFC3339_FORMAT )
             }, function( results ){
-                if( !results.values.length ){
+                if( !results.length ){
                     // don't bother with empty values
                     toaster.pop( "warning", "No data", "No data for sensor <i>'" + item.name + "</i>' during this" +
                         " interval.",  null, 'trustedHtml');
@@ -228,9 +228,9 @@
                 }
                 var s = series[item.id];
                 if( s ){
-                    s.update( results.values );
+                    s.update( results );
                 }else{
-                    s = new Serie( item, results.values );
+                    s = new Serie( item, results );
                     series[item.id] = s;
                 }
                 self.graph.addSerie( s );
@@ -240,13 +240,13 @@
         //##------------utils
 
         function _closeSidebar(){
-            if( sidebarState != 'hide' ){
+            if( sidebarState !== 'hide' ){
                 $( '#toggleSidebar' ).click();
             }
         }
 
         function _showSidebar(){
-            if( sidebarState != 'show' ){
+            if( sidebarState !== 'show' ){
                 $( '#toggleSidebar' ).click();
             }
         }
@@ -257,7 +257,7 @@
         }
 
         // modifies the hierarchy received fomr the OUTPUT API
-        // to be usable with our ng-repeat (see _sidebar.html)
+        // to be usable with our ng-repeat (see _sidebar.html) TODO UNUSED
         function _hierarchise( data ){
 
             var hierarchy = [];
@@ -310,7 +310,7 @@
 
 
         function _log( msg ){
-            toaster.error( {body: errorParser.parse(msg)} );
+            toaster.error( {body: ErrorParser.parse(msg)} );
             console.log( msg );
         }
 
