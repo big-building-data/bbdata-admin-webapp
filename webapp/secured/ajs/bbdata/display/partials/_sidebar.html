@@ -59,17 +59,6 @@
                     =>
                     <input type="number" step="10" ng-model="modifiedAxis.max"
                            ng-min="modifiedAxis.min" ng-change="ctrl.changeAxisY(modifiedAxis)" required/>
-                    <!--<div class="ui input">-->
-                    <!--<input type="number" ng-model="modifiedAxis.min"-->
-                    <!--ng-max="modifiedAxis.max" ng-change="ctrl.changeAxisY(modifiedAxis)" step="10"-->
-                    <!--required/>-->
-                    <!--</div>-->
-                    <!--=>-->
-                    <!--<div class="ui input">-->
-                    <!--<input type="number" step="10" ng-model="modifiedAxis.max"-->
-                    <!--ng-min="modifiedAxis.min" ng-change="ctrl.changeAxisY(modifiedAxis)" required/>-->
-                    <!--</div>-->
-
                 </div>
 
                 {{form.axisForm.$valid}}
@@ -80,42 +69,22 @@
     <sidebar-title icon="magnet" title="available sensors"></sidebar-title>
     <sidebar-item>
         <div class="wrapper">
-            <div class="ck-nested">
+            <!--div class="ck-nested">
                 <div ng-class="{opened: item.opened}" class="ck-item opened"
                      ng-repeat="item in ctrl.sensorsHierarchy" style="padding-bottom: 4px">
                     <input id="sensor-{{item.id}}" ng-change="ctrl.chkChanged(item)" ng-model="item.selected" type="checkbox"/>
                     <label for="sensor-{{item.id}}">{{item.name}}</label>
                 </div>
+            </div-->
+            <div id="sensors-selection" class="ui fluid multiple search selection dropdown">
+                <input type="hidden" name="country">
+                <i class="dropdown icon"></i>
+                <div class="default text">Select Sensors</div>
+                <div class="menu">
+                    <div class="item" ng-repeat="s in ctrl.sensorsHierarchy" data-value="{{$index}}">{{s.name}}</div>
+                </div>
             </div>
         </div>
     </sidebar-item>
 
-    <!--sidebar-title icon="magnet" title="available sensors"></sidebar-title>
-    <sidebar-item>
-        <div class="wrapper">
-            <div class="ck-nested">
-                <div ng-class="{opened: item.opened}" class="ck-item opened" ng-include="'table_tree.html'"
-                     ng-repeat="item in ctrl.sensorsHierarchy"></div>
-            </div>
-
-            <script id="table_tree.html" type="text/ng-template">
-                <div ng-class="{parent: item.children}" class="ck-item-{{level}}" title="{{item.name}}">
-                    <div class="indent" style="padding-left: {{10*level}}px"
-                         ng-click="item.opened = !item.opened"></div>
-                    <div ng-if="level > 0" class="cell-input ui checkbox">
-                        <input ng-change="ctrl.chkChanged(item)" ng-model="item.selected" type="checkbox"/>
-                        <label></label>
-                    </div>
-                    <div class="cell-name" ng-click="item.opened = !item.opened">
-                        {{item.name}}
-                    </div>
-                </div>
-                <div class="children" ng-if="item.children && item.children.length">
-                    <div ng-class="{opened: item.opened}" ng-include="'table_tree.html'" class="ck-item-{{level}}"
-                         ng-init="level = level + 1"
-                         ng-repeat="item in item.children"></div>
-                </div>
-            </script>
-        </div>
-    </sidebar-item-->
 </sidebar>
