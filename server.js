@@ -1,5 +1,17 @@
 // address of the output-api
-var API_SERVER_HOST =  "http://localhost:8080"; //"http://10.10.10.102:8456/api";
+var API_URL = null;
+// parse server host
+if (process.argv.length > 2)
+    API_URL = process.argv[2];
+else if (process.env.API_SERVER_HOST)
+    API_URL = process.env.API_SERVER_HOST;
+
+if (!API_URL || !API_URL.startsWith("http://")) {
+    console.log("Invalid or missing API_SERVER_HOST. " +
+        "Pass it as first argument or set env variable API_URL and try again.")
+    process.exit(1);
+}
+
 // application port
 var port = process.env.PORT || 8088;
 
@@ -10,7 +22,7 @@ var FileStore = require('session-file-store')(session);
 var request = require('request');
 
 var bouncer = require("express-bouncer")(10000, 900000);
-var proxy = require('http-proxy').createProxyServer({host: API_SERVER_HOST});
+var proxy = require('http-proxy').createProxyServer({host: API_URL});
 
 // == setup logging
 // logs are written to ./logs/server.log and are rotated automatically
@@ -36,7 +48,7 @@ bouncer.blocked = function (req, res, next, remaining) {
     res.status(429).send(JSON.stringify({
         exception: "TooManyAttempts",
         details: "Too many requests have been made, " +
-        "please wait " + remaining / 1000 + " seconds."
+            "please wait " + remaining / 1000 + " seconds."
     }));
 };
 
@@ -91,7 +103,7 @@ app.get('/logout', function (req, res, next) {
     var sess = req.session;
     // call /logout on the output-api
     request({
-        url: API_SERVER_HOST + '/logout',
+        url: API_URL + '/logout',
         method: "POST",
         headers: {
             "content-type": "application/json",
@@ -126,7 +138,7 @@ app.post("/api/login", bouncer.block, function (req, res, next) {
 // setup redirect to api calls
 app.use('/api', function (req, res, next) {
     proxy.web(req, res, {
-        target: API_SERVER_HOST
+        target: API_URL
     }, next);
 
 });
@@ -182,7 +194,8 @@ proxy.on('error', function (err, req, res) {
 // ======================== launch the server
 
 app.listen(port, function () {
-    logger.info('server started on port ', port);
+    logger.info('server started at http://localhost:' + port);
+    logger.info('using API at ', API_URL);
 });
 
 
