@@ -23,7 +23,7 @@
             <div class="center tiny marged"><code>month/day/year hr:min</code></div>
 
             <div class="ui button mini right floated" ng-click="ctrl.applyDate(date)"
-                 ng-class="{'disabled': equals(date, ctrl.date) || datetimeForm.$invalid }">
+                 ng-class="{'disabled': datetimeForm.$invalid }">
                 Apply
             </div>
             <div style="clear:both"></div>
