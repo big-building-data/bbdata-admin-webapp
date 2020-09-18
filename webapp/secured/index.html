@@ -21,8 +21,6 @@
     <link rel="stylesheet" href="/secured/css/ogroups.css">
     <link rel="stylesheet" href="/secured/css/me.css">
     <link rel="stylesheet" href="/secured/css/display.css">
-
-
 </head>
 <body ng-app="bbdata.app">
 
@@ -77,15 +75,16 @@
     <div id="container" ng-if="$root.page_init[4]" ng-show="$root.page==4" class="ui main container display" ng-include
          ng-controller="DisplayController as ctrl"
          src="'/secured/ajs/bbdata/display/partials/_main.html'"></div>
+    <!--about page-->
+    <div id="container" ng-if="$root.page_init[5]" ng-show="$root.page==5" class="ui main container display" ng-include
+         ng-controller="AboutController as ctrl"
+         src="'/secured/ajs/bbdata/about/partials/_main.html'"></div>
 
     <!--footer-->
     <div class="ui inverted vertical footer segment">
         <div class="ui center aligned container">
             <div class="ui horizontal inverted small link list">
-                <a class="item" href="#">Site Map</a>
-                <a class="item" href="#">Contact Us</a>
-                <a class="item" href="#">Terms and Conditions</a>
-                <a class="item" href="#">Privacy Policy</a>
+                <a class="item" href="#5" ng-click="$root.page=5">About</a>
             </div>
         </div>
     </div>
@@ -134,6 +133,7 @@
 <script type="text/javascript" src="/secured/ajs/bbdata/ogroups/ogroups.controller.js"></script>
 <script type="text/javascript" src="/secured/ajs/bbdata/me/me.controller.js"></script>
 <script type="text/javascript" src="/secured/ajs/bbdata/display/display.controller.js"></script>
+<script type="text/javascript" src="/secured/ajs/bbdata/about/about.controller.js"></script>
 
 
 <!--semantic helpers-->

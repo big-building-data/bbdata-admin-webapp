@@ -25,6 +25,12 @@
 
         return $resource( '', {}, {
 
+            getInfo: {
+                method : 'GET',
+                url    : baseUrl + 'info',
+                isArray: false
+            },
+
             // ---------------------------------------------------- objects
 
             getObjects: {

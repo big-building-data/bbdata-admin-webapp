@@ -1,0 +1,22 @@
+<!--"lazy" load-->
+<div ng-init="ctrl.init()">
+
+    <h2 class="ui center aligned icon header">
+        <i class="circular info icon"></i>
+        About
+    </h2>
+
+    <div class="ui raised segment text left">
+        <a class="ui blue ribbon label right">
+            <i class="exchange icon"></i> Linked API
+        </a>
+        <!--my info-->
+        <p class="center aligned">This webapp is bound to <br>
+            <b class="ui blue header">{{ctrl.info['instance-name']}}</b>
+        </p>
+        <div style="max-width: 700px; margin: 10px auto; background: #eaeaea; padding: 10px; text-align: left">
+            <pre>{{ctrl.info | json}}</pre>
+        </div>
+    </div>
+
+</div>

@@ -41,12 +41,13 @@
      * number bound to each page.
      * Useful to watch pages switch inside a controller
      */
-    webapp.constant("NUM_PAGES", 5);
+    webapp.constant("NUM_PAGES", 6);
     webapp.constant( "OBJECTS_PAGE", 0 );
     webapp.constant( "OGROUPS_PAGE", 1 );
     webapp.constant( "UGROUPS_PAGE", 2 );
     webapp.constant( "PROFILE_PAGE", 3 );
     webapp.constant( "DISPLAY_PAGE", 4 );
+    webapp.constant( "ABOUT_PAGE", 5 );
 
 
     webapp.factory( 'ErrorHandler', ErrorHandler );
@@ -93,6 +94,5 @@
             }
         };
     }
-
 
 }());
