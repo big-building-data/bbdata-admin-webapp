@@ -27,7 +27,7 @@
 
             getInfo: {
                 method : 'GET',
-                url    : baseUrl + 'info',
+                url    : baseUrl + 'about',
                 isArray: false
             },
 
